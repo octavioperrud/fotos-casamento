@@ -70,6 +70,16 @@
 
 
         <button
+            class="botao apresentacao"
+            onclick="abrirApresentacao()"
+        >
+
+            🖥️ Apresentação
+
+        </button>
+
+
+        <button
             class="botao admin"
             onclick="abrirSenha()"
         >
@@ -246,7 +256,6 @@
 
 
         <!-- BOTÃO SAIR NO TOPO -->
-        <!-- APARECE SOMENTE NAS FOTOS APROVADAS -->
 
         <button
             id="botaoSairTopo"
@@ -305,6 +314,89 @@
 
 
     </div>
+
+</div>
+
+
+
+<!-- ====================================== -->
+<!-- TELA DE APRESENTAÇÃO -->
+<!-- ====================================== -->
+
+<div
+    id="apresentacaoTela"
+    class="apresentacao-tela escondido"
+>
+
+
+    <!-- BARRA SUPERIOR -->
+
+    <div
+        class="apresentacao-topo"
+    >
+
+
+        <div
+            class="apresentacao-titulo"
+        >
+
+            💍 Janaina & Octávio
+
+        </div>
+
+
+        <div
+            class="apresentacao-botoes"
+        >
+
+
+            <button
+                class="botao-tela"
+                onclick="alternarTelaCheia()"
+            >
+
+                ⛶ Tela Cheia
+
+            </button>
+
+
+            <button
+                class="botao-tela sair-apresentacao"
+                onclick="sairApresentacao()"
+            >
+
+                ✕ Sair
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- PAINEL DE FOTOS -->
+
+    <div
+        id="painelApresentacao"
+        class="painel-apresentacao"
+    ></div>
+
+
+
+    <!-- RODAPÉ -->
+
+    <div
+        id="statusApresentacao"
+        class="status-apresentacao"
+    >
+
+        ❤️ Carregando nossos melhores momentos...
+
+    </div>
+
 
 </div>
 
