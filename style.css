@@ -501,14 +501,14 @@ input[type="file"] {
         );
 
     /*
-        Linha superior menor
-        Linha inferior maior
+        Linha superior um pouco maior
+        Linha inferior proporcionalmente menor
     */
 
     grid-template-rows:
 
         1.15fr
-        2fr;
+        1.85fr;
 
     gap: 12px;
 
@@ -573,7 +573,7 @@ input[type="file"] {
 
 
 /* ====================================== */
-/* EFEITO DE ZOOM OUT DAS IMAGENS         */
+/* AJUSTE AUTOMÁTICO DAS IMAGENS          */
 /* ====================================== */
 
 
@@ -589,43 +589,22 @@ input[type="file"] {
 
     object-position: center;
 
-    animation:
+    transition:
 
-        efeitoZoomOut
-        12s
-        ease-out
-        forwards;
+        transform
+        10s
+        ease;
 
 }
 
 
-/* -------------------------------------- */
-/* EFEITO SUAVE DE AFASTAMENTO            */
-/* -------------------------------------- */
+.foto-apresentacao:hover img {
 
+    transform:
 
-@keyframes efeitoZoomOut {
-
-    from {
-
-        transform:
-
-            scale(
-                1.12
-            );
-
-    }
-
-
-    to {
-
-        transform:
-
-            scale(
-                1
-            );
-
-    }
+        scale(
+            1.05
+        );
 
 }
 
@@ -634,11 +613,6 @@ input[type="file"] {
 /* ====================================== */
 /* POSIÇÕES DAS 5 FOTOS                   */
 /* ====================================== */
-
-
-/* -------------------------------------- */
-/* FOTO 1 - SUPERIOR ESQUERDA             */
-/* -------------------------------------- */
 
 
 .foto-posicao-1 {
@@ -654,11 +628,6 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 2 - SUPERIOR CENTRO               */
-/* -------------------------------------- */
-
-
 .foto-posicao-2 {
 
     grid-column:
@@ -670,11 +639,6 @@ input[type="file"] {
         1;
 
 }
-
-
-/* -------------------------------------- */
-/* FOTO 3 - SUPERIOR DIREITA              */
-/* -------------------------------------- */
 
 
 .foto-posicao-3 {
@@ -690,11 +654,6 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 4 - INFERIOR ESQUERDA             */
-/* -------------------------------------- */
-
-
 .foto-posicao-4 {
 
     grid-column:
@@ -706,11 +665,6 @@ input[type="file"] {
         2;
 
 }
-
-
-/* -------------------------------------- */
-/* FOTO 5 - INFERIOR DIREITA              */
-/* -------------------------------------- */
 
 
 .foto-posicao-5 {
@@ -728,7 +682,7 @@ input[type="file"] {
 
 
 /* ====================================== */
-/* ANIMAÇÃO DE ENTRADA                    */
+/* ANIMAÇÃO                               */
 /* ====================================== */
 
 
