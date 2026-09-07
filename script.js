@@ -1,589 +1,637 @@
 /************************************************
+
+ CONFIGURAÇÕES SUPABASE
+
+************************************************/
+
+
+const SUPABASE_URL =
+    "https://gmizhmkichnkzsdaznjg.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_4j1VkO20dQG7R6oMYRMwgA_V9HYVRri";
+
+
+const BUCKET =
+    "fotos-casamento";
+
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+
+/************************************************
+
  CONFIGURAÇÕES
+
 ************************************************/
 
 
-const SENHA_ADMIN = "CASAMENTO2026";
+const SENHA_ADMIN =
+    "CASAMENTO2026";
 
-
-const LINK_FOTOS_APROVADAS =
-    "https://1drv.ms/f/c/f203919d62721e53/IgDBWH5vRVqcTLP_ennS0ThFAbzVWbGUZoULU9zM_F_M4iM?e=bw1XGR";
 
 
 /************************************************
+
  VARIÁVEIS
+
 ************************************************/
 
 
-let fotosSelecionadas = [];
+let fotoSelecionada = null;
+
 
 
 /************************************************
- BANCO LOCAL - INDEXEDDB
+
+ ABRIR ENVIO
+
 ************************************************/
 
 
-function abrirBanco() {
-
-    return new Promise((resolve, reject) => {
-
-        const pedido = indexedDB.open(
-            "FotosCasamento",
-            1
-        );
+function abrirEnvio() {
 
 
-        pedido.onupgradeneeded = function(event) {
+    esconderTodasTelas();
 
-            const banco = event.target.result;
-
-
-            if (!banco.objectStoreNames.contains("fotos")) {
-
-                banco.createObjectStore(
-                    "fotos",
-                    {
-                        keyPath: "id",
-                        autoIncrement: true
-                    }
-                );
-
-            }
-
-        };
-
-
-        pedido.onsuccess = function(event) {
-
-            resolve(event.target.result);
-
-        };
-
-
-        pedido.onerror = function(event) {
-
-            reject(event.target.error);
-
-        };
-
-    });
-
-}
-
-
-/************************************************
- ABRIR TELA ENVIAR FOTO
-************************************************/
-
-
-function abrirEnviarFoto() {
-
-    esconderTodas();
 
     document
-        .getElementById("enviarTela")
+        .getElementById("envioTela")
         .classList
         .remove("escondido");
 
+
 }
 
 
+
 /************************************************
- DETECTAR FOTOS ESCOLHIDAS
+
+ PREVIEW DA FOTO
+
 ************************************************/
 
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        const inputFoto =
-            document.getElementById("inputFoto");
-
-
-        inputFoto.addEventListener(
-            "change",
-            function(event) {
-
-                fotosSelecionadas =
-                    Array.from(event.target.files);
+document
+    .getElementById("fotoInput")
+    .addEventListener(
+        "change",
+        function(event) {
 
 
-                mostrarPreview();
+            const arquivo =
+                event.target.files[0];
+
+
+            if (!arquivo) {
+
+                return;
 
             }
-        );
-
-    }
-);
 
 
-/************************************************
- MOSTRAR PRÉ-VISUALIZAÇÃO
-************************************************/
+            fotoSelecionada =
+                arquivo;
 
 
-function mostrarPreview() {
-
-    const area =
-        document.getElementById("previewFotos");
-
-
-    area.innerHTML = "";
+            const imagem =
+                document
+                .getElementById(
+                    "previewImagem"
+                );
 
 
-    fotosSelecionadas.forEach(
-        function(foto) {
-
-            const leitor =
-                new FileReader();
-
-
-            leitor.onload =
-                function(event) {
-
-                    const imagem =
-                        document.createElement("img");
+            imagem.src =
+                URL.createObjectURL(
+                    arquivo
+                );
 
 
-                    imagem.src =
-                        event.target.result;
+            document
+                .getElementById(
+                    "previewContainer"
+                )
+                .classList
+                .remove(
+                    "escondido"
+                );
 
-
-                    imagem.className =
-                        "preview-imagem";
-
-
-                    area.appendChild(imagem);
-
-                };
-
-
-            leitor.readAsDataURL(foto);
 
         }
     );
 
 
-    if (fotosSelecionadas.length > 0) {
-
-        document
-            .getElementById("botaoEnviar")
-            .style.display = "block";
-
-    }
-
-}
-
 
 /************************************************
- ENVIAR PARA VALIDAÇÃO
+
+ ENVIAR FOTO
+
 ************************************************/
 
 
-async function enviarParaValidacao() {
+async function enviarFoto() {
 
-    if (fotosSelecionadas.length === 0) {
 
-        alert(
-            "Escolha pelo menos uma foto."
+    const status =
+        document.getElementById(
+            "statusEnvio"
         );
+
+
+    if (!fotoSelecionada) {
+
+
+        status.innerText =
+            "📸 Escolha ou tire uma foto primeiro.";
 
         return;
 
     }
 
 
-    try {
-
-        const banco =
-            await abrirBanco();
+    status.innerText =
+        "⏳ Enviando foto...";
 
 
-        const transacao =
-            banco.transaction(
-                "fotos",
-                "readwrite"
-            );
+    const extensao =
+        fotoSelecionada.name
+        .split(".")
+        .pop();
 
 
-        const tabela =
-            transacao.objectStore(
-                "fotos"
-            );
+    const nomeArquivo =
+
+        "aguardando/" +
+
+        Date.now() +
+
+        "_" +
+
+        Math.random()
+        .toString(36)
+        .substring(2,8) +
+
+        "." +
+
+        extensao;
 
 
-        fotosSelecionadas.forEach(
-            function(foto) {
+    const {
 
-                tabela.add({
+        data,
 
-                    arquivo: foto,
+        error
 
-                    nome: foto.name,
+    } =
 
-                    data:
-                        new Date().toISOString(),
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .upload(
 
-                    status: "pendente"
+            nomeArquivo,
 
-                });
+            fotoSelecionada,
+
+            {
+
+                cacheControl:
+                    "3600",
+
+                upsert:
+                    false
 
             }
+
         );
 
 
-        transacao.oncomplete = function() {
-
-            alert(
-                "✅ Foto(s) enviada(s) para validação!"
-            );
+    if (error) {
 
 
-            fotosSelecionadas = [];
+        console.error(error);
 
 
-            document
-                .getElementById("inputFoto")
-                .value = "";
+        status.innerText =
+            "❌ Erro ao enviar a foto: " +
+            error.message;
 
 
-            document
-                .getElementById("previewFotos")
-                .innerHTML = "";
-
-
-            document
-                .getElementById("botaoEnviar")
-                .style.display = "none";
-
-
-            voltarInicio();
-
-        };
-
-
-        transacao.onerror = function() {
-
-            alert(
-                "❌ Erro ao salvar as fotos."
-            );
-
-        };
+        return;
 
     }
 
-    catch (erro) {
 
-        console.error(erro);
+    status.innerText =
+        "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
 
-        alert(
-            "❌ Não foi possível salvar a foto."
+
+    fotoSelecionada = null;
+
+
+    document
+        .getElementById("fotoInput")
+        .value = "";
+
+
+    document
+        .getElementById(
+            "previewContainer"
+        )
+        .classList
+        .add(
+            "escondido"
         );
 
-    }
 
 }
 
 
+
 /************************************************
- ABRIR ÁREA DE SENHA
+
+ ABRIR SENHA
+
 ************************************************/
 
 
 function abrirSenha() {
 
-    esconderTodas();
+
+    esconderTodasTelas();
 
 
     document
-        .getElementById("senhaTela")
+        .getElementById(
+            "senhaTela"
+        )
         .classList
-        .remove("escondido");
+        .remove(
+            "escondido"
+        );
 
-
-    document
-        .getElementById("erroSenha")
-        .innerText = "";
 
 }
 
 
+
 /************************************************
+
  VALIDAR SENHA
+
 ************************************************/
 
 
 function validarSenha() {
 
+
     const senha =
+
         document
         .getElementById("senha")
         .value;
 
 
-    if (senha === SENHA_ADMIN) {
+    const erro =
 
-        esconderTodas();
+        document
+        .getElementById(
+            "erroSenha"
+        );
+
+
+    if (
+        senha === SENHA_ADMIN
+    ) {
+
+
+        esconderTodasTelas();
 
 
         document
-            .getElementById("validacaoTela")
+            .getElementById(
+                "validacaoTela"
+            )
             .classList
-            .remove("escondido");
+            .remove(
+                "escondido"
+            );
+
+
+        erro.innerText = "";
 
 
         carregarFotosPendentes();
+
 
     }
 
     else {
 
-        document
-            .getElementById("erroSenha")
-            .innerText =
-                "❌ Senha incorreta.";
+
+        erro.innerText =
+            "❌ Senha incorreta!";
+
 
     }
+
 
 }
 
 
+
 /************************************************
+
  CARREGAR FOTOS PENDENTES
+
 ************************************************/
 
 
 async function carregarFotosPendentes() {
 
-    try {
 
-        const banco =
-            await abrirBanco();
+    const galeria =
 
-
-        const transacao =
-            banco.transaction(
-                "fotos",
-                "readonly"
-            );
+        document
+        .getElementById(
+            "galeriaPendentes"
+        );
 
 
-        const tabela =
-            transacao.objectStore(
-                "fotos"
-            );
+    const mensagem =
+
+        document
+        .getElementById(
+            "nenhumaFoto"
+        );
 
 
-        const pedido =
-            tabela.getAll();
+    galeria.innerHTML = "";
 
 
-        pedido.onsuccess = function() {
-
-            const fotos =
-                pedido.result.filter(
-                    foto =>
-                        foto.status ===
-                        "pendente"
-                );
+    mensagem.innerText =
+        "⏳ Carregando fotos...";
 
 
-            mostrarFotosPendentes(
-                fotos
-            );
+    const {
 
-        };
+        data,
 
-    }
+        error
 
-    catch (erro) {
+    } =
 
-        console.error(erro);
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .list(
 
-    }
+            "aguardando",
 
-}
+            {
 
+                limit: 1000,
 
-/************************************************
- MOSTRAR FOTOS PENDENTES
-************************************************/
+                sortBy: {
 
+                    column:
+                        "created_at",
 
-function mostrarFotosPendentes(fotos) {
+                    order:
+                        "desc"
 
-    const lista =
-        document.getElementById("listaFotos");
+                }
 
+            }
 
-    const contador =
-        document.getElementById("contadorFotos");
-
-
-    lista.innerHTML = "";
-
-
-    contador.innerText =
-        fotos.length +
-        " foto(s) aguardando";
+        );
 
 
-    if (fotos.length === 0) {
+    if (error) {
 
-        lista.innerHTML = `
 
-            <div class="sem-fotos">
+        console.error(error);
 
-                📭
 
-                <h3>
-                    Nenhuma foto pendente
-                </h3>
+        mensagem.innerText =
+            "❌ Erro ao carregar as fotos.";
 
-                <p>
-                    As fotos enviadas aparecerão aqui.
-                </p>
-
-            </div>
-
-        `;
 
         return;
 
     }
 
 
-    fotos.forEach(
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+
+        mensagem.innerText =
+            "📭 Nenhuma foto aguardando aprovação.";
+
+        return;
+
+    }
+
+
+    mensagem.innerText =
+        "📸 " +
+        data.length +
+        " foto(s) aguardando aprovação";
+
+
+    data.forEach(
         function(foto) {
 
-            const url =
-                URL.createObjectURL(
-                    foto.arquivo
-                );
 
-
-            const card =
-                document.createElement("div");
-
-
-            card.className =
-                "foto-card";
-
-
-            const imagem =
-                document.createElement("img");
-
-
-            imagem.src = url;
-
-
-            const nome =
-                document.createElement("p");
-
-
-            nome.innerText =
-                foto.nome;
-
-
-            const acoes =
-                document.createElement("div");
-
-
-            acoes.className =
-                "acoes";
-
-
-            const permitir =
-                document.createElement("button");
-
-
-            permitir.className =
-                "permitir";
-
-
-            permitir.innerText =
-                "✓ Permitir";
-
-
-            permitir.onclick =
-                function() {
-
-                    permitirFoto(
-                        foto.id
-                    );
-
-                };
-
-
-            const bloquear =
-                document.createElement("button");
-
-
-            bloquear.className =
-                "bloquear";
-
-
-            bloquear.innerText =
-                "✕ Bloquear";
-
-
-            bloquear.onclick =
-                function() {
-
-                    bloquearFoto(
-                        foto.id
-                    );
-
-                };
-
-
-            acoes.appendChild(
-                permitir
+            criarCardFoto(
+                foto
             );
 
-
-            acoes.appendChild(
-                bloquear
-            );
-
-
-            card.appendChild(
-                imagem
-            );
-
-
-            card.appendChild(
-                nome
-            );
-
-
-            card.appendChild(
-                acoes
-            );
-
-
-            lista.appendChild(
-                card
-            );
 
         }
     );
 
+
 }
 
 
+
 /************************************************
- PERMITIR FOTO
+
+ CRIAR CARD DA FOTO
+
 ************************************************/
 
 
-async function permitirFoto(id) {
+function criarCardFoto(foto) {
 
-    await alterarStatus(
-        id,
-        "aprovada"
+
+    const caminho =
+
+        "aguardando/" +
+        foto.name;
+
+
+    const {
+
+        data
+
+    } =
+
+    supabaseClient
+        .storage
+        .from(BUCKET)
+        .getPublicUrl(
+            caminho
+        );
+
+
+    const urlFoto =
+        data.publicUrl;
+
+
+    const galeria =
+
+        document
+        .getElementById(
+            "galeriaPendentes"
+        );
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "foto-card";
+
+
+    card.innerHTML =
+
+        `
+
+        <img
+            src="${urlFoto}"
+            alt="Foto enviada"
+        >
+
+
+        <div class="nome-foto">
+
+            ${foto.name}
+
+        </div>
+
+
+        <div class="botoes-foto">
+
+
+            <button
+                class="botao-aprovar"
+                onclick="aprovarFoto('${foto.name}')"
+            >
+
+                ✅ Permitir
+
+            </button>
+
+
+            <button
+                class="botao-reprovar"
+                onclick="reprovarFoto('${foto.name}')"
+            >
+
+                ❌ Bloquear
+
+            </button>
+
+
+        </div>
+
+        `;
+
+
+    galeria.appendChild(
+        card
     );
+
+
+}
+
+
+
+/************************************************
+
+ APROVAR FOTO
+
+************************************************/
+
+
+async function aprovarFoto(nomeFoto) {
+
+
+    const confirmar =
+
+        confirm(
+            "Deseja permitir esta foto?"
+        );
+
+
+    if (!confirmar) {
+
+        return;
+
+    }
+
+
+    const {
+
+        data,
+
+        error
+
+    } =
+
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .move(
+
+            "aguardando/" +
+            nomeFoto,
+
+            "aprovadas/" +
+            nomeFoto
+
+        );
+
+
+    if (error) {
+
+
+        console.error(error);
+
+
+        alert(
+            "❌ Erro ao aprovar a foto:\n\n" +
+            error.message
+        );
+
+
+        return;
+
+    }
 
 
     alert(
@@ -593,17 +641,23 @@ async function permitirFoto(id) {
 
     carregarFotosPendentes();
 
+
 }
 
 
+
 /************************************************
- BLOQUEAR FOTO
+
+ REPROVAR FOTO
+
 ************************************************/
 
 
-async function bloquearFoto(id) {
+async function reprovarFoto(nomeFoto) {
+
 
     const confirmar =
+
         confirm(
             "Deseja bloquear esta foto?"
         );
@@ -616,126 +670,261 @@ async function bloquearFoto(id) {
     }
 
 
-    await alterarStatus(
-        id,
-        "bloqueada"
+    const {
+
+        data,
+
+        error
+
+    } =
+
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .move(
+
+            "aguardando/" +
+            nomeFoto,
+
+            "reprovadas/" +
+            nomeFoto
+
+        );
+
+
+    if (error) {
+
+
+        console.error(error);
+
+
+        alert(
+            "❌ Erro ao bloquear a foto:\n\n" +
+            error.message
+        );
+
+
+        return;
+
+    }
+
+
+    alert(
+        "🚫 Foto bloqueada!"
     );
 
 
     carregarFotosPendentes();
 
+
 }
 
 
+
 /************************************************
- ALTERAR STATUS
+
+ VISUALIZAR FOTOS APROVADAS
+
 ************************************************/
 
 
-async function alterarStatus(
-    id,
-    novoStatus
-) {
-
-    const banco =
-        await abrirBanco();
+async function visualizarFotos() {
 
 
-    return new Promise(
-        (resolve, reject) => {
+    esconderTodasTelas();
 
-            const transacao =
-                banco.transaction(
-                    "fotos",
-                    "readwrite"
+
+    document
+        .getElementById(
+            "validacaoTela"
+        )
+        .classList
+        .remove(
+            "escondido"
+        );
+
+
+    const galeria =
+
+        document
+        .getElementById(
+            "galeriaPendentes"
+        );
+
+
+    const mensagem =
+
+        document
+        .getElementById(
+            "nenhumaFoto"
+        );
+
+
+    galeria.innerHTML = "";
+
+
+    mensagem.innerText =
+        "⏳ Carregando fotos aprovadas...";
+
+
+    const {
+
+        data,
+
+        error
+
+    } =
+
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .list(
+
+            "aprovadas",
+
+            {
+
+                limit: 1000,
+
+                sortBy: {
+
+                    column:
+                        "created_at",
+
+                    order:
+                        "desc"
+
+                }
+
+            }
+
+        );
+
+
+    document.querySelector(
+        "#validacaoTela h2"
+    ).innerText =
+        "🖼️ Fotos Aprovadas";
+
+
+    if (error) {
+
+
+        mensagem.innerText =
+            "❌ Erro ao carregar fotos.";
+
+
+        return;
+
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+
+        mensagem.innerText =
+            "📭 Ainda não existem fotos aprovadas.";
+
+        return;
+
+    }
+
+
+    mensagem.innerText =
+        data.length +
+        " foto(s) disponíveis ❤️";
+
+
+    data.forEach(
+        function(foto) {
+
+
+            const caminho =
+
+                "aprovadas/" +
+                foto.name;
+
+
+            const {
+
+                data: urlData
+
+            } =
+
+            supabaseClient
+                .storage
+                .from(BUCKET)
+                .getPublicUrl(
+                    caminho
                 );
 
 
-            const tabela =
-                transacao.objectStore(
-                    "fotos"
+            const card =
+                document.createElement(
+                    "div"
                 );
 
 
-            const pedido =
-                tabela.get(id);
+            card.className =
+                "foto-card";
 
 
-            pedido.onsuccess =
-                function() {
+            card.innerHTML =
 
-                    const foto =
-                        pedido.result;
+                `
 
+                <img
+                    src="${urlData.publicUrl}"
+                    alt="Foto"
+                >
 
-                    if (!foto) {
-
-                        reject(
-                            "Foto não encontrada"
-                        );
-
-                        return;
-
-                    }
+                `;
 
 
-                    foto.status =
-                        novoStatus;
+            galeria.appendChild(
+                card
+            );
 
-
-                    tabela.put(
-                        foto
-                    );
-
-                };
-
-
-            transacao.oncomplete =
-                function() {
-
-                    resolve();
-
-                };
-
-
-            transacao.onerror =
-                function(event) {
-
-                    reject(
-                        event.target.error
-                    );
-
-                };
 
         }
     );
 
+
 }
 
 
+
 /************************************************
- VISUALIZAR FOTOS APROVADAS
+
+ SAIR DA VALIDAÇÃO
+
 ************************************************/
 
 
-function visualizarFotos() {
+function sairValidacao() {
 
-    window.open(
-        LINK_FOTOS_APROVADAS,
-        "_blank"
-    );
+
+    voltarInicio();
+
 
 }
 
 
+
 /************************************************
+
  VOLTAR AO INÍCIO
+
 ************************************************/
 
 
 function voltarInicio() {
 
-    esconderTodas();
+
+    esconderTodasTelas();
 
 
     document
@@ -743,39 +932,56 @@ function voltarInicio() {
         .classList
         .remove("escondido");
 
+
+    document
+        .getElementById("senha")
+        .value = "";
+
+
+    document
+        .getElementById(
+            "erroSenha"
+        )
+        .innerText = "";
+
+
 }
 
 
+
 /************************************************
+
  ESCONDER TODAS AS TELAS
+
 ************************************************/
 
 
-function esconderTodas() {
-
-    const telas = [
-
-        "inicio",
-
-        "enviarTela",
-
-        "senhaTela",
-
-        "validacaoTela"
-
-    ];
+function esconderTodasTelas() {
 
 
-    telas.forEach(
-        function(id) {
+    document
+        .getElementById("inicio")
+        .classList
+        .add("escondido");
 
-            document
-                .getElementById(id)
-                .classList
-                .add("escondido");
 
-        }
-    );
+    document
+        .getElementById("envioTela")
+        .classList
+        .add("escondido");
+
+
+    document
+        .getElementById("senhaTela")
+        .classList
+        .add("escondido");
+
+
+    document
+        .getElementById("validacaoTela")
+        .classList
+        .add("escondido");
+
 
 }
 
