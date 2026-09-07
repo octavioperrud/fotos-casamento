@@ -39,50 +39,6 @@ const SENHA_ADMIN =
 
 /************************************************
 
- CONFIGURAÇÕES DE OTIMIZAÇÃO DAS FOTOS
-
-************************************************/
-
-
-const TAMANHO_MAXIMO_IMAGEM =
-    2400;
-
-
-/*
-    Objetivo aproximado:
-
-    2 MB
-*/
-
-
-const TAMANHO_ALVO =
-    2 * 1024 * 1024;
-
-
-/*
-    Qualidade inicial da imagem.
-*/
-
-
-const QUALIDADE_INICIAL =
-    0.88;
-
-
-/*
-    Qualidade mínima permitida.
-
-    Não vamos reduzir excessivamente
-    para preservar a qualidade.
-*/
-
-
-const QUALIDADE_MINIMA =
-    0.55;
-
-
-
-/************************************************
-
  VARIÁVEIS
 
 ************************************************/
@@ -148,9 +104,7 @@ document
 
             if (!arquivo) {
 
-
                 return;
-
 
             }
 
@@ -160,7 +114,6 @@ document
 
 
             const imagem =
-
                 document
                 .getElementById(
                     "previewImagem"
@@ -190,240 +143,109 @@ document
 
 /************************************************
 
- OTIMIZAR FOTO
-
- Reduz resolução e tamanho antes
- de enviar para o Supabase.
+ COMPRIMIR FOTO
 
 ************************************************/
 
 
-async function otimizarFoto(
-    arquivo
+function comprimirImagem(
+    arquivo,
+    qualidade = 0.85,
+    larguraMaxima = 2400
 ) {
 
 
     return new Promise(
-        function(resolve, reject) {
+        function(resolve,reject) {
 
 
-            const imagem =
-                new Image();
+            if (
+                !arquivo.type.startsWith(
+                    "image/"
+                )
+            ) {
 
-
-            const urlImagem =
-                URL.createObjectURL(
-                    arquivo
+                reject(
+                    new Error(
+                        "O arquivo não é uma imagem."
+                    )
                 );
 
+                return;
 
-            imagem.onload =
-                async function() {
+            }
 
 
-                    try {
+            const leitor =
+                new FileReader();
 
 
-                        let largura =
-                            imagem.width;
+            leitor.onload =
+                function(event) {
 
 
-                        let altura =
-                            imagem.height;
+                    const imagem =
+                        new Image();
 
 
-                        /*
-                            Redimensiona apenas se
-                            ultrapassar o tamanho máximo.
-                        */
+                    imagem.onload =
+                        function() {
 
 
-                        if (
-                            largura >
-                            TAMANHO_MAXIMO_IMAGEM
-                        ) {
+                            let largura =
+                                imagem.width;
 
 
-                            altura =
-                                Math.round(
+                            let altura =
+                                imagem.height;
 
-                                    altura *
 
-                                    (
-                                        TAMANHO_MAXIMO_IMAGEM /
-                                        largura
-                                    )
+                            if (
+                                largura >
+                                larguraMaxima
+                            ) {
 
-                                );
 
+                                const proporcao =
+                                    larguraMaxima /
+                                    largura;
 
-                            largura =
-                                TAMANHO_MAXIMO_IMAGEM;
 
+                                largura =
+                                    larguraMaxima;
 
-                        }
 
+                                altura =
+                                    Math.round(
+                                        altura *
+                                        proporcao
+                                    );
 
-                        else if (
-                            altura >
-                            TAMANHO_MAXIMO_IMAGEM
-                        ) {
 
+                            }
 
-                            largura =
-                                Math.round(
 
-                                    largura *
-
-                                    (
-                                        TAMANHO_MAXIMO_IMAGEM /
-                                        altura
-                                    )
-
-                                );
-
-
-                            altura =
-                                TAMANHO_MAXIMO_IMAGEM;
-
-
-                        }
-
-
-                        const canvas =
-                            document.createElement(
-                                "canvas"
-                            );
-
-
-                        const contexto =
-                            canvas.getContext(
-                                "2d"
-                            );
-
-
-                        canvas.width =
-                            largura;
-
-
-                        canvas.height =
-                            altura;
-
-
-                        contexto.drawImage(
-                            imagem,
-                            0,
-                            0,
-                            largura,
-                            altura
-                        );
-
-
-                        let qualidade =
-                            QUALIDADE_INICIAL;
-
-
-                        let blob =
-                            await gerarBlobImagem(
-                                canvas,
-                                qualidade
-                            );
-
-
-                        /*
-                            Reduz gradualmente
-                            a qualidade até tentar
-                            chegar próximo de 2 MB.
-                        */
-
-
-                        while (
-
-                            blob.size >
-                            TAMANHO_ALVO
-
-                            &&
-
-                            qualidade >
-                            QUALIDADE_MINIMA
-
-                        ) {
-
-
-                            qualidade =
-                                qualidade -
-                                0.05;
-
-
-                            blob =
-                                await gerarBlobImagem(
-                                    canvas,
-                                    qualidade
-                                );
-
-
-                        }
-
-
-                        /*
-                            Caso ainda esteja acima
-                            de 2 MB, reduz a resolução
-                            gradualmente.
-
-                            Mesmo assim, nunca bloqueia
-                            o envio da foto.
-                        */
-
-
-                        let tentativas =
-                            0;
-
-
-                        while (
-
-                            blob.size >
-                            TAMANHO_ALVO
-
-                            &&
-
-                            tentativas < 4
-
-                        ) {
-
-
-                            largura =
-                                Math.round(
-                                    largura * 0.85
-                                );
-
-
-                            altura =
-                                Math.round(
-                                    altura * 0.85
-                                );
-
-
-                            const novoCanvas =
+                            const canvas =
                                 document.createElement(
                                     "canvas"
                                 );
 
 
-                            const novoContexto =
-                                novoCanvas.getContext(
+                            canvas.width =
+                                largura;
+
+
+                            canvas.height =
+                                altura;
+
+
+                            const contexto =
+                                canvas.getContext(
                                     "2d"
                                 );
 
 
-                            novoCanvas.width =
-                                largura;
-
-
-                            novoCanvas.height =
-                                altura;
-
-
-                            novoContexto.drawImage(
+                            contexto.drawImage(
                                 imagem,
                                 0,
                                 0,
@@ -432,63 +254,67 @@ async function otimizarFoto(
                             );
 
 
-                            blob =
-                                await gerarBlobImagem(
-                                    novoCanvas,
-                                    QUALIDADE_MINIMA
-                                );
+                            canvas.toBlob(
+                                function(blob) {
 
 
-                            tentativas++;
+                                    if (!blob) {
+
+                                        reject(
+                                            new Error(
+                                                "Não foi possível processar a imagem."
+                                            )
+                                        );
+
+                                        return;
+
+                                    }
 
 
-                        }
+                                    resolve(
+                                        blob
+                                    );
 
 
-                        URL.revokeObjectURL(
-                            urlImagem
-                        );
+                                },
+
+                                "image/jpeg",
+
+                                qualidade
+                            );
 
 
-                        resolve(
-                            blob
-                        );
+                        };
 
 
-                    }
+                    imagem.onerror =
+                        function() {
 
 
-                    catch (erro) {
+                            reject(
+                                new Error(
+                                    "Não foi possível carregar a imagem."
+                                )
+                            );
 
 
-                        URL.revokeObjectURL(
-                            urlImagem
-                        );
+                        };
 
 
-                        reject(
-                            erro
-                        );
-
-
-                    }
+                    imagem.src =
+                        event.target.result;
 
 
                 };
 
 
-            imagem.onerror =
+            leitor.onerror =
                 function() {
-
-
-                    URL.revokeObjectURL(
-                        urlImagem
-                    );
 
 
                     reject(
                         new Error(
-                            "Não foi possível processar esta imagem."
+                            "Erro ao ler o arquivo."
                         )
                     );
 
@@ -496,67 +322,8 @@ async function otimizarFoto(
                 };
 
 
-            imagem.src =
-                urlImagem;
-
-
-        }
-    );
-
-
-}
-
-
-
-/************************************************
-
- GERAR BLOB DA IMAGEM
-
-************************************************/
-
-
-function gerarBlobImagem(
-    canvas,
-    qualidade
-) {
-
-
-    return new Promise(
-        function(resolve, reject) {
-
-
-            canvas.toBlob(
-                function(blob) {
-
-
-                    if (!blob) {
-
-
-                        reject(
-                            new Error(
-                                "Não foi possível otimizar a imagem."
-                            )
-                        );
-
-
-                        return;
-
-
-                    }
-
-
-                    resolve(
-                        blob
-                    );
-
-
-                },
-
-
-                "image/jpeg",
-
-
-                qualidade
+            leitor.readAsDataURL(
+                arquivo
             );
 
 
@@ -600,49 +367,44 @@ async function enviarFoto() {
     try {
 
 
-        /*
-            Primeiro otimiza a foto
-            diretamente no dispositivo
-            da pessoa.
-        */
-
-
         status.innerText =
-            "🖼️ Otimizando foto...";
+            "⏳ Preparando sua foto...";
 
 
-        const fotoOtimizada =
-            await otimizarFoto(
-                fotoSelecionada
+        let qualidade =
+            0.88;
+
+
+        let imagemComprimida =
+            await comprimirImagem(
+                fotoSelecionada,
+                qualidade
             );
 
 
-        /*
-            Mostra aproximadamente
-            o tamanho final.
-        */
+        while (
+            imagemComprimida.size >
+            2 * 1024 * 1024 &&
+            qualidade > 0.50
+        ) {
 
 
-        const tamanhoMB =
-            (
-                fotoOtimizada.size /
-                1024 /
-                1024
-            )
-            .toFixed(1);
+            qualidade =
+                qualidade - 0.05;
+
+
+            imagemComprimida =
+                await comprimirImagem(
+                    fotoSelecionada,
+                    qualidade
+                );
+
+
+        }
 
 
         status.innerText =
-            "☁️ Enviando foto otimizada (" +
-            tamanhoMB +
-            " MB)...";
-
-
-        /*
-            Agora todas as fotos
-            otimizadas são salvas
-            como JPG.
-        */
+            "⏳ Enviando foto...";
 
 
         const nomeArquivo =
@@ -673,7 +435,7 @@ async function enviarFoto() {
 
                 nomeArquivo,
 
-                fotoOtimizada,
+                imagemComprimida,
 
                 {
 
@@ -694,9 +456,7 @@ async function enviarFoto() {
         if (error) {
 
 
-            console.error(
-                error
-            );
+            console.error(error);
 
 
             status.innerText =
@@ -719,7 +479,9 @@ async function enviarFoto() {
 
 
         document
-            .getElementById("fotoInput")
+            .getElementById(
+                "fotoInput"
+            )
             .value = "";
 
 
@@ -735,17 +497,15 @@ async function enviarFoto() {
 
     }
 
+    catch (error) {
 
-    catch (erro) {
 
-
-        console.error(
-            erro
-        );
+        console.error(error);
 
 
         status.innerText =
-            "❌ Erro ao otimizar a foto. Tente novamente.";
+            "❌ Erro ao preparar a foto: " +
+            error.message;
 
 
     }
@@ -912,7 +672,6 @@ function validarSenha() {
 
     }
 
-
     else {
 
 
@@ -1059,11 +818,8 @@ async function carregarFotosPendentes() {
 
 
     if (
-
         !data ||
-
         data.length === 0
-
     ) {
 
 
@@ -1228,9 +984,7 @@ async function aprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
-
         return;
-
 
     }
 
@@ -1262,10 +1016,8 @@ async function aprovarFoto(nomeFoto) {
 
 
         alert(
-
             "❌ Erro ao aprovar a foto:\n\n" +
             error.message
-
         );
 
 
@@ -1306,9 +1058,7 @@ async function reprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
-
         return;
-
 
     }
 
@@ -1340,10 +1090,8 @@ async function reprovarFoto(nomeFoto) {
 
 
         alert(
-
             "❌ Erro ao bloquear a foto:\n\n" +
             error.message
-
         );
 
 
@@ -1479,11 +1227,8 @@ async function visualizarFotos() {
 
 
     if (
-
         !data ||
-
         data.length === 0
-
     ) {
 
 
@@ -1584,6 +1329,16 @@ async function abrirApresentacao() {
         .remove(
             "escondido"
         );
+
+
+    clearInterval(
+        intervaloApresentacao
+    );
+
+
+    clearInterval(
+        intervaloAtualizacaoApresentacao
+    );
 
 
     await carregarFotosApresentacao();
@@ -1690,11 +1445,8 @@ async function carregarFotosApresentacao() {
 
 
     if (
-
         !data ||
-
         data.length === 0
-
     ) {
 
 
@@ -1772,6 +1524,10 @@ async function carregarFotosApresentacao() {
 
  TROCAR FOTOS DA APRESENTAÇÃO
 
+ LAYOUT:
+ 3 FOTOS EM CIMA
+ 2 FOTOS GRANDES EMBAIXO
+
 ************************************************/
 
 
@@ -1779,16 +1535,11 @@ function trocarFotosApresentacao() {
 
 
     if (
-
         !fotosApresentacao ||
-
         fotosApresentacao.length === 0
-
     ) {
 
-
         return;
-
 
     }
 
@@ -1801,13 +1552,18 @@ function trocarFotosApresentacao() {
         );
 
 
+    /* ====================================== */
+    /* MOSTRA NO MÁXIMO 5 FOTOS              */
+    /* ====================================== */
+
+
     const quantidade =
 
         Math.min(
 
             fotosApresentacao.length,
 
-            8
+            5
 
         );
 
@@ -1815,12 +1571,14 @@ function trocarFotosApresentacao() {
     const fotosMisturadas =
 
         [...fotosApresentacao]
+
         .sort(
 
             () =>
                 Math.random() - 0.5
 
         )
+
         .slice(
 
             0,
@@ -1854,28 +1612,12 @@ function trocarFotosApresentacao() {
 
 
                     card.className =
-                        "foto-apresentacao";
 
+                        "foto-apresentacao " +
 
-                    if (index === 0) {
+                        "foto-posicao-" +
 
-
-                        card.classList.add(
-                            "foto-grande"
-                        );
-
-
-                    }
-
-                    else if (index === 3) {
-
-
-                        card.classList.add(
-                            "foto-media"
-                        );
-
-
-                    }
+                        (index + 1);
 
 
                     const imagem =
@@ -1934,9 +1676,7 @@ function alternarTelaCheia() {
 
 
     if (
-
         !document.fullscreenElement
-
     ) {
 
 
