@@ -28,6 +28,13 @@ const SENHA_ADMIN =
     "CASAMENTO2026";
 
 
+const LINK_FOTOS_AGUARDANDO =
+    "https://1drv.ms/f/c/f203919d62721e53/IgBJxxN6tRZCR6Ei-80o3fdbAUryfiJxQAk-5yxRJelFj0w?e=weFT7p";
+
+const LINK_FOTOS_APROVADAS =
+    "https://1drv.ms/f/c/f203919d62721e53/IgDBWH5vRVqcTLP_ennS0ThFAbzVWbGUZoULU9zM_F_M4iM?e=bw1XGR";
+
+
 
 /************************************************
 
@@ -214,6 +221,3 @@ function voltarInicio() {
 
 }
 
-
-const LINK_FOTOS_APROVADAS =
-    "https://1drv.ms/f/c/f203919d62721e53/IgDBWH5vRVqcTLP_ennS0ThFAbzVWbGUZoULU9zM_F_M4iM?e=bw1XGR";
