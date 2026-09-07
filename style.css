@@ -1,7 +1,5 @@
 * {
-
     box-sizing: border-box;
-
 }
 
 
@@ -257,7 +255,6 @@ input[type="file"] {
     display: grid;
 
     grid-template-columns:
-
         repeat(
             auto-fill,
             minmax(250px, 1fr)
@@ -279,17 +276,8 @@ input[type="file"] {
     border-radius: 15px;
 
     box-shadow:
-
-        0
-        5px
-        15px
-
-        rgba(
-            0,
-            0,
-            0,
-            0.1
-        );
+        0 5px 15px
+        rgba(0,0,0,0.1);
 
 }
 
@@ -312,7 +300,6 @@ input[type="file"] {
     font-size: 13px;
 
     margin:
-
         10px
         0;
 
@@ -402,14 +389,20 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* TOPO                                   */
+/* ====================================== */
+
+
 .apresentacao-topo {
 
-    min-height: 80px;
+    flex-shrink: 0;
+
+    min-height: 70px;
 
     padding:
-
-        15px
-        30px;
+        12px
+        28px;
 
     display: flex;
 
@@ -458,7 +451,6 @@ input[type="file"] {
     border-radius: 10px;
 
     padding:
-
         10px
         18px;
 
@@ -496,24 +488,21 @@ input[type="file"] {
 
 
 /* ====================================== */
-/* PAINEL DA APRESENTAÇÃO                 */
+/* PAINEL PRINCIPAL                       */
 /* ====================================== */
 
 
 /*
-    O painel sempre possui:
+    O painel ocupa TODO o espaço disponível.
 
-    50% da largura = FOTO GRANDE
+    IMPORTANTE:
 
-    50% da largura = 4 FOTOS PEQUENAS
+    Sempre teremos:
 
-    A posição pode inverter:
+    50% = FOTO GRANDE
 
-    GRANDE | PEQUENAS
+    50% = ÁREA COM 4 FOTOS
 
-    ou
-
-    PEQUENAS | GRANDE
 */
 
 
@@ -521,32 +510,26 @@ input[type="file"] {
 
     flex: 1;
 
+    width: 100%;
+
+    min-width: 0;
+
     min-height: 0;
 
     display: grid;
 
     grid-template-columns:
 
-        minmax(
-            0,
-            1fr
-        )
-
-        minmax(
-            0,
-            1fr
-        );
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
     grid-template-rows:
 
-        minmax(
-            0,
-            1fr
-        );
+        minmax(0, 1fr);
 
     gap: 12px;
 
-    padding: 15px;
+    padding: 12px;
 
     overflow: hidden;
 
@@ -561,58 +544,56 @@ input[type="file"] {
 }
 
 
-/* ====================================== */
-/* FOTO GRANDE À ESQUERDA                  */
-/* ====================================== */
+.painel-trocando {
 
-
-.painel-grande-esquerda {
-
-    grid-template-areas:
-
-        "grande pequenas";
+    opacity: 0;
 
 }
 
 
-/* ====================================== */
-/* FOTO GRANDE À DIREITA                   */
-/* ====================================== */
-
-
-.painel-grande-direita {
-
-    grid-template-areas:
-
-        "pequenas grande";
-
-}
-
 
 /* ====================================== */
-/* ÁREA DA FOTO GRANDE                     */
+/* ÁREA DA FOTO GRANDE                    */
 /* ====================================== */
 
 
 .area-foto-grande {
 
-    grid-area: grande;
+    width: 100%;
+
+    height: 100%;
 
     min-width: 0;
 
     min-height: 0;
 
+    overflow: hidden;
+
 }
 
 
+
 /* ====================================== */
-/* ÁREA DAS 4 FOTOS PEQUENAS               */
+/* ÁREA DAS 4 FOTOS                       */
 /* ====================================== */
+
+
+/*
+    Exatamente 4 espaços iguais:
+
+    ┌───────┬───────┐
+    │   1   │   2   │
+    ├───────┼───────┤
+    │   3   │   4   │
+    └───────┴───────┘
+*/
 
 
 .area-fotos-pequenas {
 
-    grid-area: pequenas;
+    width: 100%;
+
+    height: 100%;
 
     min-width: 0;
 
@@ -622,35 +603,66 @@ input[type="file"] {
 
     grid-template-columns:
 
-        minmax(
-            0,
-            1fr
-        )
-
-        minmax(
-            0,
-            1fr
-        );
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
     grid-template-rows:
 
-        minmax(
-            0,
-            1fr
-        )
-
-        minmax(
-            0,
-            1fr
-        );
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
     gap: 12px;
 
 }
 
 
+
 /* ====================================== */
-/* FOTOS                                  */
+/* ORDEM - FOTO GRANDE ESQUERDA           */
+/* ====================================== */
+
+
+.grande-esquerda
+.area-foto-grande {
+
+    grid-column: 1;
+
+}
+
+
+.grande-esquerda
+.area-fotos-pequenas {
+
+    grid-column: 2;
+
+}
+
+
+
+/* ====================================== */
+/* ORDEM - FOTO GRANDE DIREITA            */
+/* ====================================== */
+
+
+.grande-direita
+.area-fotos-pequenas {
+
+    grid-column: 1;
+
+}
+
+
+.grande-direita
+.area-foto-grande {
+
+    grid-column: 2;
+
+}
+
+
+
+/* ====================================== */
+/* FOTO                                   */
 /* ====================================== */
 
 
@@ -694,6 +706,12 @@ input[type="file"] {
 }
 
 
+
+/* ====================================== */
+/* IMAGENS                                */
+/* ====================================== */
+
+
 .foto-apresentacao img {
 
     width: 100%;
@@ -706,14 +724,30 @@ input[type="file"] {
 
     object-position: center;
 
+    transition:
+
+        transform
+        10s
+        ease;
+
 }
 
 
-/*
-    A foto grande ocupa
-    obrigatoriamente toda a metade
-    da tela destinada a ela.
-*/
+.foto-apresentacao:hover img {
+
+    transform:
+
+        scale(
+            1.05
+        );
+
+}
+
+
+
+/* ====================================== */
+/* FOTO GRANDE                            */
+/* ====================================== */
 
 
 .area-foto-grande
@@ -726,38 +760,9 @@ input[type="file"] {
 }
 
 
-/*
-    As quatro pequenas ocupam
-    exatamente uma grade 2 x 2.
-*/
-
-
-.area-fotos-pequenas
-.foto-apresentacao {
-
-    width: 100%;
-
-    height: 100%;
-
-}
-
-
 
 /* ====================================== */
-/* TRANSIÇÃO                               */
-/* ====================================== */
-
-
-.painel-trocando {
-
-    opacity: 0;
-
-}
-
-
-
-/* ====================================== */
-/* ANIMAÇÃO                                */
+/* ANIMAÇÃO                               */
 /* ====================================== */
 
 
@@ -799,13 +804,15 @@ input[type="file"] {
 
 .status-apresentacao {
 
+    flex-shrink: 0;
+
     text-align: center;
 
     padding:
-
+        10px
         15px;
 
-    font-size: 18px;
+    font-size: 16px;
 
     background:
 
@@ -826,7 +833,7 @@ input[type="file"] {
 
 
 @media
-(max-width: 600px) {
+(max-width: 700px) {
 
 
     .container {
@@ -845,19 +852,14 @@ input[type="file"] {
 
     .galeria {
 
-        grid-template-columns:
-
-            1fr;
+        grid-template-columns: 1fr;
 
     }
 
 
     .apresentacao-topo {
 
-        min-height: 60px;
-
         padding:
-
             10px
             15px;
 
@@ -874,7 +876,6 @@ input[type="file"] {
     .botao-tela {
 
         padding:
-
             8px
             10px;
 
@@ -886,9 +887,9 @@ input[type="file"] {
     /*
         No celular:
 
-        FOTO GRANDE
+        Foto grande em cima
 
-        4 PEQUENAS EMBAIXO
+        4 pequenas abaixo
     */
 
 
@@ -900,20 +901,8 @@ input[type="file"] {
 
         grid-template-rows:
 
-            minmax(
-                0,
-                1fr
-            )
-
-            minmax(
-                0,
-                1fr
-            );
-
-        grid-template-areas:
-
-            "grande"
-            "pequenas";
+            1fr
+            1fr;
 
         gap: 8px;
 
@@ -922,22 +911,28 @@ input[type="file"] {
     }
 
 
-    .painel-grande-esquerda {
+    .grande-esquerda
+    .area-foto-grande,
 
-        grid-template-areas:
+    .grande-direita
+    .area-foto-grande {
 
-            "grande"
-            "pequenas";
+        grid-column: 1;
+
+        grid-row: 1;
 
     }
 
 
-    .painel-grande-direita {
+    .grande-esquerda
+    .area-fotos-pequenas,
 
-        grid-template-areas:
+    .grande-direita
+    .area-fotos-pequenas {
 
-            "grande"
-            "pequenas";
+        grid-column: 1;
+
+        grid-row: 2;
 
     }
 
@@ -954,17 +949,5 @@ input[type="file"] {
         border-radius: 18px;
 
     }
-
-
-    .status-apresentacao {
-
-        padding:
-
-            10px;
-
-        font-size: 14px;
-
-    }
-
 
 }
