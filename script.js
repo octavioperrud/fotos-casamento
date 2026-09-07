@@ -213,3 +213,7 @@ function voltarInicio() {
         .value = "";
 
 }
+
+
+const LINK_FOTOS_APROVADAS =
+    "https://1drv.ms/f/c/f203919d62721e53/IgDBWH5vRVqcTLP_ennS0ThFAbzVWbGUZoULU9zM_F_M4iM?e=bw1XGR";
