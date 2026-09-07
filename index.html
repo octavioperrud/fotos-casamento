@@ -2,27 +2,34 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Casamento Janaína & Octávio 📸</title>
+    <title>Janaína & Octávio ❤️</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
 <div class="container">
 
-    <!-- TELA INICIAL -->
+
+    <!-- =========================
+         TELA INICIAL
+    ========================== -->
 
     <div id="inicio" class="tela">
 
         <div class="card principal">
 
-            <div class="icone">💍</div>
+            <div class="icone">
+                💍
+            </div>
 
             <h1>
                 Janaína & Octávio
@@ -45,7 +52,7 @@
             </button>
 
 
-            <!-- VISUALIZAR -->
+            <!-- VISUALIZAR ARQUIVOS -->
 
             <button
                 class="botao botao-visualizar"
@@ -56,7 +63,7 @@
             </button>
 
 
-            <!-- VALIDACAO -->
+            <!-- VALIDAÇÃO -->
 
             <button
                 class="botao botao-validacao"
@@ -79,42 +86,47 @@
     </div>
 
 
-    <!-- ENVIAR FOTO -->
 
-    <div id="enviarTela"
-        class="tela escondido">
+    <!-- =========================
+         TELA ENVIAR FOTO
+    ========================== -->
+
+    <div id="enviarTela" class="tela escondido">
 
         <div class="card">
 
-            <h2>📸 Enviar Foto</h2>
+            <h2>
+                📸 Enviar Foto
+            </h2>
 
-            <p>
+            <p class="descricao">
+
                 Tire uma foto agora ou escolha
                 uma foto da sua galeria.
+
             </p>
 
 
-            <!-- INPUT ESCONDIDO -->
+            <!-- BOTÃO REAL PARA ABRIR CÂMERA / GALERIA -->
+
+            <label
+                for="inputFoto"
+                class="botao botao-foto botao-upload">
+
+                📷 Tirar ou Escolher Foto
+
+            </label>
+
 
             <input
                 type="file"
                 id="inputFoto"
                 accept="image/*"
                 capture="environment"
-                multiple
-                style="display:none">
+                multiple>
 
 
-            <button
-                class="botao botao-foto"
-                onclick="tirarFoto()">
-
-                📷 Tirar / Escolher Foto
-
-            </button>
-
-
-            <!-- PREVIEW -->
+            <!-- ÁREA DE PRÉ-VISUALIZAÇÃO -->
 
             <div
                 id="previewFotos"
@@ -123,16 +135,20 @@
             </div>
 
 
+            <!-- BOTÃO ENVIAR PARA VALIDAÇÃO -->
+
             <button
                 id="botaoEnviar"
                 class="botao botao-validacao"
                 onclick="enviarParaValidacao()"
-                style="display:none">
+                style="display: none;">
 
                 📤 Enviar para Validação
 
             </button>
 
+
+            <!-- VOLTAR -->
 
             <button
                 class="voltar"
@@ -147,24 +163,32 @@
     </div>
 
 
-    <!-- SENHA -->
 
-    <div id="senhaTela"
-        class="tela escondido">
+    <!-- =========================
+         TELA SENHA
+    ========================== -->
+
+    <div id="senhaTela" class="tela escondido">
 
         <div class="card">
 
-            <h2>🔐 Área de Validação</h2>
+            <h2>
+                🔐 Área de Validação
+            </h2>
 
-            <p>
+            <p class="descricao">
+
                 Digite a senha para acessar
                 as fotos pendentes.
+
             </p>
+
 
             <input
                 type="password"
                 id="senha"
                 placeholder="Digite a senha">
+
 
             <button
                 class="botao botao-validacao"
@@ -174,11 +198,13 @@
 
             </button>
 
+
             <p
                 id="erroSenha"
                 class="erro">
 
             </p>
+
 
             <button
                 class="voltar"
@@ -193,10 +219,12 @@
     </div>
 
 
-    <!-- VALIDAÇÃO -->
 
-    <div id="validacaoTela"
-        class="tela escondido">
+    <!-- =========================
+         TELA VALIDAÇÃO
+    ========================== -->
+
+    <div id="validacaoTela" class="tela escondido">
 
         <div class="card painel">
 
@@ -204,13 +232,16 @@
 
                 <div>
 
-                    <h2>📸 Fotos Pendentes</h2>
+                    <h2>
+                        📸 Fotos Pendentes
+                    </h2>
 
                     <p id="contadorFotos">
                         0 fotos aguardando
                     </p>
 
                 </div>
+
 
                 <button
                     class="sair"
@@ -246,7 +277,10 @@
 </div>
 
 
+<!-- JAVASCRIPT -->
+
 <script src="script.js"></script>
+
 
 </body>
 
