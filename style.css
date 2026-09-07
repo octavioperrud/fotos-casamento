@@ -1,7 +1,5 @@
 * {
-
     box-sizing: border-box;
-
 }
 
 
@@ -50,6 +48,10 @@ body {
 }
 
 
+/* ====================================== */
+/* CONTAINERS                             */
+/* ====================================== */
+
 .container {
 
     width: 100%;
@@ -77,6 +79,10 @@ body {
 
 }
 
+
+/* ====================================== */
+/* TÍTULOS                                */
+/* ====================================== */
 
 h1 {
 
@@ -107,6 +113,10 @@ h2 {
 }
 
 
+/* ====================================== */
+/* BOTÕES                                 */
+/* ====================================== */
+
 .botao {
 
     width: 100%;
@@ -127,7 +137,9 @@ h2 {
 
     color: #3d322c;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
 
 }
 
@@ -184,6 +196,10 @@ h2 {
 }
 
 
+/* ====================================== */
+/* INPUTS                                 */
+/* ====================================== */
+
 input[type="password"] {
 
     width: 100%;
@@ -216,6 +232,10 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* PREVIEW                                */
+/* ====================================== */
+
 .preview-container {
 
     margin-top: 25px;
@@ -234,6 +254,10 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* STATUS                                 */
+/* ====================================== */
+
 .status {
 
     margin-top: 20px;
@@ -251,6 +275,10 @@ input[type="file"] {
 
 }
 
+
+/* ====================================== */
+/* GALERIA ADMINISTRATIVA                  */
+/* ====================================== */
 
 .galeria {
 
@@ -357,11 +385,9 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
 /* APRESENTAÇÃO                           */
 /* ====================================== */
-
 
 .apresentacao-tela {
 
@@ -391,13 +417,17 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* TOPO                                   */
+/* ====================================== */
+
 .apresentacao-topo {
 
-    min-height: 80px;
+    min-height: 62px;
 
     padding:
-        15px
-        30px;
+        10px
+        28px;
 
     display: flex;
 
@@ -415,6 +445,8 @@ input[type="file"] {
         );
 
     z-index: 10;
+
+    flex-shrink: 0;
 
 }
 
@@ -481,11 +513,9 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
-/* PAINEL - 1 FOTO GRANDE + 4 PEQUENAS    */
+/* PAINEL DA APRESENTAÇÃO                  */
 /* ====================================== */
-
 
 .painel-apresentacao {
 
@@ -495,23 +525,30 @@ input[type="file"] {
 
     display: grid;
 
+    /*
+        Duas colunas menores
+        e uma coluna maior.
+
+        A posição da foto grande
+        é alterada pelas classes
+        layout-grande-esquerda
+        e layout-grande-direita.
+    */
+
     grid-template-columns:
 
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1.75fr);
 
     grid-template-rows:
 
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
     gap: 12px;
 
-    padding: 15px;
+    padding: 14px;
 
     overflow: hidden;
 
@@ -533,11 +570,9 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
-/* FOTOS DA APRESENTAÇÃO                  */
+/* FOTOS                                  */
 /* ====================================== */
-
 
 .foto-apresentacao {
 
@@ -549,36 +584,35 @@ input[type="file"] {
 
     overflow: hidden;
 
-    border-radius: 35px;
+    border-radius: 28px;
 
     background: #111;
 
     box-shadow:
 
         0
-        10px
-        35px
+        8px
+        28px
 
         rgba(
             0,
             0,
             0,
-            0.45
+            0.40
         );
 
     animation:
 
         aparecerFoto
-        0.8s
+        0.7s
         ease;
 
 }
 
 
 /* ====================================== */
-/* AJUSTE DAS IMAGENS                     */
+/* IMAGENS                                */
 /* ====================================== */
-
 
 .foto-apresentacao img {
 
@@ -592,296 +626,143 @@ input[type="file"] {
 
     object-position: center;
 
-    transition:
-
-        transform
-        10s
-        ease;
-
 }
-
-
-.foto-apresentacao:hover img {
-
-    transform:
-
-        scale(
-            1.03
-        );
-
-}
-
 
 
 /* ====================================== */
-/* FOTO GRANDE À ESQUERDA                 */
+/* LAYOUT                                 */
+/* FOTO GRANDE À DIREITA                   */
 /* ====================================== */
-
-
-/* FOTO 1 GRANDE */
-
-
-.painel-apresentacao.grande-esquerda
-.foto-posicao-1 {
-
-    grid-column:
-
-        1 / 3;
-
-    grid-row:
-
-        1 / 3;
-
-}
-
-
-/* FOTO 2 PEQUENA */
-
-
-.painel-apresentacao.grande-esquerda
-.foto-posicao-2 {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        1;
-
-}
-
-
-/* FOTO 3 PEQUENA */
-
-
-.painel-apresentacao.grande-esquerda
-.foto-posicao-3 {
-
-    grid-column:
-
-        4;
-
-    grid-row:
-
-        1;
-
-}
-
-
-/* FOTO 4 PEQUENA */
-
-
-.painel-apresentacao.grande-esquerda
-.foto-posicao-4 {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        2;
-
-}
-
-
-/* FOTO 5 PEQUENA */
-
-
-.painel-apresentacao.grande-esquerda
-.foto-posicao-5 {
-
-    grid-column:
-
-        4;
-
-    grid-row:
-
-        2;
-
-}
-
-
-
-/* ====================================== */
-/* FOTO GRANDE À DIREITA                  */
-/* ====================================== */
-
-
-/* FOTO 1 PEQUENA */
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-1 {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        1;
-
-}
-
-
-/* FOTO 2 PEQUENA */
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-2 {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        1;
-
-}
-
-
-/* FOTO 3 PEQUENA */
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-3 {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        2;
-
-}
-
-
-/* FOTO 4 PEQUENA */
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-4 {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        2;
-
-}
-
-
-/* FOTO 5 GRANDE */
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-5 {
-
-    grid-column:
-
-        3 / 5;
-
-    grid-row:
-
-        1 / 3;
-
-}
-
-
-
-/* ====================================== */
-/* LAYOUT PADRÃO                          */
-/* ====================================== */
-
 
 /*
-   Caso nenhuma classe seja aplicada
-   pelo JavaScript, utiliza o layout
-   com a foto grande à esquerda.
+    FOTO 1 | FOTO 2 | GRANDE
+    FOTO 3 | FOTO 4 | GRANDE
 */
 
-
-.painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+.layout-grande-direita
 .foto-posicao-1 {
 
-    grid-column:
+    grid-column: 1;
 
-        1 / 3;
-
-    grid-row:
-
-        1 / 3;
+    grid-row: 1;
 
 }
 
 
-.painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+.layout-grande-direita
 .foto-posicao-2 {
 
-    grid-column:
+    grid-column: 2;
 
-        3;
-
-    grid-row:
-
-        1;
+    grid-row: 1;
 
 }
 
 
-.painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+.layout-grande-direita
 .foto-posicao-3 {
 
-    grid-column:
+    grid-column: 1;
 
-        4;
-
-    grid-row:
-
-        1;
+    grid-row: 2;
 
 }
 
 
-.painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+.layout-grande-direita
 .foto-posicao-4 {
 
-    grid-column:
+    grid-column: 2;
 
-        3;
-
-    grid-row:
-
-        2;
+    grid-row: 2;
 
 }
 
 
-.painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+.layout-grande-direita
 .foto-posicao-5 {
 
-    grid-column:
+    grid-column: 3;
 
-        4;
-
-    grid-row:
-
-        2;
+    grid-row: 1 / 3;
 
 }
 
+
+/* ====================================== */
+/* LAYOUT                                 */
+/* FOTO GRANDE À ESQUERDA                  */
+/* ====================================== */
+
+/*
+    GRANDE | FOTO 1 | FOTO 2
+    GRANDE | FOTO 3 | FOTO 4
+*/
+
+.layout-grande-esquerda {
+
+    grid-template-columns:
+
+        minmax(0, 1.75fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+}
+
+
+.layout-grande-esquerda
+.foto-posicao-5 {
+
+    grid-column: 1;
+
+    grid-row: 1 / 3;
+
+}
+
+
+.layout-grande-esquerda
+.foto-posicao-1 {
+
+    grid-column: 2;
+
+    grid-row: 1;
+
+}
+
+
+.layout-grande-esquerda
+.foto-posicao-2 {
+
+    grid-column: 3;
+
+    grid-row: 1;
+
+}
+
+
+.layout-grande-esquerda
+.foto-posicao-3 {
+
+    grid-column: 2;
+
+    grid-row: 2;
+
+}
+
+
+.layout-grande-esquerda
+.foto-posicao-4 {
+
+    grid-column: 3;
+
+    grid-row: 2;
+
+}
 
 
 /* ====================================== */
 /* ANIMAÇÃO                               */
 /* ====================================== */
-
 
 @keyframes aparecerFoto {
 
@@ -890,10 +771,7 @@ input[type="file"] {
         opacity: 0;
 
         transform:
-
-            scale(
-                0.96
-            );
+            scale(0.97);
 
     }
 
@@ -903,30 +781,26 @@ input[type="file"] {
         opacity: 1;
 
         transform:
-
-            scale(
-                1
-            );
+            scale(1);
 
     }
 
 }
 
 
-
 /* ====================================== */
-/* STATUS                                 */
+/* STATUS DA APRESENTAÇÃO                  */
 /* ====================================== */
-
 
 .status-apresentacao {
 
     text-align: center;
 
     padding:
+        10px
         15px;
 
-    font-size: 18px;
+    font-size: 16px;
 
     background:
 
@@ -934,17 +808,125 @@ input[type="file"] {
             0,
             0,
             0,
-            0.35
+            0.30
+        );
+
+    flex-shrink: 0;
+
+}
+
+
+/* ====================================== */
+/* QUANDO EXISTEM MENOS DE 5 FOTOS         */
+/* ====================================== */
+
+.painel-apresentacao.layout-4-fotos {
+
+    grid-template-columns:
+
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    grid-template-rows:
+
+        repeat(
+            2,
+            minmax(0, 1fr)
         );
 
 }
 
 
+.layout-4-fotos
+.foto-apresentacao {
+
+    grid-column: auto !important;
+
+    grid-row: auto !important;
+
+}
+
+
+.painel-apresentacao.layout-3-fotos {
+
+    grid-template-columns:
+
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    grid-template-rows:
+
+        minmax(0, 1fr);
+
+}
+
+
+.layout-3-fotos
+.foto-apresentacao {
+
+    grid-column: auto !important;
+
+    grid-row: auto !important;
+
+}
+
+
+.painel-apresentacao.layout-2-fotos {
+
+    grid-template-columns:
+
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    grid-template-rows:
+
+        minmax(0, 1fr);
+
+}
+
+
+.layout-2-fotos
+.foto-apresentacao {
+
+    grid-column: auto !important;
+
+    grid-row: auto !important;
+
+}
+
+
+.painel-apresentacao.layout-1-foto {
+
+    grid-template-columns:
+
+        minmax(0, 1fr);
+
+    grid-template-rows:
+
+        minmax(0, 1fr);
+
+}
+
+
+.layout-1-foto
+.foto-apresentacao {
+
+    grid-column: auto !important;
+
+    grid-row: auto !important;
+
+}
+
 
 /* ====================================== */
 /* CELULAR                                */
 /* ====================================== */
-
 
 @media
 (max-width: 600px) {
@@ -966,7 +948,8 @@ input[type="file"] {
 
     .galeria {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
 
     }
 
@@ -974,8 +957,10 @@ input[type="file"] {
     .apresentacao-topo {
 
         padding:
-            10px
-            15px;
+            8px
+            12px;
+
+        min-height: 55px;
 
     }
 
@@ -997,6 +982,11 @@ input[type="file"] {
 
     }
 
+
+    /*
+        No celular mantém as 5 fotos
+        organizadas de forma equilibrada.
+    */
 
     .painel-apresentacao {
 
@@ -1021,109 +1011,121 @@ input[type="file"] {
     }
 
 
-    /*
-       No celular todas as fotos
-       ficam organizadas em uma grade
-       equilibrada.
-    */
-
-
-    .painel-apresentacao.grande-esquerda
-    .foto-posicao-1,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-1,
-
-    .painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+    .layout-grande-direita
     .foto-posicao-1 {
 
-        grid-column:
+        grid-column: 1;
 
-            1 / 3;
-
-        grid-row:
-
-            1 / 3;
+        grid-row: 1;
 
     }
 
 
-    .painel-apresentacao.grande-esquerda
-    .foto-posicao-2,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-2,
-
-    .painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+    .layout-grande-direita
     .foto-posicao-2 {
 
-        grid-column:
+        grid-column: 2;
 
-            1;
-
-        grid-row:
-
-            3;
+        grid-row: 1;
 
     }
 
 
-    .painel-apresentacao.grande-esquerda
-    .foto-posicao-3,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-3,
-
-    .painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+    .layout-grande-direita
     .foto-posicao-3 {
 
-        grid-column:
+        grid-column: 1;
 
-            2;
-
-        grid-row:
-
-            3;
+        grid-row: 2;
 
     }
 
 
-    .painel-apresentacao.grande-esquerda
-    .foto-posicao-4,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-4,
-
-    .painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+    .layout-grande-direita
     .foto-posicao-4 {
 
-        grid-column:
+        grid-column: 2;
 
-            1;
-
-        grid-row:
-
-            4;
+        grid-row: 2;
 
     }
 
 
-    .painel-apresentacao.grande-esquerda
-    .foto-posicao-5,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-5,
-
-    .painel-apresentacao:not(.grande-esquerda):not(.grande-direita)
+    .layout-grande-direita
     .foto-posicao-5 {
 
-        grid-column:
+        grid-column: 1 / 3;
 
-            2;
+        grid-row: 3 / 5;
 
-        grid-row:
+    }
 
-            4;
+
+    .layout-grande-esquerda {
+
+        grid-template-columns:
+
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .layout-grande-esquerda
+    .foto-posicao-1 {
+
+        grid-column: 1;
+
+        grid-row: 1;
+
+    }
+
+
+    .layout-grande-esquerda
+    .foto-posicao-2 {
+
+        grid-column: 2;
+
+        grid-row: 1;
+
+    }
+
+
+    .layout-grande-esquerda
+    .foto-posicao-3 {
+
+        grid-column: 1;
+
+        grid-row: 2;
+
+    }
+
+
+    .layout-grande-esquerda
+    .foto-posicao-4 {
+
+        grid-column: 2;
+
+        grid-row: 2;
+
+    }
+
+
+    .layout-grande-esquerda
+    .foto-posicao-5 {
+
+        grid-column: 1 / 3;
+
+        grid-row: 3 / 5;
+
+    }
+
+
+    .foto-apresentacao {
+
+        border-radius: 18px;
 
     }
 
