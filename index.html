@@ -7,197 +7,246 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>Casamento Janaina & Octávio 📸</title>
+    <title>Casamento Janaína & Octávio 📸</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <!-- TELA PRINCIPAL -->
+    <!-- TELA INICIAL -->
 
-        <div id="inicio" class="tela">
+    <div id="inicio" class="tela">
 
-            <div class="card principal">
+        <div class="card principal">
 
-                <div class="icone">💍</div>
+            <div class="icone">💍</div>
 
-                <h1>
-                    Casamento<br>
-                    Janaina & Octávio
-                </h1>
+            <h1>
+                Janaína & Octávio
+            </h1>
 
-                <p class="subtitulo">
-                    Compartilhe seus melhores momentos conosco ❤️
-                </p>
-
-
-                <!-- ENVIAR FOTO -->
-
-                <button
-                    class="botao botao-foto"
-                    onclick="enviarFoto()">
-
-                    📸
-                    <span>Enviar Foto</span>
-
-                </button>
+            <p class="subtitulo">
+                Compartilhe os melhores momentos
+                do nosso casamento ❤️
+            </p>
 
 
-                <!-- VISUALIZAR -->
+            <!-- ENVIAR FOTO -->
 
-                <button
-                    class="botao botao-visualizar"
-                    onclick="visualizarFotos()">
+            <button
+                class="botao botao-foto"
+                onclick="abrirEnviarFoto()">
 
-                    🖼️
-                    <span>Visualizar Arquivos</span>
+                📸 Enviar Foto
 
-                </button>
-
-
-                <!-- VALIDACAO -->
-
-                <button
-                    class="botao botao-validacao"
-                    onclick="abrirSenha()">
-
-                    🔐
-                    <span>Validação</span>
-
-                </button>
+            </button>
 
 
-                <p class="rodape">
+            <!-- VISUALIZAR -->
 
-                    Obrigado por fazer parte
-                    deste momento especial ❤️
+            <button
+                class="botao botao-visualizar"
+                onclick="visualizarFotos()">
 
-                </p>
+                🖼️ Visualizar Arquivos
 
-            </div>
+            </button>
+
+
+            <!-- VALIDACAO -->
+
+            <button
+                class="botao botao-validacao"
+                onclick="abrirSenha()">
+
+                🔐 Validação
+
+            </button>
+
+
+            <p class="rodape">
+
+                Obrigado por fazer parte
+                deste momento especial ❤️
+
+            </p>
 
         </div>
-
-
-        <!-- SENHA -->
-
-        <div id="senhaTela"
-            class="tela escondido">
-
-            <div class="card">
-
-                <h2>🔐 Área de Validação</h2>
-
-                <p>
-                    Digite a senha para acessar
-                    as fotos pendentes.
-                </p>
-
-                <input
-                    type="password"
-                    id="senha"
-                    placeholder="Digite a senha">
-
-                <button
-                    class="botao botao-validacao"
-                    onclick="validarSenha()">
-
-                    Entrar
-
-                </button>
-
-                <button
-                    class="voltar"
-                    onclick="voltarInicio()">
-
-                    ← Voltar
-
-                </button>
-
-                <p id="erroSenha"
-                    class="erro"></p>
-
-            </div>
-
-        </div>
-
-
-        <!-- PAINEL DE VALIDACAO -->
-
-        <div id="validacaoTela"
-            class="tela escondido">
-
-            <div class="card painel">
-
-                <div class="topo-painel">
-
-                    <h2>📸 Fotos Pendentes</h2>
-
-                    <button
-                        class="sair"
-                        onclick="sairValidacao()">
-
-                        Sair
-
-                    </button>
-
-                </div>
-
-
-                <p class="descricao">
-
-                    Aqui aparecerão as fotos da pasta
-                    <strong>01 - Aguardando</strong>.
-
-                </p>
-
-
-                <div id="listaFotos"
-                    class="lista-fotos">
-
-                    <!--
-                    As fotos serão carregadas aqui
-                    quando conectarmos o OneDrive
-                    -->
-
-                    <div class="sem-fotos">
-
-                        📂
-
-                        <h3>Conexão com OneDrive</h3>
-
-                        <p>
-                            O painel está pronto.
-                            Agora precisamos conectar
-                            a pasta do OneDrive.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="voltar"
-                    onclick="voltarInicio()">
-
-                    ← Voltar ao início
-
-                </button>
-
-            </div>
-
-        </div>
-
 
     </div>
 
 
-    <script src="script.js"></script>
+    <!-- ENVIAR FOTO -->
+
+    <div id="enviarTela"
+        class="tela escondido">
+
+        <div class="card">
+
+            <h2>📸 Enviar Foto</h2>
+
+            <p>
+                Tire uma foto agora ou escolha
+                uma foto da sua galeria.
+            </p>
+
+
+            <!-- INPUT ESCONDIDO -->
+
+            <input
+                type="file"
+                id="inputFoto"
+                accept="image/*"
+                capture="environment"
+                multiple
+                style="display:none">
+
+
+            <button
+                class="botao botao-foto"
+                onclick="tirarFoto()">
+
+                📷 Tirar / Escolher Foto
+
+            </button>
+
+
+            <!-- PREVIEW -->
+
+            <div
+                id="previewFotos"
+                class="preview-fotos">
+
+            </div>
+
+
+            <button
+                id="botaoEnviar"
+                class="botao botao-validacao"
+                onclick="enviarParaValidacao()"
+                style="display:none">
+
+                📤 Enviar para Validação
+
+            </button>
+
+
+            <button
+                class="voltar"
+                onclick="voltarInicio()">
+
+                ← Voltar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SENHA -->
+
+    <div id="senhaTela"
+        class="tela escondido">
+
+        <div class="card">
+
+            <h2>🔐 Área de Validação</h2>
+
+            <p>
+                Digite a senha para acessar
+                as fotos pendentes.
+            </p>
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Digite a senha">
+
+            <button
+                class="botao botao-validacao"
+                onclick="validarSenha()">
+
+                Entrar
+
+            </button>
+
+            <p
+                id="erroSenha"
+                class="erro">
+
+            </p>
+
+            <button
+                class="voltar"
+                onclick="voltarInicio()">
+
+                ← Voltar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- VALIDAÇÃO -->
+
+    <div id="validacaoTela"
+        class="tela escondido">
+
+        <div class="card painel">
+
+            <div class="topo-painel">
+
+                <div>
+
+                    <h2>📸 Fotos Pendentes</h2>
+
+                    <p id="contadorFotos">
+                        0 fotos aguardando
+                    </p>
+
+                </div>
+
+                <button
+                    class="sair"
+                    onclick="voltarInicio()">
+
+                    Sair
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="listaFotos"
+                class="lista-fotos">
+
+            </div>
+
+
+            <button
+                class="botao botao-visualizar"
+                onclick="carregarFotosPendentes()">
+
+                🔄 Atualizar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script src="script.js"></script>
 
 </body>
 
