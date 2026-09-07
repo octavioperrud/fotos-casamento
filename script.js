@@ -44,20 +44,34 @@ const SENHA_ADMIN =
 ************************************************/
 
 
-let fotoSelecionada = null;
+let fotoSelecionada =
+    null;
 
 
 let modoGaleria =
     "pendentes";
 
 
-let fotosApresentacao = [];
+let fotosApresentacao =
+    [];
 
 
-let intervaloApresentacao = null;
+let intervaloApresentacao =
+    null;
 
 
-let intervaloAtualizacaoApresentacao = null;
+let intervaloAtualizacaoApresentacao =
+    null;
+
+
+/*
+    Controla a alternância da posição
+    da foto grande.
+*/
+
+
+let grandeDoLadoEsquerdo =
+    Math.random() < 0.5;
 
 
 
@@ -75,9 +89,13 @@ function abrirEnvio() {
 
 
     document
-        .getElementById("envioTela")
+        .getElementById(
+            "envioTela"
+        )
         .classList
-        .remove("escondido");
+        .remove(
+            "escondido"
+        );
 
 
 }
@@ -92,7 +110,9 @@ function abrirEnvio() {
 
 
 document
-    .getElementById("fotoInput")
+    .getElementById(
+        "fotoInput"
+    )
     .addEventListener(
         "change",
         function(event) {
@@ -104,7 +124,9 @@ document
 
             if (!arquivo) {
 
+
                 return;
+
 
             }
 
@@ -156,7 +178,7 @@ function comprimirImagem(
 
 
     return new Promise(
-        function(resolve,reject) {
+        function(resolve, reject) {
 
 
             if (
@@ -174,6 +196,7 @@ function comprimirImagem(
 
 
                 return;
+
 
             }
 
@@ -272,6 +295,7 @@ function comprimirImagem(
 
                                         return;
 
+
                                     }
 
 
@@ -282,7 +306,9 @@ function comprimirImagem(
 
                                 },
 
+
                                 "image/jpeg",
+
 
                                 qualidade
                             );
@@ -364,6 +390,7 @@ async function enviarFoto() {
 
         return;
 
+
     }
 
 
@@ -420,15 +447,13 @@ async function enviarFoto() {
 
             Math.random()
             .toString(36)
-            .substring(2,8) +
+            .substring(2, 8) +
 
             ".jpg";
 
 
         const {
-
             error
-
         } =
 
         await supabaseClient
@@ -459,7 +484,9 @@ async function enviarFoto() {
         if (error) {
 
 
-            console.error(error);
+            console.error(
+                error
+            );
 
 
             status.innerText =
@@ -468,6 +495,7 @@ async function enviarFoto() {
 
 
             return;
+
 
         }
 
@@ -499,10 +527,13 @@ async function enviarFoto() {
 
     }
 
+
     catch (error) {
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         status.innerText =
@@ -576,6 +607,7 @@ function abrirSenha() {
 
         return;
 
+
     }
 
 
@@ -609,7 +641,9 @@ function validarSenha() {
     const senha =
 
         document
-        .getElementById("senha")
+        .getElementById(
+            "senha"
+        )
         .value;
 
 
@@ -665,13 +699,15 @@ function validarSenha() {
             );
 
 
-        erro.innerText = "";
+        erro.innerText =
+            "";
 
 
         carregarFotosPendentes();
 
 
     }
+
 
     else {
 
@@ -707,6 +743,7 @@ function atualizarFotos() {
 
 
     }
+
 
     else {
 
@@ -761,7 +798,8 @@ async function carregarFotosPendentes() {
         );
 
 
-    galeria.innerHTML = "";
+    galeria.innerHTML =
+        "";
 
 
     mensagem.innerText =
@@ -785,7 +823,8 @@ async function carregarFotosPendentes() {
 
             {
 
-                limit: 1000,
+                limit:
+                    1000,
 
                 sortBy: {
 
@@ -805,7 +844,9 @@ async function carregarFotosPendentes() {
     if (error) {
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         mensagem.innerText =
@@ -813,6 +854,7 @@ async function carregarFotosPendentes() {
 
 
         return;
+
 
     }
 
@@ -828,6 +870,7 @@ async function carregarFotosPendentes() {
 
 
         return;
+
 
     }
 
@@ -919,16 +962,13 @@ function criarCardFoto(foto) {
             alt="Foto enviada"
         >
 
-
         <div class="nome-foto">
 
             ${foto.name}
 
         </div>
 
-
         <div class="botoes-foto">
-
 
             <button
                 class="botao-aprovar"
@@ -939,7 +979,6 @@ function criarCardFoto(foto) {
 
             </button>
 
-
             <button
                 class="botao-reprovar"
                 onclick="reprovarFoto('${foto.name}')"
@@ -948,7 +987,6 @@ function criarCardFoto(foto) {
                 ❌ Bloquear
 
             </button>
-
 
         </div>
 
@@ -983,7 +1021,9 @@ async function aprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
+
         return;
+
 
     }
 
@@ -1011,7 +1051,9 @@ async function aprovarFoto(nomeFoto) {
     if (error) {
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         alert(
@@ -1021,6 +1063,7 @@ async function aprovarFoto(nomeFoto) {
 
 
         return;
+
 
     }
 
@@ -1056,7 +1099,9 @@ async function reprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
+
         return;
+
 
     }
 
@@ -1084,7 +1129,9 @@ async function reprovarFoto(nomeFoto) {
     if (error) {
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         alert(
@@ -1094,6 +1141,7 @@ async function reprovarFoto(nomeFoto) {
 
 
         return;
+
 
     }
 
@@ -1169,7 +1217,8 @@ async function visualizarFotos() {
         );
 
 
-    galeria.innerHTML = "";
+    galeria.innerHTML =
+        "";
 
 
     mensagem.innerText =
@@ -1193,7 +1242,8 @@ async function visualizarFotos() {
 
             {
 
-                limit: 1000,
+                limit:
+                    1000,
 
                 sortBy: {
 
@@ -1219,6 +1269,7 @@ async function visualizarFotos() {
 
         return;
 
+
     }
 
 
@@ -1233,6 +1284,7 @@ async function visualizarFotos() {
 
 
         return;
+
 
     }
 
@@ -1406,7 +1458,8 @@ async function carregarFotosApresentacao() {
 
             {
 
-                limit: 1000,
+                limit:
+                    1000,
 
                 sortBy: {
 
@@ -1426,7 +1479,9 @@ async function carregarFotosApresentacao() {
     if (error) {
 
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         status.innerText =
@@ -1434,6 +1489,7 @@ async function carregarFotosApresentacao() {
 
 
         return;
+
 
     }
 
@@ -1444,7 +1500,8 @@ async function carregarFotosApresentacao() {
     ) {
 
 
-        painel.innerHTML = "";
+        painel.innerHTML =
+            "";
 
 
         status.innerText =
@@ -1452,6 +1509,7 @@ async function carregarFotosApresentacao() {
 
 
         return;
+
 
     }
 
@@ -1515,38 +1573,43 @@ async function carregarFotosApresentacao() {
 
 /************************************************
 
- ESCOLHER LAYOUT ALEATÓRIO
+ ESCOLHER POSIÇÃO DA FOTO GRANDE
 
 ************************************************/
 
 
-function escolherLayout() {
+function escolherLayoutApresentacao() {
 
 
-    const layouts = [
+    /*
+        Alterna a posição a cada troca.
 
-        "painel-layout-1",
+        FOTO GRANDE | 4 PEQUENAS
 
-        "painel-layout-2",
+        depois:
 
-        "painel-layout-3",
-
-        "painel-layout-4"
-
-    ];
+        4 PEQUENAS | FOTO GRANDE
+    */
 
 
-    const indice =
-
-        Math.floor(
-
-            Math.random() *
-            layouts.length
-
-        );
+    grandeDoLadoEsquerdo =
+        !grandeDoLadoEsquerdo;
 
 
-    return layouts[indice];
+    if (
+        grandeDoLadoEsquerdo
+    ) {
+
+
+        return
+            "painel-grande-esquerda";
+
+
+    }
+
+
+    return
+        "painel-grande-direita";
 
 
 }
@@ -1555,70 +1618,50 @@ function escolherLayout() {
 
 /************************************************
 
- IDENTIFICAR PROPORÇÃO DA FOTO
+ CRIAR FOTO DA APRESENTAÇÃO
 
 ************************************************/
 
 
-function carregarProporcaoImagem(
-    url
+function criarFotoApresentacao(
+    foto
 ) {
 
 
-    return new Promise(
-        function(resolve) {
+    const card =
+        document.createElement(
+            "div"
+        );
 
 
-            const imagem =
-                new Image();
+    card.className =
+        "foto-apresentacao";
 
 
-            imagem.onload =
-                function() {
+    const imagem =
+        document.createElement(
+            "img"
+        );
 
 
-                    resolve({
-
-                        largura:
-                            imagem.naturalWidth,
-
-                        altura:
-                            imagem.naturalHeight,
-
-                        proporcao:
-                            imagem.naturalWidth /
-                            imagem.naturalHeight
-
-                    });
+    imagem.src =
+        foto.url;
 
 
-                };
+    imagem.alt =
+        "Foto do casamento";
 
 
-            imagem.onerror =
-                function() {
+    imagem.loading =
+        "eager";
 
 
-                    resolve({
-
-                        largura: 1,
-
-                        altura: 1,
-
-                        proporcao: 1
-
-                    });
-
-
-                };
-
-
-            imagem.src =
-                url;
-
-
-        }
+    card.appendChild(
+        imagem
     );
+
+
+    return card;
 
 
 }
@@ -1629,10 +1672,16 @@ function carregarProporcaoImagem(
 
  TROCAR FOTOS DA APRESENTAÇÃO
 
+ LAYOUT FIXO:
+
+ 50% = 1 FOTO GRANDE
+
+ 50% = 4 FOTOS PEQUENAS
+
 ************************************************/
 
 
-async function trocarFotosApresentacao() {
+function trocarFotosApresentacao() {
 
 
     if (
@@ -1640,7 +1689,9 @@ async function trocarFotosApresentacao() {
         fotosApresentacao.length === 0
     ) {
 
+
         return;
+
 
     }
 
@@ -1651,6 +1702,12 @@ async function trocarFotosApresentacao() {
         .getElementById(
             "painelApresentacao"
         );
+
+
+    /*
+        Sempre utiliza no máximo
+        5 fotos.
+    */
 
 
     const quantidade =
@@ -1664,24 +1721,29 @@ async function trocarFotosApresentacao() {
         );
 
 
+    /*
+        Escolhe fotos aleatórias.
+    */
+
+
     const fotosMisturadas =
 
         [...fotosApresentacao]
 
         .sort(
-
             () =>
                 Math.random() - 0.5
-
         )
 
         .slice(
-
             0,
-
             quantidade
-
         );
+
+
+    /*
+        Inicia o efeito de troca.
+    */
 
 
     painel.classList.add(
@@ -1690,19 +1752,42 @@ async function trocarFotosApresentacao() {
 
 
     setTimeout(
-        async function() {
+        function() {
 
 
-            painel.innerHTML = "";
+            /*
+                Limpa completamente
+                o conteúdo anterior.
+            */
+
+
+            painel.innerHTML =
+                "";
+
+
+            /*
+                Remove qualquer layout anterior.
+            */
 
 
             painel.className =
                 "painel-apresentacao";
 
 
+            /*
+                Escolhe:
+
+                grande esquerda
+
+                ou
+
+                grande direita
+            */
+
+
             const layout =
 
-                escolherLayout();
+                escolherLayoutApresentacao();
 
 
             painel.classList.add(
@@ -1710,135 +1795,123 @@ async function trocarFotosApresentacao() {
             );
 
 
-            const fotosComProporcao =
-
-                await Promise.all(
-
-                    fotosMisturadas.map(
-                        async function(foto) {
-
-
-                            const dimensoes =
-
-                                await carregarProporcaoImagem(
-                                    foto.url
-                                );
-
-
-                            return {
-
-                                ...foto,
-
-                                ...dimensoes
-
-                            };
-
-
-                        }
-                    )
-
-                );
-
-
             /*
-                Coloca fotos verticais primeiro
-                quando existirem.
+                ==================================
 
-                Isso ajuda o layout a aproveitar
-                melhor a tela.
+                CRIA OS DOIS BLOCOS PRINCIPAIS
+
+                BLOCO 1:
+                FOTO GRANDE
+
+                BLOCO 2:
+                GRADE 2 x 2
+
+                ==================================
             */
 
 
-            fotosComProporcao.sort(
-                function(a,b) {
+            const areaGrande =
+                document.createElement(
+                    "div"
+                );
 
 
-                    return
-                        a.proporcao -
-                        b.proporcao;
+            areaGrande.className =
+                "area-foto-grande";
 
 
-                }
-            );
+            const areaPequenas =
+                document.createElement(
+                    "div"
+                );
 
 
-            fotosComProporcao.forEach(
-                function(foto) {
+            areaPequenas.className =
+                "area-fotos-pequenas";
 
 
-                    const card =
+            /*
+                ==================================
 
-                        document.createElement(
-                            "div"
-                        );
+                FOTO GRANDE
 
-
-                    card.className =
-                        "foto-apresentacao";
+                ==================================
+            */
 
 
-                    if (
-                        foto.proporcao < 0.85
-                    ) {
+            if (
+                fotosMisturadas.length > 0
+            ) {
 
 
-                        card.classList.add(
-                            "foto-vertical"
-                        );
+                const fotoGrande =
 
-
-                    }
-
-                    else if (
-                        foto.proporcao > 1.15
-                    ) {
-
-
-                        card.classList.add(
-                            "foto-horizontal"
-                        );
-
-
-                    }
-
-                    else {
-
-
-                        card.classList.add(
-                            "foto-quadrada"
-                        );
-
-
-                    }
-
-
-                    const imagem =
-
-                        document.createElement(
-                            "img"
-                        );
-
-
-                    imagem.src =
-                        foto.url;
-
-
-                    imagem.alt =
-                        "Foto do casamento";
-
-
-                    card.appendChild(
-                        imagem
+                    criarFotoApresentacao(
+                        fotosMisturadas[0]
                     );
 
 
-                    painel.appendChild(
-                        card
+                areaGrande.appendChild(
+                    fotoGrande
+                );
+
+
+            }
+
+
+            /*
+                ==================================
+
+                4 FOTOS PEQUENAS
+
+                ==================================
+            */
+
+
+            for (
+                let i = 1;
+                i < fotosMisturadas.length;
+                i++
+            ) {
+
+
+                const fotoPequena =
+
+                    criarFotoApresentacao(
+                        fotosMisturadas[i]
                     );
 
 
-                }
+                areaPequenas.appendChild(
+                    fotoPequena
+                );
+
+
+            }
+
+
+            /*
+                Adiciona os dois blocos.
+
+                A posição esquerda/direita
+                é controlada exclusivamente
+                pelo CSS.
+            */
+
+
+            painel.appendChild(
+                areaGrande
             );
+
+
+            painel.appendChild(
+                areaPequenas
+            );
+
+
+            /*
+                Finaliza a transição.
+            */
 
 
             painel.classList.remove(
@@ -1849,7 +1922,6 @@ async function trocarFotosApresentacao() {
         },
 
         500
-
     );
 
 
@@ -1891,6 +1963,7 @@ function alternarTelaCheia() {
 
 
     }
+
 
     else {
 
@@ -1982,21 +2055,29 @@ function voltarInicio() {
 
 
     document
-        .getElementById("inicio")
+        .getElementById(
+            "inicio"
+        )
         .classList
-        .remove("escondido");
+        .remove(
+            "escondido"
+        );
 
 
     document
-        .getElementById("senha")
-        .value = "";
+        .getElementById(
+            "senha"
+        )
+        .value =
+            "";
 
 
     document
         .getElementById(
             "erroSenha"
         )
-        .innerText = "";
+        .innerText =
+            "";
 
 
 }
@@ -2014,33 +2095,53 @@ function esconderTodasTelas() {
 
 
     document
-        .getElementById("inicio")
+        .getElementById(
+            "inicio"
+        )
         .classList
-        .add("escondido");
+        .add(
+            "escondido"
+        );
 
 
     document
-        .getElementById("envioTela")
+        .getElementById(
+            "envioTela"
+        )
         .classList
-        .add("escondido");
+        .add(
+            "escondido"
+        );
 
 
     document
-        .getElementById("senhaTela")
+        .getElementById(
+            "senhaTela"
+        )
         .classList
-        .add("escondido");
+        .add(
+            "escondido"
+        );
 
 
     document
-        .getElementById("validacaoTela")
+        .getElementById(
+            "validacaoTela"
+        )
         .classList
-        .add("escondido");
+        .add(
+            "escondido"
+        );
 
 
     document
-        .getElementById("apresentacaoTela")
+        .getElementById(
+            "apresentacaoTela"
+        )
         .classList
-        .add("escondido");
+        .add(
+            "escondido"
+        );
 
 
 }
