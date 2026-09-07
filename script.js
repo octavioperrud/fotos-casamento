@@ -65,13 +65,15 @@ let intervaloAtualizacaoApresentacao =
 
 
 /*
-    Controla a alternância da posição
-    da foto grande.
+    Controla a alternância da foto grande.
+
+    true  = esquerda
+    false = direita
 */
 
 
-let grandeDoLadoEsquerdo =
-    Math.random() < 0.5;
+let grandeNaEsquerda =
+    true;
 
 
 
@@ -124,9 +126,7 @@ document
 
             if (!arquivo) {
 
-
                 return;
-
 
             }
 
@@ -196,7 +196,6 @@ function comprimirImagem(
 
 
                 return;
-
 
             }
 
@@ -295,7 +294,6 @@ function comprimirImagem(
 
                                         return;
 
-
                                     }
 
 
@@ -306,9 +304,7 @@ function comprimirImagem(
 
                                 },
 
-
                                 "image/jpeg",
-
 
                                 qualidade
                             );
@@ -390,7 +386,6 @@ async function enviarFoto() {
 
         return;
 
-
     }
 
 
@@ -453,7 +448,9 @@ async function enviarFoto() {
 
 
         const {
+
             error
+
         } =
 
         await supabaseClient
@@ -484,9 +481,7 @@ async function enviarFoto() {
         if (error) {
 
 
-            console.error(
-                error
-            );
+            console.error(error);
 
 
             status.innerText =
@@ -495,7 +490,6 @@ async function enviarFoto() {
 
 
             return;
-
 
         }
 
@@ -527,13 +521,10 @@ async function enviarFoto() {
 
     }
 
-
     catch (error) {
 
 
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         status.innerText =
@@ -606,7 +597,6 @@ function abrirSenha() {
 
 
         return;
-
 
     }
 
@@ -708,7 +698,6 @@ function validarSenha() {
 
     }
 
-
     else {
 
 
@@ -743,7 +732,6 @@ function atualizarFotos() {
 
 
     }
-
 
     else {
 
@@ -844,9 +832,7 @@ async function carregarFotosPendentes() {
     if (error) {
 
 
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         mensagem.innerText =
@@ -854,7 +840,6 @@ async function carregarFotosPendentes() {
 
 
         return;
-
 
     }
 
@@ -870,7 +855,6 @@ async function carregarFotosPendentes() {
 
 
         return;
-
 
     }
 
@@ -962,13 +946,16 @@ function criarCardFoto(foto) {
             alt="Foto enviada"
         >
 
+
         <div class="nome-foto">
 
             ${foto.name}
 
         </div>
 
+
         <div class="botoes-foto">
+
 
             <button
                 class="botao-aprovar"
@@ -979,6 +966,7 @@ function criarCardFoto(foto) {
 
             </button>
 
+
             <button
                 class="botao-reprovar"
                 onclick="reprovarFoto('${foto.name}')"
@@ -987,6 +975,7 @@ function criarCardFoto(foto) {
                 ❌ Bloquear
 
             </button>
+
 
         </div>
 
@@ -1021,9 +1010,7 @@ async function aprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
-
         return;
-
 
     }
 
@@ -1051,9 +1038,7 @@ async function aprovarFoto(nomeFoto) {
     if (error) {
 
 
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         alert(
@@ -1063,7 +1048,6 @@ async function aprovarFoto(nomeFoto) {
 
 
         return;
-
 
     }
 
@@ -1099,9 +1083,7 @@ async function reprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
-
         return;
-
 
     }
 
@@ -1129,9 +1111,7 @@ async function reprovarFoto(nomeFoto) {
     if (error) {
 
 
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         alert(
@@ -1141,7 +1121,6 @@ async function reprovarFoto(nomeFoto) {
 
 
         return;
-
 
     }
 
@@ -1269,7 +1248,6 @@ async function visualizarFotos() {
 
         return;
 
-
     }
 
 
@@ -1284,7 +1262,6 @@ async function visualizarFotos() {
 
 
         return;
-
 
     }
 
@@ -1388,10 +1365,23 @@ async function abrirApresentacao() {
     );
 
 
+    /*
+        Reinicia a alternância.
+
+        A primeira tela começa com
+        a foto grande à esquerda.
+    */
+
+
+    grandeNaEsquerda =
+        true;
+
+
     await carregarFotosApresentacao();
 
 
     intervaloApresentacao =
+
         setInterval(
 
             trocarFotosApresentacao,
@@ -1402,6 +1392,7 @@ async function abrirApresentacao() {
 
 
     intervaloAtualizacaoApresentacao =
+
         setInterval(
 
             carregarFotosApresentacao,
@@ -1479,9 +1470,7 @@ async function carregarFotosApresentacao() {
     if (error) {
 
 
-        console.error(
-            error
-        );
+        console.error(error);
 
 
         status.innerText =
@@ -1489,7 +1478,6 @@ async function carregarFotosApresentacao() {
 
 
         return;
-
 
     }
 
@@ -1509,7 +1497,6 @@ async function carregarFotosApresentacao() {
 
 
         return;
-
 
     }
 
@@ -1573,52 +1560,7 @@ async function carregarFotosApresentacao() {
 
 /************************************************
 
- ESCOLHER POSIÇÃO DA FOTO GRANDE
-
-************************************************/
-
-
-function escolherLayoutApresentacao() {
-
-
-    /*
-        Alterna a posição a cada troca.
-
-        FOTO GRANDE | 4 PEQUENAS
-
-        depois:
-
-        4 PEQUENAS | FOTO GRANDE
-    */
-
-
-    grandeDoLadoEsquerdo =
-        !grandeDoLadoEsquerdo;
-
-
-    if (
-        grandeDoLadoEsquerdo
-    ) {
-
-
-        return
-            "painel-grande-esquerda";
-
-
-    }
-
-
-    return
-        "painel-grande-direita";
-
-
-}
-
-
-
-/************************************************
-
- CRIAR FOTO DA APRESENTAÇÃO
+ CRIAR CARD DA FOTO DA APRESENTAÇÃO
 
 ************************************************/
 
@@ -1649,7 +1591,7 @@ function criarFotoApresentacao(
 
 
     imagem.alt =
-        "Foto do casamento";
+        "Momento compartilhado";
 
 
     imagem.loading =
@@ -1674,7 +1616,7 @@ function criarFotoApresentacao(
 
  LAYOUT FIXO:
 
- 50% = 1 FOTO GRANDE
+ 50% = FOTO GRANDE
 
  50% = 4 FOTOS PEQUENAS
 
@@ -1689,9 +1631,7 @@ function trocarFotosApresentacao() {
         fotosApresentacao.length === 0
     ) {
 
-
         return;
-
 
     }
 
@@ -1705,24 +1645,7 @@ function trocarFotosApresentacao() {
 
 
     /*
-        Sempre utiliza no máximo
-        5 fotos.
-    */
-
-
-    const quantidade =
-
-        Math.min(
-
-            fotosApresentacao.length,
-
-            5
-
-        );
-
-
-    /*
-        Escolhe fotos aleatórias.
+        Mistura as fotos.
     */
 
 
@@ -1733,16 +1656,27 @@ function trocarFotosApresentacao() {
         .sort(
             () =>
                 Math.random() - 0.5
-        )
-
-        .slice(
-            0,
-            quantidade
         );
 
 
     /*
-        Inicia o efeito de troca.
+        Seleciona no máximo 5 fotos.
+    */
+
+
+    const fotosSelecionadas =
+
+        fotosMisturadas.slice(
+            0,
+            Math.min(
+                fotosMisturadas.length,
+                5
+            )
+        );
+
+
+    /*
+        Inicia a transição.
     */
 
 
@@ -1757,7 +1691,7 @@ function trocarFotosApresentacao() {
 
             /*
                 Limpa completamente
-                o conteúdo anterior.
+                o painel anterior.
             */
 
 
@@ -1766,47 +1700,54 @@ function trocarFotosApresentacao() {
 
 
             /*
-                Remove qualquer layout anterior.
+                Remove as classes de posição.
             */
 
 
-            painel.className =
-                "painel-apresentacao";
+            painel.classList.remove(
+                "grande-esquerda"
+            );
 
 
-            /*
-                Escolhe:
-
-                grande esquerda
-
-                ou
-
-                grande direita
-            */
-
-
-            const layout =
-
-                escolherLayoutApresentacao();
-
-
-            painel.classList.add(
-                layout
+            painel.classList.remove(
+                "grande-direita"
             );
 
 
             /*
-                ==================================
+                Define o lado da
+                foto grande.
+            */
 
-                CRIA OS DOIS BLOCOS PRINCIPAIS
 
-                BLOCO 1:
-                FOTO GRANDE
+            if (
+                grandeNaEsquerda
+            ) {
 
-                BLOCO 2:
-                GRADE 2 x 2
 
-                ==================================
+                painel.classList.add(
+                    "grande-esquerda"
+                );
+
+
+            }
+
+            else {
+
+
+                painel.classList.add(
+                    "grande-direita"
+                );
+
+
+            }
+
+
+            /*
+                Cria a área que ocupará
+                exatamente 50% da tela.
+
+                FOTO GRANDE.
             */
 
 
@@ -1820,6 +1761,14 @@ function trocarFotosApresentacao() {
                 "area-foto-grande";
 
 
+            /*
+                Cria a área que ocupará
+                exatamente 50% da tela.
+
+                4 FOTOS PEQUENAS.
+            */
+
+
             const areaPequenas =
                 document.createElement(
                     "div"
@@ -1831,23 +1780,22 @@ function trocarFotosApresentacao() {
 
 
             /*
-                ==================================
+                =================================================
 
                 FOTO GRANDE
 
-                ==================================
+                =================================================
             */
 
 
             if (
-                fotosMisturadas.length > 0
+                fotosSelecionadas.length >= 1
             ) {
 
 
                 const fotoGrande =
-
                     criarFotoApresentacao(
-                        fotosMisturadas[0]
+                        fotosSelecionadas[0]
                     );
 
 
@@ -1860,25 +1808,27 @@ function trocarFotosApresentacao() {
 
 
             /*
-                ==================================
+                =================================================
 
-                4 FOTOS PEQUENAS
+                FOTOS PEQUENAS
 
-                ==================================
+                Sempre são adicionadas
+                na grade 2 x 2.
+
+                =================================================
             */
 
 
             for (
                 let i = 1;
-                i < fotosMisturadas.length;
+                i < fotosSelecionadas.length;
                 i++
             ) {
 
 
                 const fotoPequena =
-
                     criarFotoApresentacao(
-                        fotosMisturadas[i]
+                        fotosSelecionadas[i]
                     );
 
 
@@ -1891,11 +1841,14 @@ function trocarFotosApresentacao() {
 
 
             /*
-                Adiciona os dois blocos.
+                =================================================
 
-                A posição esquerda/direita
-                é controlada exclusivamente
-                pelo CSS.
+                ADICIONA AS DUAS METADES.
+
+                A ORDEM VISUAL É CONTROLADA
+                PELO CSS.
+
+                =================================================
             */
 
 
@@ -1914,9 +1867,30 @@ function trocarFotosApresentacao() {
             */
 
 
-            painel.classList.remove(
-                "painel-trocando"
+            requestAnimationFrame(
+                function() {
+
+
+                    painel.classList.remove(
+                        "painel-trocando"
+                    );
+
+
+                }
             );
+
+
+            /*
+                Alterna para a próxima tela.
+
+                ESQUERDA → DIREITA
+
+                DIREITA → ESQUERDA
+            */
+
+
+            grandeNaEsquerda =
+                !grandeNaEsquerda;
 
 
         },
@@ -1963,7 +1937,6 @@ function alternarTelaCheia() {
 
 
     }
-
 
     else {
 
@@ -2068,8 +2041,7 @@ function voltarInicio() {
         .getElementById(
             "senha"
         )
-        .value =
-            "";
+        .value = "";
 
 
     document
