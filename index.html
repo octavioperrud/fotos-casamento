@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janaína & Octávio | Fotos</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/html5-qrcode" defer></script>
+</head><body><main class="card">
+<section id="start"><div class="rings">💍</div><h1>Janaína & Octávio</h1>
+<p>Compartilhe os melhores momentos do nosso casamento 📸</p>
+<button id="scan">📷 Escanear QR Code</button></section>
+<section id="scanner" class="hidden"><h2>Aponte a câmera para o QR Code</h2><div id="reader"></div><button id="cancel">Cancelar</button></section>
+<section id="upload" class="hidden"><div class="rings">💍</div><h1>QR Code validado!</h1>
+<p>Agora tire ou escolha uma foto.</p>
+<label>📸 Tirar / Escolher foto<input id="photo" type="file" accept="image/*" capture="environment"></label>
+<img id="preview" class="hidden"><button id="send" disabled>📤 Enviar foto</button><p id="msg"></p></section>
+</main><script src="script.js"></script></body></html>
