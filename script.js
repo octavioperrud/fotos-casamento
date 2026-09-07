@@ -47,6 +47,18 @@ const SENHA_ADMIN =
 let fotoSelecionada = null;
 
 
+/*
+    Controla qual tipo de galeria
+    está sendo visualizada.
+
+    pendentes = área de validação
+    aprovadas = fotos públicas
+*/
+
+let modoGaleria =
+    "pendentes";
+
+
 
 /************************************************
 
@@ -101,6 +113,7 @@ document
 
 
             const imagem =
+
                 document
                 .getElementById(
                     "previewImagem"
@@ -149,6 +162,7 @@ async function enviarFoto() {
 
         status.innerText =
             "📸 Escolha ou tire uma foto primeiro.";
+
 
         return;
 
@@ -232,7 +246,8 @@ async function enviarFoto() {
         "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
 
 
-    fotoSelecionada = null;
+    fotoSelecionada =
+        null;
 
 
     document
@@ -311,6 +326,10 @@ function validarSenha() {
     ) {
 
 
+        modoGaleria =
+            "pendentes";
+
+
         esconderTodasTelas();
 
 
@@ -322,6 +341,12 @@ function validarSenha() {
             .remove(
                 "escondido"
             );
+
+
+        document.querySelector(
+            "#validacaoTela h2"
+        ).innerText =
+            "📋 Fotos Aguardando Liberação";
 
 
         erro.innerText = "";
@@ -348,12 +373,53 @@ function validarSenha() {
 
 /************************************************
 
+ ATUALIZAR FOTOS
+
+ Esta função identifica automaticamente
+ qual galeria está aberta.
+
+************************************************/
+
+
+function atualizarFotos() {
+
+
+    if (
+        modoGaleria ===
+        "aprovadas"
+    ) {
+
+
+        visualizarFotos();
+
+
+    }
+
+    else {
+
+
+        carregarFotosPendentes();
+
+
+    }
+
+
+}
+
+
+
+/************************************************
+
  CARREGAR FOTOS PENDENTES
 
 ************************************************/
 
 
 async function carregarFotosPendentes() {
+
+
+    modoGaleria =
+        "pendentes";
 
 
     const galeria =
@@ -429,13 +495,17 @@ async function carregarFotosPendentes() {
 
 
     if (
+
         !data ||
+
         data.length === 0
+
     ) {
 
 
         mensagem.innerText =
             "📭 Nenhuma foto aguardando aprovação.";
+
 
         return;
 
@@ -443,8 +513,11 @@ async function carregarFotosPendentes() {
 
 
     mensagem.innerText =
+
         "📸 " +
+
         data.length +
+
         " foto(s) aguardando aprovação";
 
 
@@ -731,6 +804,10 @@ async function reprovarFoto(nomeFoto) {
 async function visualizarFotos() {
 
 
+    modoGaleria =
+        "aprovadas";
+
+
     esconderTodasTelas();
 
 
@@ -820,13 +897,17 @@ async function visualizarFotos() {
 
 
     if (
+
         !data ||
+
         data.length === 0
+
     ) {
 
 
         mensagem.innerText =
             "📭 Ainda não existem fotos aprovadas.";
+
 
         return;
 
@@ -834,7 +915,9 @@ async function visualizarFotos() {
 
 
     mensagem.innerText =
+
         data.length +
+
         " foto(s) disponíveis ❤️";
 
 
