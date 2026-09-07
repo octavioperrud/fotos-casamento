@@ -47,14 +47,6 @@ const SENHA_ADMIN =
 let fotoSelecionada = null;
 
 
-/*
-    Controla qual tipo de galeria
-    está sendo visualizada.
-
-    pendentes = área de validação
-    aprovadas = fotos públicas
-*/
-
 let modoGaleria =
     "pendentes";
 
@@ -279,21 +271,11 @@ async function enviarFoto() {
 function abrirSenha() {
 
 
-    /*
-        Verifica se este dispositivo
-        já foi autorizado anteriormente
-    */
-
     const autorizado =
         localStorage.getItem(
             "adminAutorizado"
         );
 
-
-    /*
-        Se já estiver autorizado,
-        entra diretamente na validação
-    */
 
     if (
         autorizado === "sim"
@@ -323,18 +305,22 @@ function abrirSenha() {
             "📋 Fotos Aguardando Liberação";
 
 
+        document
+            .getElementById(
+                "botaoSairTopo"
+            )
+            .classList
+            .add(
+                "escondido"
+            );
+
+
         carregarFotosPendentes();
 
 
         return;
 
     }
-
-
-    /*
-        Caso ainda não esteja autorizado,
-        solicita a senha normalmente
-    */
 
 
     esconderTodasTelas();
@@ -384,11 +370,6 @@ function validarSenha() {
     ) {
 
 
-        /*
-            Salva a autorização
-            neste dispositivo
-        */
-
         localStorage.setItem(
             "adminAutorizado",
             "sim"
@@ -418,6 +399,16 @@ function validarSenha() {
             "📋 Fotos Aguardando Liberação";
 
 
+        document
+            .getElementById(
+                "botaoSairTopo"
+            )
+            .classList
+            .add(
+                "escondido"
+            );
+
+
         erro.innerText = "";
 
 
@@ -443,9 +434,6 @@ function validarSenha() {
 /************************************************
 
  ATUALIZAR FOTOS
-
- Esta função identifica automaticamente
- qual galeria está aberta.
 
 ************************************************/
 
@@ -489,6 +477,16 @@ async function carregarFotosPendentes() {
 
     modoGaleria =
         "pendentes";
+
+
+    document
+        .getElementById(
+            "botaoSairTopo"
+        )
+        .classList
+        .add(
+            "escondido"
+        );
 
 
     const galeria =
@@ -890,6 +888,27 @@ async function visualizarFotos() {
         );
 
 
+    document.querySelector(
+        "#validacaoTela h2"
+    ).innerText =
+        "🖼️ Fotos Aprovadas";
+
+
+    /*
+        MOSTRA O BOTÃO SAIR
+        NO TOPO DAS FOTOS APROVADAS
+    */
+
+    document
+        .getElementById(
+            "botaoSairTopo"
+        )
+        .classList
+        .remove(
+            "escondido"
+        );
+
+
     const galeria =
 
         document
@@ -945,12 +964,6 @@ async function visualizarFotos() {
             }
 
         );
-
-
-    document.querySelector(
-        "#validacaoTela h2"
-    ).innerText =
-        "🖼️ Fotos Aprovadas";
 
 
     if (error) {
