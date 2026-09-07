@@ -1,5 +1,7 @@
 * {
+
     box-sizing: border-box;
+
 }
 
 
@@ -26,11 +28,6 @@ body {
 }
 
 
-/* ====================================== */
-/* TELAS                                  */
-/* ====================================== */
-
-
 .tela {
 
     min-height: 100vh;
@@ -53,11 +50,6 @@ body {
 }
 
 
-/* ====================================== */
-/* CONTAINERS                             */
-/* ====================================== */
-
-
 .container {
 
     width: 100%;
@@ -73,8 +65,17 @@ body {
     text-align: center;
 
     box-shadow:
-        0 15px 50px
-        rgba(0,0,0,0.15);
+
+        0
+        15px
+        50px
+
+        rgba(
+            0,
+            0,
+            0,
+            0.15
+        );
 
 }
 
@@ -84,11 +85,6 @@ body {
     max-width: 1200px;
 
 }
-
-
-/* ====================================== */
-/* TEXTOS                                 */
-/* ====================================== */
 
 
 h1 {
@@ -120,11 +116,6 @@ h2 {
 }
 
 
-/* ====================================== */
-/* BOTÕES                                 */
-/* ====================================== */
-
-
 .botao {
 
     width: 100%;
@@ -145,17 +136,14 @@ h2 {
 
     color: #3d322c;
 
-    transition:
-        transform 0.2s,
-        opacity 0.2s;
+    transition: 0.2s;
 
 }
 
 
 .botao:hover {
 
-    transform:
-        scale(1.02);
+    transform: scale(1.02);
 
 }
 
@@ -205,11 +193,6 @@ h2 {
 }
 
 
-/* ====================================== */
-/* INPUTS                                 */
-/* ====================================== */
-
-
 input[type="password"] {
 
     width: 100%;
@@ -242,11 +225,6 @@ input[type="file"] {
 }
 
 
-/* ====================================== */
-/* PREVIEW                                */
-/* ====================================== */
-
-
 .preview-container {
 
     margin-top: 25px;
@@ -263,11 +241,6 @@ input[type="file"] {
     border-radius: 15px;
 
 }
-
-
-/* ====================================== */
-/* STATUS                                 */
-/* ====================================== */
 
 
 .status {
@@ -288,19 +261,18 @@ input[type="file"] {
 }
 
 
-/* ====================================== */
-/* GALERIA ADMINISTRATIVA                  */
-/* ====================================== */
-
-
 .galeria {
 
     display: grid;
 
     grid-template-columns:
+
         repeat(
             auto-fill,
-            minmax(250px, 1fr)
+            minmax(
+                250px,
+                1fr
+            )
         );
 
     gap: 25px;
@@ -319,8 +291,17 @@ input[type="file"] {
     border-radius: 15px;
 
     box-shadow:
-        0 5px 15px
-        rgba(0,0,0,0.1);
+
+        0
+        5px
+        15px
+
+        rgba(
+            0,
+            0,
+            0,
+            0.1
+        );
 
 }
 
@@ -343,6 +324,7 @@ input[type="file"] {
     font-size: 13px;
 
     margin:
+
         10px
         0;
 
@@ -398,6 +380,7 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
 /* APRESENTAÇÃO                           */
 /* ====================================== */
@@ -431,6 +414,7 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
 /* TOPO                                   */
 /* ====================================== */
@@ -438,9 +422,10 @@ input[type="file"] {
 
 .apresentacao-topo {
 
-    min-height: 64px;
+    min-height: 60px;
 
     padding:
+
         10px
         25px;
 
@@ -493,6 +478,7 @@ input[type="file"] {
     border-radius: 10px;
 
     padding:
+
         10px
         18px;
 
@@ -528,18 +514,10 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
-/* PAINEL PRINCIPAL                        */
+/* PAINEL DA APRESENTAÇÃO                 */
 /* ====================================== */
-
-
-/*
-    ESTRUTURA EXATA:
-
-    FOTO GRANDE | PEQUENA | PEQUENA
-    FOTO GRANDE | PEQUENA | PEQUENA
-
-*/
 
 
 .painel-apresentacao {
@@ -548,20 +526,7 @@ input[type="file"] {
 
     min-height: 0;
 
-    width: 100%;
-
     display: grid;
-
-    grid-template-columns:
-
-        minmax(0, 1.55fr)
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
-    grid-template-rows:
-
-        minmax(0, 1fr)
-        minmax(0, 1fr);
 
     gap: 12px;
 
@@ -580,21 +545,6 @@ input[type="file"] {
 }
 
 
-/* ====================================== */
-/* GRANDE À DIREITA                        */
-/* ====================================== */
-
-
-.painel-apresentacao.grande-direita {
-
-    grid-template-columns:
-
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        minmax(0, 1.55fr);
-
-}
-
 
 /* ====================================== */
 /* EFEITO DE TROCA                         */
@@ -608,8 +558,233 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
-/* FOTO                                   */
+/* ====================================== */
+/* LAYOUT 1                               */
+/* FOTO GRANDE À ESQUERDA                 */
+/* ====================================== */
+/* ====================================== */
+
+
+.painel-grande-esquerda {
+
+    grid-template-columns:
+
+        1.7fr
+        1fr
+        1fr;
+
+    grid-template-rows:
+
+        minmax(
+            0,
+            1fr
+        )
+
+        minmax(
+            0,
+            1fr
+        );
+
+}
+
+
+/* FOTO GRANDE */
+
+.painel-grande-esquerda
+.foto-apresentacao:nth-child(1) {
+
+    grid-column:
+
+        1;
+
+    grid-row:
+
+        1 / 3;
+
+}
+
+
+/* PEQUENA 1 */
+
+.painel-grande-esquerda
+.foto-apresentacao:nth-child(2) {
+
+    grid-column:
+
+        2;
+
+    grid-row:
+
+        1;
+
+}
+
+
+/* PEQUENA 2 */
+
+.painel-grande-esquerda
+.foto-apresentacao:nth-child(3) {
+
+    grid-column:
+
+        3;
+
+    grid-row:
+
+        1;
+
+}
+
+
+/* PEQUENA 3 */
+
+.painel-grande-esquerda
+.foto-apresentacao:nth-child(4) {
+
+    grid-column:
+
+        2;
+
+    grid-row:
+
+        2;
+
+}
+
+
+/* PEQUENA 4 */
+
+.painel-grande-esquerda
+.foto-apresentacao:nth-child(5) {
+
+    grid-column:
+
+        3;
+
+    grid-row:
+
+        2;
+
+}
+
+
+
+/* ====================================== */
+/* ====================================== */
+/* LAYOUT 2                               */
+/* FOTO GRANDE À DIREITA                  */
+/* ====================================== */
+/* ====================================== */
+
+
+.painel-grande-direita {
+
+    grid-template-columns:
+
+        1fr
+        1fr
+        1.7fr;
+
+    grid-template-rows:
+
+        minmax(
+            0,
+            1fr
+        )
+
+        minmax(
+            0,
+            1fr
+        );
+
+}
+
+
+/* PEQUENA 1 */
+
+.painel-grande-direita
+.foto-apresentacao:nth-child(1) {
+
+    grid-column:
+
+        1;
+
+    grid-row:
+
+        1;
+
+}
+
+
+/* PEQUENA 2 */
+
+.painel-grande-direita
+.foto-apresentacao:nth-child(2) {
+
+    grid-column:
+
+        2;
+
+    grid-row:
+
+        1;
+
+}
+
+
+/* PEQUENA 3 */
+
+.painel-grande-direita
+.foto-apresentacao:nth-child(3) {
+
+    grid-column:
+
+        1;
+
+    grid-row:
+
+        2;
+
+}
+
+
+/* PEQUENA 4 */
+
+.painel-grande-direita
+.foto-apresentacao:nth-child(4) {
+
+    grid-column:
+
+        2;
+
+    grid-row:
+
+        2;
+
+}
+
+
+/* FOTO GRANDE */
+
+.painel-grande-direita
+.foto-apresentacao:nth-child(5) {
+
+    grid-column:
+
+        3;
+
+    grid-row:
+
+        1 / 3;
+
+}
+
+
+
+/* ====================================== */
+/* FOTOS                                  */
 /* ====================================== */
 
 
@@ -621,6 +796,10 @@ input[type="file"] {
 
     min-height: 0;
 
+    width: 100%;
+
+    height: 100%;
+
     overflow: hidden;
 
     border-radius: 28px;
@@ -631,7 +810,7 @@ input[type="file"] {
 
         0
         10px
-        30px
+        35px
 
         rgba(
             0,
@@ -643,10 +822,11 @@ input[type="file"] {
     animation:
 
         aparecerFoto
-        0.7s
+        0.8s
         ease;
 
 }
+
 
 
 /* ====================================== */
@@ -668,158 +848,6 @@ input[type="file"] {
 
 }
 
-
-/* ====================================== */
-/* LAYOUT NORMAL                           */
-/* FOTO GRANDE À ESQUERDA                  */
-/* ====================================== */
-
-
-/*
-    ┌───────────────────────┬───────────┬───────────┐
-    │                       │ Pequena 1 │ Pequena 2 │
-    │     FOTO GRANDE       ├───────────┼───────────┤
-    │                       │ Pequena 3 │ Pequena 4 │
-    └───────────────────────┴───────────┴───────────┘
-*/
-
-
-.foto-posicao-1 {
-
-    grid-column: 1;
-
-    grid-row: 1 / 3;
-
-}
-
-
-.foto-posicao-2 {
-
-    grid-column: 2;
-
-    grid-row: 1;
-
-}
-
-
-.foto-posicao-3 {
-
-    grid-column: 3;
-
-    grid-row: 1;
-
-}
-
-
-.foto-posicao-4 {
-
-    grid-column: 2;
-
-    grid-row: 2;
-
-}
-
-
-.foto-posicao-5 {
-
-    grid-column: 3;
-
-    grid-row: 2;
-
-}
-
-
-/* ====================================== */
-/* LAYOUT GRANDE À DIREITA                 */
-/* ====================================== */
-
-
-/*
-    ┌───────────┬───────────┬───────────────────────┐
-    │ Pequena 1 │ Pequena 2 │                       │
-    ├───────────┼───────────┤     FOTO GRANDE       │
-    │ Pequena 3 │ Pequena 4 │                       │
-    └───────────┴───────────┴───────────────────────┘
-*/
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-1 {
-
-    grid-column: 3;
-
-    grid-row: 1 / 3;
-
-}
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-2 {
-
-    grid-column: 1;
-
-    grid-row: 1;
-
-}
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-3 {
-
-    grid-column: 2;
-
-    grid-row: 1;
-
-}
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-4 {
-
-    grid-column: 1;
-
-    grid-row: 2;
-
-}
-
-
-.painel-apresentacao.grande-direita
-.foto-posicao-5 {
-
-    grid-column: 2;
-
-    grid-row: 2;
-
-}
-
-
-/* ====================================== */
-/* FALLBACK PARA MENOS DE 5 FOTOS          */
-/* ====================================== */
-
-
-.painel-apresentacao.menos-de-cinco {
-
-    grid-template-columns:
-
-        repeat(
-            auto-fit,
-            minmax(220px, 1fr)
-        );
-
-    grid-template-rows: 1fr;
-
-}
-
-
-.painel-apresentacao.menos-de-cinco
-.foto-apresentacao {
-
-    grid-column: auto;
-
-    grid-row: auto;
-
-}
 
 
 /* ====================================== */
@@ -857,8 +885,9 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
-/* STATUS APRESENTAÇÃO                     */
+/* STATUS                                 */
 /* ====================================== */
 
 
@@ -867,7 +896,9 @@ input[type="file"] {
     text-align: center;
 
     padding:
-        10px;
+
+        8px
+        15px;
 
     font-size: 16px;
 
@@ -883,6 +914,7 @@ input[type="file"] {
     flex-shrink: 0;
 
 }
+
 
 
 /* ====================================== */
@@ -910,18 +942,19 @@ input[type="file"] {
 
     .galeria {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+
+            1fr;
 
     }
 
 
     .apresentacao-topo {
 
-        min-height: 55px;
-
         padding:
-            8px
-            12px;
+
+            10px
+            15px;
 
     }
 
@@ -936,6 +969,7 @@ input[type="file"] {
     .botao-tela {
 
         padding:
+
             8px
             10px;
 
@@ -944,30 +978,20 @@ input[type="file"] {
     }
 
 
-    /*
-        No celular:
-
-        FOTO GRANDE
-        ───────────
-        Pequena | Pequena
-        Pequena | Pequena
-    */
-
-
     .painel-apresentacao {
 
         grid-template-columns:
 
             repeat(
                 2,
-                minmax(0, 1fr)
-            );
+                1fr
+            ) !important;
 
         grid-template-rows:
 
-            minmax(0, 1.4fr)
-            minmax(0, 1fr)
-            minmax(0, 1fr);
+            1.4fr
+            1fr
+            1fr !important;
 
         gap: 8px;
 
@@ -976,81 +1000,76 @@ input[type="file"] {
     }
 
 
-    .painel-apresentacao.grande-direita {
+    /* FOTO GRANDE */
 
-        grid-template-columns:
+    .painel-apresentacao
+    .foto-apresentacao:nth-child(1) {
 
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+        grid-column:
 
-    }
+            1 / 3 !important;
 
+        grid-row:
 
-    .foto-posicao-1,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-1 {
-
-        grid-column: 1 / 3;
-
-        grid-row: 1;
+            1 !important;
 
     }
 
 
-    .foto-posicao-2,
+    /* PEQUENAS */
 
-    .painel-apresentacao.grande-direita
-    .foto-posicao-2 {
+    .painel-apresentacao
+    .foto-apresentacao:nth-child(2) {
 
-        grid-column: 1;
+        grid-column:
 
-        grid-row: 2;
+            1 !important;
 
-    }
+        grid-row:
 
-
-    .foto-posicao-3,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-3 {
-
-        grid-column: 2;
-
-        grid-row: 2;
+            2 !important;
 
     }
 
 
-    .foto-posicao-4,
+    .painel-apresentacao
+    .foto-apresentacao:nth-child(3) {
 
-    .painel-apresentacao.grande-direita
-    .foto-posicao-4 {
+        grid-column:
 
-        grid-column: 1;
+            2 !important;
 
-        grid-row: 3;
+        grid-row:
 
-    }
-
-
-    .foto-posicao-5,
-
-    .painel-apresentacao.grande-direita
-    .foto-posicao-5 {
-
-        grid-column: 2;
-
-        grid-row: 3;
+            2 !important;
 
     }
 
 
-    .foto-apresentacao {
+    .painel-apresentacao
+    .foto-apresentacao:nth-child(4) {
 
-        border-radius: 18px;
+        grid-column:
+
+            1 !important;
+
+        grid-row:
+
+            3 !important;
+
+    }
+
+
+    .painel-apresentacao
+    .foto-apresentacao:nth-child(5) {
+
+        grid-column:
+
+            2 !important;
+
+        grid-row:
+
+            3 !important;
 
     }
 
