@@ -501,14 +501,14 @@ input[type="file"] {
         );
 
     /*
-        Linha superior menor
-        Linha inferior maior
+        Linha superior um pouco menor.
+        Linha inferior maior.
     */
 
     grid-template-rows:
 
-        1fr
-        2fr;
+        0.85fr
+        2.15fr;
 
     gap: 12px;
 
@@ -572,6 +572,7 @@ input[type="file"] {
 }
 
 
+
 /* ====================================== */
 /* AJUSTE AUTOMÁTICO DAS IMAGENS          */
 /* ====================================== */
@@ -585,26 +586,15 @@ input[type="file"] {
 
     display: block;
 
-    object-fit: cover;
+    /*
+        Mostra a imagem inteira,
+        redimensionando para caber
+        dentro do espaço disponível.
+    */
+
+    object-fit: contain;
 
     object-position: center;
-
-    transition:
-
-        transform
-        10s
-        ease;
-
-}
-
-
-.foto-apresentacao:hover img {
-
-    transform:
-
-        scale(
-            1.05
-        );
 
 }
 
@@ -615,10 +605,7 @@ input[type="file"] {
 /* ====================================== */
 
 
-/* -------------------------------------- */
-/* FOTO 1 - SUPERIOR ESQUERDA             */
-/* 1/3 DA TELA                            */
-/* -------------------------------------- */
+/* FOTO 1 - SUPERIOR ESQUERDA */
 
 
 .foto-posicao-1 {
@@ -634,10 +621,7 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 2 - SUPERIOR CENTRO               */
-/* 1/3 DA TELA                            */
-/* -------------------------------------- */
+/* FOTO 2 - SUPERIOR CENTRO */
 
 
 .foto-posicao-2 {
@@ -653,10 +637,7 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 3 - SUPERIOR DIREITA              */
-/* 1/3 DA TELA                            */
-/* -------------------------------------- */
+/* FOTO 3 - SUPERIOR DIREITA */
 
 
 .foto-posicao-3 {
@@ -672,10 +653,7 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 4 - INFERIOR ESQUERDA             */
-/* APROXIMADAMENTE 1/3                    */
-/* -------------------------------------- */
+/* FOTO 4 - INFERIOR ESQUERDA */
 
 
 .foto-posicao-4 {
@@ -691,10 +669,7 @@ input[type="file"] {
 }
 
 
-/* -------------------------------------- */
-/* FOTO 5 - INFERIOR DIREITA              */
-/* APROXIMADAMENTE 2/3                    */
-/* -------------------------------------- */
+/* FOTO 5 - INFERIOR DIREITA */
 
 
 .foto-posicao-5 {
