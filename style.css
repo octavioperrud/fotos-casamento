@@ -257,6 +257,7 @@ input[type="file"] {
     display: grid;
 
     grid-template-columns:
+
         repeat(
             auto-fill,
             minmax(250px, 1fr)
@@ -278,8 +279,17 @@ input[type="file"] {
     border-radius: 15px;
 
     box-shadow:
-        0 5px 15px
-        rgba(0,0,0,0.1);
+
+        0
+        5px
+        15px
+
+        rgba(
+            0,
+            0,
+            0,
+            0.1
+        );
 
 }
 
@@ -302,6 +312,7 @@ input[type="file"] {
     font-size: 13px;
 
     margin:
+
         10px
         0;
 
@@ -396,6 +407,7 @@ input[type="file"] {
     min-height: 80px;
 
     padding:
+
         15px
         30px;
 
@@ -446,6 +458,7 @@ input[type="file"] {
     border-radius: 10px;
 
     padding:
+
         10px
         18px;
 
@@ -488,22 +501,19 @@ input[type="file"] {
 
 
 /*
-    IMPORTANTE
+    O painel sempre possui:
 
-    A tela possui exatamente:
+    50% da largura = FOTO GRANDE
 
-    4 colunas iguais
-    2 linhas iguais
+    50% da largura = 4 FOTOS PEQUENAS
 
-    Isso permite:
+    A posição pode inverter:
 
-    FOTO GRANDE = 2 colunas × 2 linhas
-    ÁREA PEQUENA = 2 colunas × 2 linhas
+    GRANDE | PEQUENAS
 
-    Resultado:
+    ou
 
-    50% FOTO GRANDE
-    50% QUATRO FOTOS IGUAIS
+    PEQUENAS | GRANDE
 */
 
 
@@ -511,20 +521,27 @@ input[type="file"] {
 
     flex: 1;
 
+    min-height: 0;
+
     display: grid;
 
     grid-template-columns:
 
-        repeat(
-            4,
-            minmax(0, 1fr)
+        minmax(
+            0,
+            1fr
+        )
+
+        minmax(
+            0,
+            1fr
         );
 
     grid-template-rows:
 
-        repeat(
-            2,
-            minmax(0, 1fr)
+        minmax(
+            0,
+            1fr
         );
 
     gap: 12px;
@@ -544,264 +561,96 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
-/* LAYOUT 1                               */
-/* FOTO GRANDE À ESQUERDA                 */
+/* FOTO GRANDE À ESQUERDA                  */
 /* ====================================== */
 
 
-/*
+.painel-grande-esquerda {
 
-    ┌───────────────────────┬───────────┬───────────┐
-    │                       │           │           │
-    │                       │ Pequena 1 │ Pequena 2 │
-    │                       │           │           │
-    │     FOTO GRANDE       ├───────────┼───────────┤
-    │                       │           │           │
-    │                       │ Pequena 3 │ Pequena 4 │
-    │                       │           │           │
-    └───────────────────────┴───────────┴───────────┘
+    grid-template-areas:
 
-*/
+        "grande pequenas";
+
+}
 
 
-.painel-layout-1 {
+/* ====================================== */
+/* FOTO GRANDE À DIREITA                   */
+/* ====================================== */
+
+
+.painel-grande-direita {
+
+    grid-template-areas:
+
+        "pequenas grande";
+
+}
+
+
+/* ====================================== */
+/* ÁREA DA FOTO GRANDE                     */
+/* ====================================== */
+
+
+.area-foto-grande {
+
+    grid-area: grande;
+
+    min-width: 0;
+
+    min-height: 0;
+
+}
+
+
+/* ====================================== */
+/* ÁREA DAS 4 FOTOS PEQUENAS               */
+/* ====================================== */
+
+
+.area-fotos-pequenas {
+
+    grid-area: pequenas;
+
+    min-width: 0;
+
+    min-height: 0;
+
+    display: grid;
 
     grid-template-columns:
 
-        repeat(
-            4,
-            minmax(0, 1fr)
+        minmax(
+            0,
+            1fr
+        )
+
+        minmax(
+            0,
+            1fr
         );
 
     grid-template-rows:
 
-        repeat(
-            2,
-            minmax(0, 1fr)
+        minmax(
+            0,
+            1fr
+        )
+
+        minmax(
+            0,
+            1fr
         );
 
-}
-
-
-/* FOTO GRANDE */
-
-.painel-layout-1
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1 / 3 !important;
-
-    grid-row:
-
-        1 / 3 !important;
+    gap: 12px;
 
 }
-
-
-/* PEQUENA 1 */
-
-.painel-layout-1
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        3 / 4 !important;
-
-    grid-row:
-
-        1 / 2 !important;
-
-}
-
-
-/* PEQUENA 2 */
-
-.painel-layout-1
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        4 / 5 !important;
-
-    grid-row:
-
-        1 / 2 !important;
-
-}
-
-
-/* PEQUENA 3 */
-
-.painel-layout-1
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        3 / 4 !important;
-
-    grid-row:
-
-        2 / 3 !important;
-
-}
-
-
-/* PEQUENA 4 */
-
-.painel-layout-1
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        4 / 5 !important;
-
-    grid-row:
-
-        2 / 3 !important;
-
-}
-
 
 
 /* ====================================== */
-/* LAYOUT 2                               */
-/* FOTO GRANDE À DIREITA                  */
-/* ====================================== */
-
-
-/*
-
-    ┌───────────┬───────────┬───────────────────────┐
-    │           │           │                       │
-    │ Pequena 1 │ Pequena 2 │                       │
-    │           │           │     FOTO GRANDE       │
-    ├───────────┼───────────┤                       │
-    │           │           │                       │
-    │ Pequena 3 │ Pequena 4 │                       │
-    │           │           │                       │
-    └───────────┴───────────┴───────────────────────┘
-
-*/
-
-
-.painel-layout-2 {
-
-    grid-template-columns:
-
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
-
-    grid-template-rows:
-
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-}
-
-
-/* PEQUENA 1 */
-
-.painel-layout-2
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1 / 2 !important;
-
-    grid-row:
-
-        1 / 2 !important;
-
-}
-
-
-/* PEQUENA 2 */
-
-.painel-layout-2
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        2 / 3 !important;
-
-    grid-row:
-
-        1 / 2 !important;
-
-}
-
-
-/* PEQUENA 3 */
-
-.painel-layout-2
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        1 / 2 !important;
-
-    grid-row:
-
-        2 / 3 !important;
-
-}
-
-
-/* PEQUENA 4 */
-
-.painel-layout-2
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        2 / 3 !important;
-
-    grid-row:
-
-        2 / 3 !important;
-
-}
-
-
-/* FOTO GRANDE */
-
-.painel-layout-2
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        3 / 5 !important;
-
-    grid-row:
-
-        1 / 3 !important;
-
-}
-
-
-
-/* ====================================== */
-/* EFEITO DE TROCA                        */
-/* ====================================== */
-
-
-.painel-trocando {
-
-    opacity: 0;
-
-}
-
-
-
-/* ====================================== */
-/* FOTOS DA APRESENTAÇÃO                  */
+/* FOTOS                                  */
 /* ====================================== */
 
 
@@ -809,13 +658,13 @@ input[type="file"] {
 
     position: relative;
 
-    min-width: 0;
-
-    min-height: 0;
-
     width: 100%;
 
     height: 100%;
+
+    min-width: 0;
+
+    min-height: 0;
 
     overflow: hidden;
 
@@ -845,12 +694,6 @@ input[type="file"] {
 }
 
 
-
-/* ====================================== */
-/* IMAGENS                                */
-/* ====================================== */
-
-
 .foto-apresentacao img {
 
     width: 100%;
@@ -866,35 +709,55 @@ input[type="file"] {
 }
 
 
-/* Fotos verticais */
+/*
+    A foto grande ocupa
+    obrigatoriamente toda a metade
+    da tela destinada a ela.
+*/
 
 
-.foto-vertical img {
+.area-foto-grande
+.foto-apresentacao {
 
-    object-position:
+    width: 100%;
 
-        center
-        center;
+    height: 100%;
 
 }
 
 
-/* Fotos horizontais */
+/*
+    As quatro pequenas ocupam
+    exatamente uma grade 2 x 2.
+*/
 
 
-.foto-horizontal img {
+.area-fotos-pequenas
+.foto-apresentacao {
 
-    object-position:
+    width: 100%;
 
-        center
-        center;
+    height: 100%;
 
 }
 
 
 
 /* ====================================== */
-/* ANIMAÇÃO                               */
+/* TRANSIÇÃO                               */
+/* ====================================== */
+
+
+.painel-trocando {
+
+    opacity: 0;
+
+}
+
+
+
+/* ====================================== */
+/* ANIMAÇÃO                                */
 /* ====================================== */
 
 
@@ -907,7 +770,7 @@ input[type="file"] {
         transform:
 
             scale(
-                0.97
+                0.96
             );
 
     }
@@ -939,6 +802,7 @@ input[type="file"] {
     text-align: center;
 
     padding:
+
         15px;
 
     font-size: 18px;
@@ -990,7 +854,10 @@ input[type="file"] {
 
     .apresentacao-topo {
 
+        min-height: 60px;
+
         padding:
+
             10px
             15px;
 
@@ -1007,6 +874,7 @@ input[type="file"] {
     .botao-tela {
 
         padding:
+
             8px
             10px;
 
@@ -1015,21 +883,37 @@ input[type="file"] {
     }
 
 
+    /*
+        No celular:
+
+        FOTO GRANDE
+
+        4 PEQUENAS EMBAIXO
+    */
+
+
     .painel-apresentacao {
 
         grid-template-columns:
 
-            repeat(
-                2,
-                minmax(0, 1fr)
-            ) !important;
+            1fr;
 
         grid-template-rows:
 
-            repeat(
-                3,
-                minmax(0, 1fr)
-            ) !important;
+            minmax(
+                0,
+                1fr
+            )
+
+            minmax(
+                0,
+                1fr
+            );
+
+        grid-template-areas:
+
+            "grande"
+            "pequenas";
 
         gap: 8px;
 
@@ -1038,85 +922,47 @@ input[type="file"] {
     }
 
 
-    /*
-        No celular:
+    .painel-grande-esquerda {
 
-        Foto grande em cima
+        grid-template-areas:
 
-        Depois:
-
-        Pequena 1 | Pequena 2
-
-        Pequena 3 | Pequena 4
-    */
-
-
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(1) {
-
-        grid-column:
-
-            1 / 3 !important;
-
-        grid-row:
-
-            1 !important;
+            "grande"
+            "pequenas";
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(2) {
+    .painel-grande-direita {
 
-        grid-column:
+        grid-template-areas:
 
-            1 !important;
-
-        grid-row:
-
-            2 !important;
+            "grande"
+            "pequenas";
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(3) {
+    .area-fotos-pequenas {
 
-        grid-column:
-
-            2 !important;
-
-        grid-row:
-
-            2 !important;
+        gap: 8px;
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(4) {
+    .foto-apresentacao {
 
-        grid-column:
-
-            1 !important;
-
-        grid-row:
-
-            3 !important;
+        border-radius: 18px;
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(5) {
+    .status-apresentacao {
 
-        grid-column:
+        padding:
 
-            2 !important;
+            10px;
 
-        grid-row:
-
-            3 !important;
+        font-size: 14px;
 
     }
 
