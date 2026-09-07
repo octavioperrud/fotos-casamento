@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
@@ -11,7 +10,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Casamento Janaina & Octávio</title>
+    <title>Casamento Janaína & Octávio</title>
 
     <link
         rel="stylesheet"
@@ -24,9 +23,11 @@
 <body>
 
 
-<!-- ====================================== -->
-<!-- TELA INICIAL -->
-<!-- ====================================== -->
+<!-- =========================
+
+TELA INICIAL
+
+========================= -->
 
 <div
     id="inicio"
@@ -35,26 +36,29 @@
 
     <div class="container">
 
-
-        <h1>
-            💍 Janaina & Octávio
-        </h1>
-
+        <h1>💍 Janaína & Octávio</h1>
 
         <p class="subtitulo">
-
-            Compartilhe seus melhores momentos
-            do nosso casamento ❤️
-
+            Compartilhe os melhores momentos do nosso casamento ❤️
         </p>
 
 
         <button
             class="botao principal"
-            onclick="abrirEnvio()"
+            onclick="abrirOpcoesFoto()"
         >
 
-            📸 Enviar Foto
+            📷 Enviar Foto
+
+        </button>
+
+
+        <button
+            class="botao"
+            onclick="abrirSenha()"
+        >
+
+            🔐 Validação
 
         </button>
 
@@ -64,17 +68,7 @@
             onclick="visualizarFotos()"
         >
 
-            🖼️ Visualizar Fotos
-
-        </button>
-
-
-        <button
-            class="botao admin"
-            onclick="abrirSenha()"
-        >
-
-            🔐 Validação
+            🖼️ Visualizar Arquivos
 
         </button>
 
@@ -85,70 +79,44 @@
 
 
 
-<!-- ====================================== -->
-<!-- TELA DE ENVIO -->
-<!-- ====================================== -->
+<!-- =========================
+
+ESCOLHER FOTO
+
+========================= -->
 
 <div
-    id="envioTela"
+    id="opcoesFoto"
     class="tela escondido"
 >
 
     <div class="container">
 
-
-        <h2>
-            📸 Enviar uma Foto
-        </h2>
-
+        <h2>Como deseja enviar?</h2>
 
         <p class="subtitulo">
-
-            Escolha uma foto da galeria
-            ou tire uma nova foto.
-
+            Escolha uma opção
         </p>
-
-
-        <input
-
-            type="file"
-
-            id="fotoInput"
-
-            accept="image/*"
-
-            capture="environment"
-
-        >
-
-
-        <div
-            id="previewContainer"
-            class="preview-container escondido"
-        >
-
-            <img
-                id="previewImagem"
-            >
-
-        </div>
 
 
         <button
             class="botao principal"
-            onclick="enviarFoto()"
+            onclick="tirarFoto()"
         >
 
-            ☁️ Enviar Foto
+            📸 Tirar uma Foto
 
         </button>
 
 
-        <p
-            id="statusEnvio"
-            class="status"
-        ></p>
+        <button
+            class="botao"
+            onclick="escolherGaleria()"
+        >
+
+            🖼️ Escolher da Galeria
+
+        </button>
 
 
         <button
@@ -160,6 +128,61 @@
 
         </button>
 
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+
+PRÉ-VISUALIZAÇÃO
+
+========================= -->
+
+<div
+    id="previewTela"
+    class="tela escondido"
+>
+
+    <div class="container">
+
+        <h2>📷 Sua Foto</h2>
+
+
+        <img
+            id="previewImagem"
+            class="preview-imagem"
+        >
+
+
+        <p id="nomeArquivo"></p>
+
+
+        <button
+            class="botao principal"
+            onclick="enviarParaServidor()"
+        >
+
+            ☁️ Enviar Foto
+
+        </button>
+
+
+        <button
+            class="botao voltar"
+            onclick="abrirOpcoesFoto()"
+        >
+
+            ← Escolher Outra
+
+        </button>
+
+
+        <p
+            id="statusUpload"
+            class="status"
+        ></p>
 
     </div>
 
@@ -167,9 +190,11 @@
 
 
 
-<!-- ====================================== -->
-<!-- SENHA -->
-<!-- ====================================== -->
+<!-- =========================
+
+SENHA
+
+========================= -->
 
 <div
     id="senhaTela"
@@ -178,28 +203,13 @@
 
     <div class="container">
 
-
-        <h2>
-            🔐 Área de Validação
-        </h2>
-
-
-        <p>
-
-            Digite a senha para acessar
-            as fotos aguardando aprovação.
-
-        </p>
+        <h2>🔐 Área de Validação</h2>
 
 
         <input
-
             type="password"
-
             id="senha"
-
             placeholder="Digite a senha"
-
         >
 
 
@@ -213,12 +223,6 @@
         </button>
 
 
-        <p
-            id="erroSenha"
-            class="erro"
-        ></p>
-
-
         <button
             class="botao voltar"
             onclick="voltarInicio()"
@@ -229,15 +233,22 @@
         </button>
 
 
+        <p
+            id="erroSenha"
+            class="erro"
+        ></p>
+
     </div>
 
 </div>
 
 
 
-<!-- ====================================== -->
-<!-- VALIDAÇÃO -->
-<!-- ====================================== -->
+<!-- =========================
+
+VALIDAÇÃO
+
+========================= -->
 
 <div
     id="validacaoTela"
@@ -246,18 +257,13 @@
 
     <div class="container grande">
 
-
-        <h2>
-            📋 Fotos Aguardando Liberação
-        </h2>
+        <h2>🔐 Fotos Aguardando Aprovação</h2>
 
 
-        <p>
-
-            Escolha quais fotos serão exibidas
-            para os convidados.
-
-        </p>
+        <div
+            id="listaFotos"
+            class="galeria-admin"
+        ></div>
 
 
         <button
@@ -270,27 +276,14 @@
         </button>
 
 
-        <div
-            id="galeriaPendentes"
-            class="galeria"
-        ></div>
-
-
-        <p
-            id="nenhumaFoto"
-            class="status"
-        ></p>
-
-
         <button
             class="botao voltar"
-            onclick="sairValidacao()"
+            onclick="voltarInicio()"
         >
 
             ← Sair
 
         </button>
-
 
     </div>
 
@@ -298,12 +291,40 @@
 
 
 
-<!-- ====================================== -->
+<!-- =========================
+
+INPUTS ESCONDIDOS
+
+========================= -->
+
+
+<!-- CÂMERA -->
+
+<input
+    type="file"
+    id="inputCamera"
+    accept="image/*"
+    capture="environment"
+    class="escondido"
+    onchange="fotoSelecionada(event)"
+>
+
+
+<!-- GALERIA -->
+
+<input
+    type="file"
+    id="inputGaleria"
+    accept="image/*"
+    class="escondido"
+    onchange="fotoSelecionada(event)"
+>
+
+
+
 <!-- SUPABASE -->
-<!-- ====================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script src="script.js"></script>
 
