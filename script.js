@@ -1086,11 +1086,6 @@ async function abrirApresentacao() {
     await carregarFotosApresentacao();
 
 
-    /*
-        Troca o painel automaticamente
-        a cada 10 segundos
-    */
-
     intervaloApresentacao =
         setInterval(
 
@@ -1100,11 +1095,6 @@ async function abrirApresentacao() {
 
         );
 
-
-    /*
-        Verifica novas fotos aprovadas
-        a cada 30 segundos
-    */
 
     intervaloAtualizacaoApresentacao =
         setInterval(
@@ -1304,11 +1294,6 @@ function trocarFotosApresentacao() {
         );
 
 
-    /*
-        Quantidade de fotos exibidas
-        simultaneamente
-    */
-
     const quantidade =
 
         Math.min(
@@ -1319,10 +1304,6 @@ function trocarFotosApresentacao() {
 
         );
 
-
-    /*
-        Embaralha as fotos
-    */
 
     const fotosMisturadas =
 
@@ -1342,10 +1323,6 @@ function trocarFotosApresentacao() {
         );
 
 
-    /*
-        Efeito de desaparecimento
-    */
-
     painel.classList.add(
         "painel-trocando"
     );
@@ -1359,7 +1336,7 @@ function trocarFotosApresentacao() {
 
 
             fotosMisturadas.forEach(
-                function(foto,index) {
+                function(foto, index) {
 
 
                     const card =
@@ -1374,28 +1351,15 @@ function trocarFotosApresentacao() {
 
 
                     /*
-                        Algumas fotos ficam maiores
+                        DISTRIBUIÇÃO DAS FOTOS
+                        CONFORME O MODELO
                     */
 
-                    if (index === 0) {
 
-
-                        card.classList.add(
-                            "foto-grande"
-                        );
-
-
-                    }
-
-                    else if (index === 3) {
-
-
-                        card.classList.add(
-                            "foto-media"
-                        );
-
-
-                    }
+                    card.classList.add(
+                        "foto-layout-" +
+                        (index + 1)
+                    );
 
 
                     const imagem =
