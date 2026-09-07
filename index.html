@@ -101,19 +101,23 @@
 
             <p class="descricao">
 
-                Tire uma foto agora ou escolha
-                uma foto da sua galeria.
+                Escolha uma foto da sua galeria
+                ou tire uma nova foto.
 
             </p>
 
 
-            <!-- BOTÃO REAL PARA ABRIR CÂMERA / GALERIA -->
+            <!--
+                IMPORTANTE:
+                SEM "capture"
+                PARA PERMITIR GALERIA OU CÂMERA
+            -->
 
             <label
                 for="inputFoto"
                 class="botao botao-foto botao-upload">
 
-                📷 Tirar ou Escolher Foto
+                📸 Escolher ou Tirar Foto
 
             </label>
 
@@ -122,11 +126,10 @@
                 type="file"
                 id="inputFoto"
                 accept="image/*"
-                capture="environment"
                 multiple>
 
 
-            <!-- ÁREA DE PRÉ-VISUALIZAÇÃO -->
+            <!-- PRÉ-VISUALIZAÇÃO -->
 
             <div
                 id="previewFotos"
@@ -135,7 +138,7 @@
             </div>
 
 
-            <!-- BOTÃO ENVIAR PARA VALIDAÇÃO -->
+            <!-- ENVIAR PARA VALIDAÇÃO -->
 
             <button
                 id="botaoEnviar"
@@ -276,8 +279,6 @@
 
 </div>
 
-
-<!-- JAVASCRIPT -->
 
 <script src="script.js"></script>
 
