@@ -279,6 +279,64 @@ async function enviarFoto() {
 function abrirSenha() {
 
 
+    /*
+        Verifica se este dispositivo
+        já foi autorizado anteriormente
+    */
+
+    const autorizado =
+        localStorage.getItem(
+            "adminAutorizado"
+        );
+
+
+    /*
+        Se já estiver autorizado,
+        entra diretamente na validação
+    */
+
+    if (
+        autorizado === "sim"
+    ) {
+
+
+        modoGaleria =
+            "pendentes";
+
+
+        esconderTodasTelas();
+
+
+        document
+            .getElementById(
+                "validacaoTela"
+            )
+            .classList
+            .remove(
+                "escondido"
+            );
+
+
+        document.querySelector(
+            "#validacaoTela h2"
+        ).innerText =
+            "📋 Fotos Aguardando Liberação";
+
+
+        carregarFotosPendentes();
+
+
+        return;
+
+    }
+
+
+    /*
+        Caso ainda não esteja autorizado,
+        solicita a senha normalmente
+    */
+
+
     esconderTodasTelas();
 
 
@@ -324,6 +382,17 @@ function validarSenha() {
     if (
         senha === SENHA_ADMIN
     ) {
+
+
+        /*
+            Salva a autorização
+            neste dispositivo
+        */
+
+        localStorage.setItem(
+            "adminAutorizado",
+            "sim"
+        );
 
 
         modoGaleria =
