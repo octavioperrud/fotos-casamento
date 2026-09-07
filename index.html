@@ -23,310 +23,385 @@
 <body>
 
 
-<!-- =========================
+    <!-- =========================
+         TELA INICIAL
+    ========================== -->
 
-TELA INICIAL
+    <main
+        id="inicio"
+        class="tela ativa"
+    >
 
-========================= -->
+        <div class="container">
 
-<div
-    id="inicio"
-    class="tela"
->
+            <div class="icone">
+                💍
+            </div>
 
-    <div class="container">
+            <h1>
+                Janaína & Octávio
+            </h1>
 
-        <h1>💍 Janaína & Octávio</h1>
+            <h2>
+                Compartilhe esse momento ❤️
+            </h2>
 
-        <p class="subtitulo">
-            Compartilhe os melhores momentos do nosso casamento ❤️
-        </p>
+            <p class="descricao">
+                Tire uma foto ou escolha uma foto da sua galeria
+                para compartilhar conosco!
+            </p>
 
 
-        <button
-            class="botao principal"
-            onclick="abrirOpcoesFoto()"
-        >
+            <!-- BOTÃO PRINCIPAL -->
 
-            📷 Enviar Foto
+            <button
+                class="botao principal"
+                onclick="abrirSeletorFoto()"
+            >
 
-        </button>
+                📸 Tirar/Enviar Foto
 
+            </button>
 
-        <button
-            class="botao"
-            onclick="abrirSenha()"
-        >
 
-            🔐 Validação
+            <!-- INPUT ESCONDIDO -->
 
-        </button>
+            <input
+                type="file"
+                id="inputFoto"
+                accept="image/*"
+                onchange="selecionarFoto(event)"
+                hidden
+            >
 
 
-        <button
-            class="botao"
-            onclick="visualizarFotos()"
-        >
+            <button
+                class="botao"
+                onclick="abrirSenha()"
+            >
 
-            🖼️ Visualizar Arquivos
+                🔐 Validação
 
-        </button>
+            </button>
 
 
-    </div>
+            <button
+                class="botao"
+                onclick="visualizarFotos()"
+            >
 
-</div>
+                🖼️ Visualizar Fotos
 
+            </button>
 
 
-<!-- =========================
+            <p class="rodape">
 
-ESCOLHER FOTO
+                Obrigado por fazer parte
+                desse momento especial! ❤️
 
-========================= -->
+            </p>
 
-<div
-    id="opcoesFoto"
-    class="tela escondido"
->
+        </div>
 
-    <div class="container">
+    </main>
 
-        <h2>Como deseja enviar?</h2>
 
-        <p class="subtitulo">
-            Escolha uma opção
-        </p>
 
+    <!-- =========================
+         PREVIEW / ENVIO
+    ========================== -->
 
-        <button
-            class="botao principal"
-            onclick="tirarFoto()"
-        >
+    <main
+        id="envioTela"
+        class="tela"
+    >
 
-            📸 Tirar uma Foto
+        <div class="container">
 
-        </button>
+            <h1>
+                📸 Sua Foto
+            </h1>
 
 
-        <button
-            class="botao"
-            onclick="escolherGaleria()"
-        >
+            <div
+                id="previewContainer"
+                class="preview-container"
+            >
 
-            🖼️ Escolher da Galeria
+                <img
+                    id="previewFoto"
+                    src=""
+                    alt="Prévia da foto"
+                >
 
-        </button>
+            </div>
 
 
-        <button
-            class="botao voltar"
-            onclick="voltarInicio()"
-        >
+            <p
+                id="nomeArquivo"
+                class="nome-arquivo"
+            >
+            </p>
 
-            ← Voltar
 
-        </button>
+            <div
+                id="progressoContainer"
+                class="progresso-container escondido"
+            >
 
-    </div>
+                <div class="barra">
 
-</div>
+                    <div
+                        id="barraProgresso"
+                        class="barra-progresso"
+                    >
+                    </div>
 
+                </div>
 
+                <p id="textoProgresso">
+                    Enviando...
+                </p>
 
-<!-- =========================
+            </div>
 
-PRÉ-VISUALIZAÇÃO
 
-========================= -->
+            <button
+                id="botaoEnviar"
+                class="botao principal"
+                onclick="enviarFoto()"
+            >
 
-<div
-    id="previewTela"
-    class="tela escondido"
->
+                ☁️ Enviar Foto
 
-    <div class="container">
+            </button>
 
-        <h2>📷 Sua Foto</h2>
 
+            <button
+                class="botao"
+                onclick="cancelarEnvio()"
+            >
 
-        <img
-            id="previewImagem"
-            class="preview-imagem"
-        >
+                ↩ Escolher Outra Foto
 
+            </button>
 
-        <p id="nomeArquivo"></p>
 
+            <button
+                class="botao secundario"
+                onclick="voltarInicio()"
+            >
 
-        <button
-            class="botao principal"
-            onclick="enviarParaServidor()"
-        >
+                ← Voltar
 
-            ☁️ Enviar Foto
+            </button>
 
-        </button>
+        </div>
 
+    </main>
 
-        <button
-            class="botao voltar"
-            onclick="abrirOpcoesFoto()"
-        >
 
-            ← Escolher Outra
 
-        </button>
+    <!-- =========================
+         SENHA
+    ========================== -->
 
+    <main
+        id="senhaTela"
+        class="tela"
+    >
 
-        <p
-            id="statusUpload"
-            class="status"
-        ></p>
+        <div class="container">
 
-    </div>
+            <h1>
+                🔐 Área de Validação
+            </h1>
 
-</div>
 
+            <p>
+                Digite a senha para acessar
+                as fotos pendentes.
+            </p>
 
 
-<!-- =========================
+            <input
+                type="password"
+                id="senha"
+                placeholder="Digite a senha"
+            >
 
-SENHA
 
-========================= -->
+            <button
+                class="botao principal"
+                onclick="validarSenha()"
+            >
 
-<div
-    id="senhaTela"
-    class="tela escondido"
->
+                Entrar
 
-    <div class="container">
+            </button>
 
-        <h2>🔐 Área de Validação</h2>
 
+            <p
+                id="erroSenha"
+                class="erro"
+            >
+            </p>
 
-        <input
-            type="password"
-            id="senha"
-            placeholder="Digite a senha"
-        >
 
+            <button
+                class="botao secundario"
+                onclick="voltarInicio()"
+            >
 
-        <button
-            class="botao principal"
-            onclick="validarSenha()"
-        >
+                ← Voltar
 
-            Entrar
+            </button>
 
-        </button>
+        </div>
 
+    </main>
 
-        <button
-            class="botao voltar"
-            onclick="voltarInicio()"
-        >
 
-            ← Voltar
 
-        </button>
+    <!-- =========================
+         VALIDAÇÃO
+    ========================== -->
 
+    <main
+        id="validacaoTela"
+        class="tela"
+    >
 
-        <p
-            id="erroSenha"
-            class="erro"
-        ></p>
+        <div class="container grande">
 
-    </div>
+            <div class="topo-validacao">
 
-</div>
+                <div>
 
+                    <h1>
+                        📋 Fotos para Liberar
+                    </h1>
 
+                    <p>
+                        Aprove ou bloqueie as fotos enviadas.
+                    </p>
 
-<!-- =========================
+                </div>
 
-VALIDAÇÃO
 
-========================= -->
+                <button
+                    class="botao pequeno"
+                    onclick="carregarFotosPendentes()"
+                >
 
-<div
-    id="validacaoTela"
-    class="tela escondido"
->
+                    🔄 Atualizar
 
-    <div class="container grande">
+                </button>
 
-        <h2>🔐 Fotos Aguardando Aprovação</h2>
+            </div>
 
 
-        <div
-            id="listaFotos"
-            class="galeria-admin"
-        ></div>
+            <div
+                id="listaPendentes"
+                class="galeria"
+            >
 
+                <p class="carregando">
+                    Carregando fotos...
+                </p>
 
-        <button
-            class="botao atualizar"
-            onclick="carregarFotosPendentes()"
-        >
+            </div>
 
-            🔄 Atualizar Fotos
 
-        </button>
+            <button
+                class="botao secundario"
+                onclick="sairValidacao()"
+            >
 
+                ← Sair da Validação
 
-        <button
-            class="botao voltar"
-            onclick="voltarInicio()"
-        >
+            </button>
 
-            ← Sair
+        </div>
 
-        </button>
+    </main>
 
-    </div>
 
-</div>
 
+    <!-- =========================
+         GALERIA
+    ========================== -->
 
+    <main
+        id="galeriaTela"
+        class="tela"
+    >
 
-<!-- =========================
+        <div class="container grande">
 
-INPUTS ESCONDIDOS
+            <div class="topo-validacao">
 
-========================= -->
+                <div>
 
+                    <h1>
+                        🖼️ Fotos do Casamento
+                    </h1>
 
-<!-- CÂMERA -->
+                    <p>
+                        Momentos compartilhados por nossos convidados ❤️
+                    </p>
 
-<input
-    type="file"
-    id="inputCamera"
-    accept="image/*"
-    capture="environment"
-    class="escondido"
-    onchange="fotoSelecionada(event)"
->
+                </div>
 
 
-<!-- GALERIA -->
+                <button
+                    class="botao pequeno"
+                    onclick="carregarFotosAprovadas()"
+                >
 
-<input
-    type="file"
-    id="inputGaleria"
-    accept="image/*"
-    class="escondido"
-    onchange="fotoSelecionada(event)"
->
+                    🔄 Atualizar
 
+                </button>
 
+            </div>
 
-<!-- SUPABASE -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <div
+                id="galeriaFotos"
+                class="galeria"
+            >
 
-<script src="script.js"></script>
+                <p class="carregando">
+                    Carregando fotos...
+                </p>
+
+            </div>
+
+
+            <button
+                class="botao secundario"
+                onclick="voltarInicio()"
+            >
+
+                ← Voltar
+
+            </button>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- SUPABASE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+    <!-- SEU JAVASCRIPT -->
+
+    <script src="script.js"></script>
 
 
 </body>
