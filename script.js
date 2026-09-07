@@ -1,6 +1,6 @@
 /************************************************
 
- CONFIGURAÇÕES
+ CONFIGURAÇÕES SUPABASE
 
 ************************************************/
 
@@ -17,23 +17,23 @@ const BUCKET =
     "fotos-casamento";
 
 
-const SENHA_ADMIN =
-    "CASAMENTO2026";
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
 
 /************************************************
 
- CONEXÃO SUPABASE
+ CONFIGURAÇÕES
 
 ************************************************/
 
 
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+const SENHA_ADMIN =
+    "CASAMENTO2026";
 
 
 
@@ -50,36 +50,22 @@ let fotoSelecionada = null;
 
 /************************************************
 
- TROCAR TELAS
+ ABRIR ENVIO
 
 ************************************************/
 
 
-function esconderTodasTelas() {
+function abrirEnvio() {
 
-    const telas =
-        document.querySelectorAll(".tela");
-
-
-    telas.forEach(function (tela) {
-
-        tela.classList.remove("ativa");
-
-    });
-
-}
-
-
-
-function mostrarTela(id) {
 
     esconderTodasTelas();
 
 
     document
-        .getElementById(id)
+        .getElementById("envioTela")
         .classList
-        .add("ativa");
+        .remove("escondido");
+
 
 }
 
@@ -87,105 +73,58 @@ function mostrarTela(id) {
 
 /************************************************
 
- ABRIR SELETOR DE FOTO
-
- IMPORTANTE:
- NÃO USAMOS capture="camera"
-
- Isso evita forçar a câmera.
-
- O celular poderá apresentar
- câmera e/ou galeria conforme
- o sistema operacional.
+ PREVIEW DA FOTO
 
 ************************************************/
 
 
-function abrirSeletorFoto() {
-
-    const input =
-        document.getElementById("inputFoto");
-
-
-    input.value = "";
+document
+    .getElementById("fotoInput")
+    .addEventListener(
+        "change",
+        function(event) {
 
 
-    input.click();
-
-}
-
+            const arquivo =
+                event.target.files[0];
 
 
-/************************************************
+            if (!arquivo) {
 
- FOTO SELECIONADA
+                return;
 
-************************************************/
-
-
-function selecionarFoto(event) {
-
-    const arquivo =
-        event.target.files[0];
+            }
 
 
-    if (!arquivo) {
-
-        return;
-
-    }
+            fotoSelecionada =
+                arquivo;
 
 
-    if (!arquivo.type.startsWith("image/")) {
-
-        alert(
-            "Por favor, selecione apenas uma imagem."
-        );
-
-        return;
-
-    }
+            const imagem =
+                document
+                .getElementById(
+                    "previewImagem"
+                );
 
 
-    fotoSelecionada =
-        arquivo;
+            imagem.src =
+                URL.createObjectURL(
+                    arquivo
+                );
 
 
-    const preview =
-        document.getElementById("previewFoto");
+            document
+                .getElementById(
+                    "previewContainer"
+                )
+                .classList
+                .remove(
+                    "escondido"
+                );
 
 
-    const nomeArquivo =
-        document.getElementById("nomeArquivo");
-
-
-    const leitor =
-        new FileReader();
-
-
-    leitor.onload =
-        function (e) {
-
-            preview.src =
-                e.target.result;
-
-        };
-
-
-    leitor.readAsDataURL(
-        arquivo
+        }
     );
-
-
-    nomeArquivo.innerText =
-        arquivo.name;
-
-
-    mostrarTela(
-        "envioTela"
-    );
-
-}
 
 
 
@@ -198,114 +137,72 @@ function selecionarFoto(event) {
 
 async function enviarFoto() {
 
+
+    const status =
+        document.getElementById(
+            "statusEnvio"
+        );
+
+
     if (!fotoSelecionada) {
 
-        alert(
-            "Nenhuma foto foi selecionada."
-        );
+
+        status.innerText =
+            "📸 Escolha ou tire uma foto primeiro.";
 
         return;
 
     }
 
 
-    const botao =
-        document.getElementById(
-            "botaoEnviar"
-        );
+    status.innerText =
+        "⏳ Enviando foto...";
 
 
-    botao.disabled = true;
+    const extensao =
+        fotoSelecionada.name
+        .split(".")
+        .pop();
 
 
-    botao.innerText =
-        "⏳ Enviando...";
+    const nomeArquivo =
+
+        "aguardando/" +
+
+        Date.now() +
+
+        "_" +
+
+        Math.random()
+        .toString(36)
+        .substring(2,8) +
+
+        "." +
+
+        extensao;
 
 
-    mostrarProgresso();
+    const {
 
+        data,
 
-    try {
+        error
 
+    } =
 
-        const extensao =
-            fotoSelecionada.name
-            .split(".")
-            .pop();
-
-
-        const agora =
-            new Date();
-
-
-        const nomeArquivo =
-
-            agora.getFullYear() +
-            "-" +
-
-            String(
-                agora.getMonth() + 1
-            ).padStart(2, "0") +
-
-            "-" +
-
-            String(
-                agora.getDate()
-            ).padStart(2, "0") +
-
-            "_" +
-
-            agora.getTime() +
-
-            "_" +
-
-            Math.random()
-            .toString(36)
-            .substring(2, 8)
-
-            +
-
-            "." +
-
-            extensao;
-
-
-        const caminho =
-
-            "aguardando/" +
-
-            nomeArquivo;
-
-
-        atualizarProgresso(
-            30,
-            "Enviando sua foto..."
-        );
-
-
-        const {
-
-            data,
-
-            error
-
-        }
-
-        =
-
-        await supabaseClient
+    await supabaseClient
         .storage
         .from(BUCKET)
         .upload(
 
-            caminho,
+            nomeArquivo,
 
             fotoSelecionada,
 
             {
 
-                contentType:
-                    fotoSelecionada.type,
+                cacheControl:
+                    "3600",
 
                 upsert:
                     false
@@ -315,170 +212,43 @@ async function enviarFoto() {
         );
 
 
-        if (error) {
-
-            throw error;
-
-        }
+    if (error) {
 
 
-        atualizarProgresso(
-            100,
-            "Foto enviada!"
-        );
+        console.error(error);
 
 
-        setTimeout(
-            function () {
-
-                alert(
-                    "🎉 Foto enviada com sucesso!\n\nAgora ela aguardará aprovação."
-                );
+        status.innerText =
+            "❌ Erro ao enviar a foto: " +
+            error.message;
 
 
-                fotoSelecionada =
-                    null;
-
-
-                voltarInicio();
-
-            },
-
-            500
-        );
-
+        return;
 
     }
 
-    catch (erro) {
+
+    status.innerText =
+        "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
 
 
-        console.error(
-            erro
-        );
-
-
-        alert(
-
-            "❌ Erro ao enviar a foto.\n\n" +
-
-            erro.message
-
-        );
-
-
-    }
-
-    finally {
-
-
-        botao.disabled =
-            false;
-
-
-        botao.innerText =
-            "☁️ Enviar Foto";
-
-
-    }
-
-}
-
-
-
-/************************************************
-
- PROGRESSO
-
-************************************************/
-
-
-function mostrarProgresso() {
-
-    const container =
-        document.getElementById(
-            "progressoContainer"
-        );
-
-
-    container.classList.remove(
-        "escondido"
-    );
-
-
-    atualizarProgresso(
-        10,
-        "Preparando envio..."
-    );
-
-}
-
-
-
-function atualizarProgresso(
-    porcentagem,
-    texto
-) {
-
-    document
-        .getElementById(
-            "barraProgresso"
-        )
-        .style.width =
-
-        porcentagem + "%";
+    fotoSelecionada = null;
 
 
     document
-        .getElementById(
-            "textoProgresso"
-        )
-        .innerText =
-
-        texto;
-
-}
-
-
-
-/************************************************
-
- CANCELAR ENVIO
-
-************************************************/
-
-
-function cancelarEnvio() {
-
-    fotoSelecionada =
-        null;
-
-
-    document
-        .getElementById(
-            "inputFoto"
-        )
+        .getElementById("fotoInput")
         .value = "";
 
 
     document
         .getElementById(
-            "previewFoto"
-        )
-        .src = "";
-
-
-    document
-        .getElementById(
-            "progressoContainer"
+            "previewContainer"
         )
         .classList
         .add(
             "escondido"
         );
 
-
-    abrirSeletorFoto();
 
 }
 
@@ -493,23 +263,19 @@ function cancelarEnvio() {
 
 function abrirSenha() {
 
-    document
-        .getElementById(
-            "senha"
-        )
-        .value = "";
+
+    esconderTodasTelas();
 
 
     document
         .getElementById(
-            "erroSenha"
+            "senhaTela"
         )
-        .innerText = "";
+        .classList
+        .remove(
+            "escondido"
+        );
 
-
-    mostrarTela(
-        "senhaTela"
-    );
 
 }
 
@@ -524,12 +290,11 @@ function abrirSenha() {
 
 function validarSenha() {
 
+
     const senha =
 
         document
-        .getElementById(
-            "senha"
-        )
+        .getElementById("senha")
         .value;
 
 
@@ -542,20 +307,24 @@ function validarSenha() {
 
 
     if (
-
-        senha ===
-        SENHA_ADMIN
-
+        senha === SENHA_ADMIN
     ) {
 
 
-        erro.innerText =
-            "";
+        esconderTodasTelas();
 
 
-        mostrarTela(
-            "validacaoTela"
-        );
+        document
+            .getElementById(
+                "validacaoTela"
+            )
+            .classList
+            .remove(
+                "escondido"
+            );
+
+
+        erro.innerText = "";
 
 
         carregarFotosPendentes();
@@ -572,46 +341,53 @@ function validarSenha() {
 
     }
 
+
 }
 
 
 
 /************************************************
 
- FOTOS PENDENTES
+ CARREGAR FOTOS PENDENTES
 
 ************************************************/
 
 
 async function carregarFotosPendentes() {
 
-    const lista =
+
+    const galeria =
 
         document
         .getElementById(
-            "listaPendentes"
+            "galeriaPendentes"
         );
 
 
-    lista.innerHTML =
+    const mensagem =
 
-        '<p class="carregando">⏳ Carregando fotos...</p>';
+        document
+        .getElementById(
+            "nenhumaFoto"
+        );
 
 
-    try {
+    galeria.innerHTML = "";
 
 
-        const {
+    mensagem.innerText =
+        "⏳ Carregando fotos...";
 
-            data: arquivos,
 
-            error
+    const {
 
-        }
+        data,
 
-        =
+        error
 
-        await supabaseClient
+    } =
+
+    await supabaseClient
         .storage
         .from(BUCKET)
         .list(
@@ -622,7 +398,7 @@ async function carregarFotosPendentes() {
 
                 limit: 1000,
 
-                sort: {
+                sortBy: {
 
                     column:
                         "created_at",
@@ -637,84 +413,53 @@ async function carregarFotosPendentes() {
         );
 
 
-        if (error) {
-
-            throw error;
-
-        }
+    if (error) {
 
 
-        lista.innerHTML =
-            "";
+        console.error(error);
 
 
-        const fotos =
+        mensagem.innerText =
+            "❌ Erro ao carregar as fotos.";
 
-            arquivos.filter(
-                arquivo =>
-                    arquivo.name &&
-                    !arquivo.name.startsWith(".")
+
+        return;
+
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+
+        mensagem.innerText =
+            "📭 Nenhuma foto aguardando aprovação.";
+
+        return;
+
+    }
+
+
+    mensagem.innerText =
+        "📸 " +
+        data.length +
+        " foto(s) aguardando aprovação";
+
+
+    data.forEach(
+        function(foto) {
+
+
+            criarCardFoto(
+                foto
             );
 
 
-        if (
-
-            fotos.length === 0
-
-        ) {
-
-
-            lista.innerHTML =
-
-                '<p class="sem-fotos">' +
-
-                '📭 Nenhuma foto aguardando aprovação.' +
-
-                '</p>';
-
-
-            return;
-
         }
+    );
 
-
-        fotos.forEach(
-
-            function (arquivo) {
-
-
-                criarFotoPendente(
-                    arquivo
-                );
-
-
-            }
-
-        );
-
-
-    }
-
-    catch (erro) {
-
-
-        console.error(
-            erro
-        );
-
-
-        lista.innerHTML =
-
-            '<p class="erro">' +
-
-            '❌ Erro ao carregar as fotos.<br><br>' +
-
-            erro.message +
-
-            '</p>';
-
-
-    }
 
 }
 
@@ -722,49 +467,47 @@ async function carregarFotosPendentes() {
 
 /************************************************
 
- CRIAR CARD PENDENTE
+ CRIAR CARD DA FOTO
 
 ************************************************/
 
 
-function criarFotoPendente(
-    arquivo
-) {
-
-
-    const lista =
-
-        document
-        .getElementById(
-            "listaPendentes"
-        );
+function criarCardFoto(foto) {
 
 
     const caminho =
 
         "aguardando/" +
-
-        arquivo.name;
+        foto.name;
 
 
     const {
 
-        data: urlData
+        data
 
-    }
-
-    =
+    } =
 
     supabaseClient
-    .storage
-    .from(BUCKET)
-    .getPublicUrl(
-        caminho
-    );
+        .storage
+        .from(BUCKET)
+        .getPublicUrl(
+            caminho
+        );
+
+
+    const urlFoto =
+        data.publicUrl;
+
+
+    const galeria =
+
+        document
+        .getElementById(
+            "galeriaPendentes"
+        );
 
 
     const card =
-
         document.createElement(
             "div"
         );
@@ -774,120 +517,55 @@ function criarFotoPendente(
         "foto-card";
 
 
-    const imagem =
+    card.innerHTML =
 
-        document.createElement(
-            "img"
-        );
+        `
 
-
-    imagem.src =
-        urlData.publicUrl;
-
-
-    imagem.alt =
-        "Foto enviada";
+        <img
+            src="${urlFoto}"
+            alt="Foto enviada"
+        >
 
 
-    imagem.loading =
-        "lazy";
+        <div class="nome-foto">
+
+            ${foto.name}
+
+        </div>
 
 
-    imagem.onerror =
-        function () {
-
-            console.error(
-                "Erro ao carregar imagem:",
-                imagem.src
-            );
-
-        };
+        <div class="botoes-foto">
 
 
-    const botoes =
+            <button
+                class="botao-aprovar"
+                onclick="aprovarFoto('${foto.name}')"
+            >
 
-        document.createElement(
-            "div"
-        );
+                ✅ Permitir
 
-
-    botoes.className =
-        "botoes-foto";
-
-
-    const aprovar =
-
-        document.createElement(
-            "button"
-        );
+            </button>
 
 
-    aprovar.className =
-        "aprovar";
+            <button
+                class="botao-reprovar"
+                onclick="reprovarFoto('${foto.name}')"
+            >
+
+                ❌ Bloquear
+
+            </button>
 
 
-    aprovar.innerText =
-        "✅ Aprovar";
+        </div>
+
+        `;
 
 
-    aprovar.onclick =
-        function () {
-
-            aprovarFoto(
-                arquivo.name
-            );
-
-        };
-
-
-    const reprovar =
-
-        document.createElement(
-            "button"
-        );
-
-
-    reprovar.className =
-        "reprovar";
-
-
-    reprovar.innerText =
-        "❌ Bloquear";
-
-
-    reprovar.onclick =
-        function () {
-
-            reprovarFoto(
-                arquivo.name
-            );
-
-        };
-
-
-    botoes.appendChild(
-        aprovar
-    );
-
-
-    botoes.appendChild(
-        reprovar
-    );
-
-
-    card.appendChild(
-        imagem
-    );
-
-
-    card.appendChild(
-        botoes
-    );
-
-
-    lista.appendChild(
+    galeria.appendChild(
         card
     );
+
 
 }
 
@@ -897,23 +575,16 @@ function criarFotoPendente(
 
  APROVAR FOTO
 
- MOVE:
- aguardando/
- PARA:
- aprovadas/
-
 ************************************************/
 
 
-async function aprovarFoto(
-    nome
-) {
+async function aprovarFoto(nomeFoto) {
 
 
     const confirmar =
 
         confirm(
-            "Deseja aprovar esta foto?"
+            "Deseja permitir esta foto?"
         );
 
 
@@ -924,75 +595,52 @@ async function aprovarFoto(
     }
 
 
-    try {
+    const {
 
+        data,
 
-        const origem =
+        error
 
-            "aguardando/" +
+    } =
 
-            nome;
-
-
-        const destino =
-
-            "aprovadas/" +
-
-            nome;
-
-
-        const {
-
-            error
-
-        }
-
-        =
-
-        await supabaseClient
+    await supabaseClient
         .storage
         .from(BUCKET)
         .move(
-            origem,
-            destino
+
+            "aguardando/" +
+            nomeFoto,
+
+            "aprovadas/" +
+            nomeFoto
+
         );
 
 
-        if (error) {
+    if (error) {
 
-            throw error;
 
-        }
+        console.error(error);
 
 
         alert(
-            "✅ Foto aprovada!"
+            "❌ Erro ao aprovar a foto:\n\n" +
+            error.message
         );
 
 
-        carregarFotosPendentes();
-
+        return;
 
     }
 
-    catch (erro) {
+
+    alert(
+        "✅ Foto aprovada!"
+    );
 
 
-        console.error(
-            erro
-        );
+    carregarFotosPendentes();
 
-
-        alert(
-
-            "❌ Erro ao aprovar a foto.\n\n" +
-
-            erro.message
-
-        );
-
-
-    }
 
 }
 
@@ -1002,17 +650,10 @@ async function aprovarFoto(
 
  REPROVAR FOTO
 
- MOVE:
- aguardando/
- PARA:
- reprovadas/
-
 ************************************************/
 
 
-async function reprovarFoto(
-    nome
-) {
+async function reprovarFoto(nomeFoto) {
 
 
     const confirmar =
@@ -1029,75 +670,52 @@ async function reprovarFoto(
     }
 
 
-    try {
+    const {
 
+        data,
 
-        const origem =
+        error
 
-            "aguardando/" +
+    } =
 
-            nome;
-
-
-        const destino =
-
-            "reprovadas/" +
-
-            nome;
-
-
-        const {
-
-            error
-
-        }
-
-        =
-
-        await supabaseClient
+    await supabaseClient
         .storage
         .from(BUCKET)
         .move(
-            origem,
-            destino
+
+            "aguardando/" +
+            nomeFoto,
+
+            "reprovadas/" +
+            nomeFoto
+
         );
 
 
-        if (error) {
+    if (error) {
 
-            throw error;
 
-        }
+        console.error(error);
 
 
         alert(
-            "❌ Foto bloqueada."
+            "❌ Erro ao bloquear a foto:\n\n" +
+            error.message
         );
 
 
-        carregarFotosPendentes();
-
+        return;
 
     }
 
-    catch (erro) {
+
+    alert(
+        "🚫 Foto bloqueada!"
+    );
 
 
-        console.error(
-            erro
-        );
+    carregarFotosPendentes();
 
-
-        alert(
-
-            "❌ Erro ao bloquear a foto.\n\n" +
-
-            erro.message
-
-        );
-
-
-    }
 
 }
 
@@ -1112,53 +730,52 @@ async function reprovarFoto(
 
 async function visualizarFotos() {
 
-    mostrarTela(
-        "galeriaTela"
-    );
+
+    esconderTodasTelas();
 
 
-    carregarFotosAprovadas();
+    document
+        .getElementById(
+            "validacaoTela"
+        )
+        .classList
+        .remove(
+            "escondido"
+        );
 
-}
-
-
-
-/************************************************
-
- CARREGAR FOTOS APROVADAS
-
-************************************************/
-
-
-async function carregarFotosAprovadas() {
 
     const galeria =
 
         document
         .getElementById(
-            "galeriaFotos"
+            "galeriaPendentes"
         );
 
 
-    galeria.innerHTML =
+    const mensagem =
 
-        '<p class="carregando">⏳ Carregando fotos...</p>';
+        document
+        .getElementById(
+            "nenhumaFoto"
+        );
 
 
-    try {
+    galeria.innerHTML = "";
 
 
-        const {
+    mensagem.innerText =
+        "⏳ Carregando fotos aprovadas...";
 
-            data: arquivos,
 
-            error
+    const {
 
-        }
+        data,
 
-        =
+        error
 
-        await supabaseClient
+    } =
+
+    await supabaseClient
         .storage
         .from(BUCKET)
         .list(
@@ -1169,7 +786,7 @@ async function carregarFotosAprovadas() {
 
                 limit: 1000,
 
-                sort: {
+                sortBy: {
 
                     column:
                         "created_at",
@@ -1184,278 +801,97 @@ async function carregarFotosAprovadas() {
         );
 
 
-        if (error) {
-
-            throw error;
-
-        }
-
-
-        galeria.innerHTML =
-            "";
+    document.querySelector(
+        "#validacaoTela h2"
+    ).innerText =
+        "🖼️ Fotos Aprovadas";
 
 
-        const fotos =
-
-            arquivos.filter(
-                arquivo =>
-                    arquivo.name &&
-                    !arquivo.name.startsWith(".")
-            );
+    if (error) {
 
 
-        if (
-
-            fotos.length === 0
-
-        ) {
+        mensagem.innerText =
+            "❌ Erro ao carregar fotos.";
 
 
-            galeria.innerHTML =
+        return;
 
-                '<p class="sem-fotos">' +
-
-                '📭 Ainda não existem fotos aprovadas.' +
-
-                '</p>';
+    }
 
 
-            return;
-
-        }
-
-
-        fotos.forEach(
-
-            function (arquivo) {
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
 
-                criarFotoGaleria(
-                    arquivo
+        mensagem.innerText =
+            "📭 Ainda não existem fotos aprovadas.";
+
+        return;
+
+    }
+
+
+    mensagem.innerText =
+        data.length +
+        " foto(s) disponíveis ❤️";
+
+
+    data.forEach(
+        function(foto) {
+
+
+            const caminho =
+
+                "aprovadas/" +
+                foto.name;
+
+
+            const {
+
+                data: urlData
+
+            } =
+
+            supabaseClient
+                .storage
+                .from(BUCKET)
+                .getPublicUrl(
+                    caminho
                 );
 
 
-            }
-
-        );
-
-
-    }
-
-    catch (erro) {
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-        console.error(
-            erro
-        );
+            card.className =
+                "foto-card";
 
 
-        galeria.innerHTML =
+            card.innerHTML =
 
-            '<p class="erro">' +
+                `
 
-            '❌ Não foi possível carregar as fotos.<br><br>' +
+                <img
+                    src="${urlData.publicUrl}"
+                    alt="Foto"
+                >
 
-            erro.message +
-
-            '</p>';
-
-
-    }
-
-}
+                `;
 
 
-
-/************************************************
-
- CRIAR FOTO DA GALERIA
-
-************************************************/
-
-
-function criarFotoGaleria(
-    arquivo
-) {
-
-
-    const galeria =
-
-        document
-        .getElementById(
-            "galeriaFotos"
-        );
-
-
-    const caminho =
-
-        "aprovadas/" +
-
-        arquivo.name;
-
-
-    const {
-
-        data: urlData
-
-    }
-
-    =
-
-    supabaseClient
-    .storage
-    .from(BUCKET)
-    .getPublicUrl(
-        caminho
-    );
-
-
-    const card =
-
-        document.createElement(
-            "div"
-        );
-
-
-    card.className =
-        "foto-galeria";
-
-
-    const imagem =
-
-        document.createElement(
-            "img"
-        );
-
-
-    imagem.src =
-        urlData.publicUrl;
-
-
-    imagem.alt =
-        "Foto do casamento";
-
-
-    imagem.loading =
-        "lazy";
-
-
-    imagem.onclick =
-        function () {
-
-            abrirImagem(
-                urlData.publicUrl
+            galeria.appendChild(
+                card
             );
 
-        };
 
-
-    imagem.onerror =
-        function () {
-
-            console.error(
-                "Não foi possível carregar:",
-                imagem.src
-            );
-
-        };
-
-
-    card.appendChild(
-        imagem
+        }
     );
 
-
-    galeria.appendChild(
-        card
-    );
-
-}
-
-
-
-/************************************************
-
- ABRIR FOTO GRANDE
-
-************************************************/
-
-
-function abrirImagem(
-    url
-) {
-
-
-    const novaJanela =
-
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    novaJanela.document.write(
-
-        `
-
-        <!DOCTYPE html>
-
-        <html>
-
-        <head>
-
-            <title>Foto do Casamento</title>
-
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1"
-            >
-
-            <style>
-
-                body {
-
-                    margin: 0;
-
-                    background: #111;
-
-                    display: flex;
-
-                    justify-content: center;
-
-                    align-items: center;
-
-                    min-height: 100vh;
-
-                }
-
-
-                img {
-
-                    max-width: 100%;
-
-                    max-height: 100vh;
-
-                    object-fit: contain;
-
-                }
-
-            </style>
-
-        </head>
-
-
-        <body>
-
-            <img src="${url}">
-
-        </body>
-
-        </html>
-
-        `
-
-    );
 
 }
 
@@ -1470,7 +906,9 @@ function abrirImagem(
 
 function sairValidacao() {
 
+
     voltarInicio();
+
 
 }
 
@@ -1478,7 +916,7 @@ function sairValidacao() {
 
 /************************************************
 
- VOLTAR INÍCIO
+ VOLTAR AO INÍCIO
 
 ************************************************/
 
@@ -1486,36 +924,63 @@ function sairValidacao() {
 function voltarInicio() {
 
 
-    fotoSelecionada =
-        null;
+    esconderTodasTelas();
 
 
     document
-        .getElementById(
-            "inputFoto"
-        )
+        .getElementById("inicio")
+        .classList
+        .remove("escondido");
+
+
+    document
+        .getElementById("senha")
         .value = "";
 
 
     document
         .getElementById(
-            "previewFoto"
+            "erroSenha"
         )
-        .src = "";
+        .innerText = "";
+
+
+}
+
+
+
+/************************************************
+
+ ESCONDER TODAS AS TELAS
+
+************************************************/
+
+
+function esconderTodasTelas() {
 
 
     document
-        .getElementById(
-            "progressoContainer"
-        )
+        .getElementById("inicio")
         .classList
-        .add(
-            "escondido"
-        );
+        .add("escondido");
 
 
-    mostrarTela(
-        "inicio"
-    );
+    document
+        .getElementById("envioTela")
+        .classList
+        .add("escondido");
+
+
+    document
+        .getElementById("senhaTela")
+        .classList
+        .add("escondido");
+
+
+    document
+        .getElementById("validacaoTela")
+        .classList
+        .add("escondido");
+
 
 }
