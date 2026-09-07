@@ -165,11 +165,13 @@ function comprimirImagem(
                 )
             ) {
 
+
                 reject(
                     new Error(
                         "O arquivo não é uma imagem."
                     )
                 );
+
 
                 return;
 
@@ -260,11 +262,13 @@ function comprimirImagem(
 
                                     if (!blob) {
 
+
                                         reject(
                                             new Error(
                                                 "Não foi possível processar a imagem."
                                             )
                                         );
+
 
                                         return;
 
@@ -359,7 +363,6 @@ async function enviarFoto() {
 
 
         return;
-
 
     }
 
@@ -465,7 +468,6 @@ async function enviarFoto() {
 
 
             return;
-
 
         }
 
@@ -573,7 +575,6 @@ function abrirSenha() {
 
 
         return;
-
 
     }
 
@@ -813,7 +814,6 @@ async function carregarFotosPendentes() {
 
         return;
 
-
     }
 
 
@@ -828,7 +828,6 @@ async function carregarFotosPendentes() {
 
 
         return;
-
 
     }
 
@@ -1023,7 +1022,6 @@ async function aprovarFoto(nomeFoto) {
 
         return;
 
-
     }
 
 
@@ -1096,7 +1094,6 @@ async function reprovarFoto(nomeFoto) {
 
 
         return;
-
 
     }
 
@@ -1222,7 +1219,6 @@ async function visualizarFotos() {
 
         return;
 
-
     }
 
 
@@ -1237,7 +1233,6 @@ async function visualizarFotos() {
 
 
         return;
-
 
     }
 
@@ -1440,7 +1435,6 @@ async function carregarFotosApresentacao() {
 
         return;
 
-
     }
 
 
@@ -1458,7 +1452,6 @@ async function carregarFotosApresentacao() {
 
 
         return;
-
 
     }
 
@@ -1522,16 +1515,124 @@ async function carregarFotosApresentacao() {
 
 /************************************************
 
- TROCAR FOTOS DA APRESENTAÇÃO
-
- LAYOUT:
- 3 FOTOS EM CIMA
- 2 FOTOS GRANDES EMBAIXO
+ ESCOLHER LAYOUT ALEATÓRIO
 
 ************************************************/
 
 
-function trocarFotosApresentacao() {
+function escolherLayout() {
+
+
+    const layouts = [
+
+        "painel-layout-1",
+
+        "painel-layout-2",
+
+        "painel-layout-3",
+
+        "painel-layout-4"
+
+    ];
+
+
+    const indice =
+
+        Math.floor(
+
+            Math.random() *
+            layouts.length
+
+        );
+
+
+    return layouts[indice];
+
+
+}
+
+
+
+/************************************************
+
+ IDENTIFICAR PROPORÇÃO DA FOTO
+
+************************************************/
+
+
+function carregarProporcaoImagem(
+    url
+) {
+
+
+    return new Promise(
+        function(resolve) {
+
+
+            const imagem =
+                new Image();
+
+
+            imagem.onload =
+                function() {
+
+
+                    resolve({
+
+                        largura:
+                            imagem.naturalWidth,
+
+                        altura:
+                            imagem.naturalHeight,
+
+                        proporcao:
+                            imagem.naturalWidth /
+                            imagem.naturalHeight
+
+                    });
+
+
+                };
+
+
+            imagem.onerror =
+                function() {
+
+
+                    resolve({
+
+                        largura: 1,
+
+                        altura: 1,
+
+                        proporcao: 1
+
+                    });
+
+
+                };
+
+
+            imagem.src =
+                url;
+
+
+        }
+    );
+
+
+}
+
+
+
+/************************************************
+
+ TROCAR FOTOS DA APRESENTAÇÃO
+
+************************************************/
+
+
+async function trocarFotosApresentacao() {
 
 
     if (
@@ -1550,11 +1651,6 @@ function trocarFotosApresentacao() {
         .getElementById(
             "painelApresentacao"
         );
-
-
-    /* ====================================== */
-    /* MOSTRA NO MÁXIMO 5 FOTOS              */
-    /* ====================================== */
 
 
     const quantidade =
@@ -1594,14 +1690,80 @@ function trocarFotosApresentacao() {
 
 
     setTimeout(
-        function() {
+        async function() {
 
 
             painel.innerHTML = "";
 
 
-            fotosMisturadas.forEach(
-                function(foto,index) {
+            painel.className =
+                "painel-apresentacao";
+
+
+            const layout =
+
+                escolherLayout();
+
+
+            painel.classList.add(
+                layout
+            );
+
+
+            const fotosComProporcao =
+
+                await Promise.all(
+
+                    fotosMisturadas.map(
+                        async function(foto) {
+
+
+                            const dimensoes =
+
+                                await carregarProporcaoImagem(
+                                    foto.url
+                                );
+
+
+                            return {
+
+                                ...foto,
+
+                                ...dimensoes
+
+                            };
+
+
+                        }
+                    )
+
+                );
+
+
+            /*
+                Coloca fotos verticais primeiro
+                quando existirem.
+
+                Isso ajuda o layout a aproveitar
+                melhor a tela.
+            */
+
+
+            fotosComProporcao.sort(
+                function(a,b) {
+
+
+                    return
+                        a.proporcao -
+                        b.proporcao;
+
+
+                }
+            );
+
+
+            fotosComProporcao.forEach(
+                function(foto) {
 
 
                     const card =
@@ -1612,12 +1774,42 @@ function trocarFotosApresentacao() {
 
 
                     card.className =
+                        "foto-apresentacao";
 
-                        "foto-apresentacao " +
 
-                        "foto-posicao-" +
+                    if (
+                        foto.proporcao < 0.85
+                    ) {
 
-                        (index + 1);
+
+                        card.classList.add(
+                            "foto-vertical"
+                        );
+
+
+                    }
+
+                    else if (
+                        foto.proporcao > 1.15
+                    ) {
+
+
+                        card.classList.add(
+                            "foto-horizontal"
+                        );
+
+
+                    }
+
+                    else {
+
+
+                        card.classList.add(
+                            "foto-quadrada"
+                        );
+
+
+                    }
 
 
                     const imagem =
