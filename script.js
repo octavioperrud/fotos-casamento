@@ -2,7 +2,9 @@
  CONFIGURAÇÕES
 ************************************************/
 
+
 const SENHA_ADMIN = "CASAMENTO2026";
+
 
 const LINK_FOTOS_APROVADAS =
     "https://1drv.ms/f/c/f203919d62721e53/IgDBWH5vRVqcTLP_ennS0ThFAbzVWbGUZoULU9zM_F_M4iM?e=bw1XGR";
@@ -12,6 +14,7 @@ const LINK_FOTOS_APROVADAS =
  VARIÁVEIS
 ************************************************/
 
+
 let fotosSelecionadas = [];
 
 
@@ -19,58 +22,49 @@ let fotosSelecionadas = [];
  BANCO LOCAL - INDEXEDDB
 ************************************************/
 
+
 function abrirBanco() {
 
     return new Promise((resolve, reject) => {
 
-        const pedido =
-            indexedDB.open(
-                "FotosCasamento",
-                1
-            );
+        const pedido = indexedDB.open(
+            "FotosCasamento",
+            1
+        );
 
 
-        pedido.onupgradeneeded =
-            function(event) {
+        pedido.onupgradeneeded = function(event) {
 
-                const banco =
-                    event.target.result;
+            const banco = event.target.result;
 
 
-                if (
-                    !banco.objectStoreNames
-                        .contains("fotos")
-                ) {
+            if (!banco.objectStoreNames.contains("fotos")) {
 
-                    banco.createObjectStore(
-                        "fotos",
-                        {
-                            keyPath: "id",
-                            autoIncrement: true
-                        }
-                    );
-
-                }
-
-            };
-
-
-        pedido.onsuccess =
-            function(event) {
-
-                resolve(
-                    event.target.result
+                banco.createObjectStore(
+                    "fotos",
+                    {
+                        keyPath: "id",
+                        autoIncrement: true
+                    }
                 );
 
-            };
+            }
+
+        };
 
 
-        pedido.onerror =
-            function(event) {
+        pedido.onsuccess = function(event) {
 
-                reject(event.target.error);
+            resolve(event.target.result);
 
-            };
+        };
+
+
+        pedido.onerror = function(event) {
+
+            reject(event.target.error);
+
+        };
 
     });
 
@@ -80,6 +74,7 @@ function abrirBanco() {
 /************************************************
  ABRIR TELA ENVIAR FOTO
 ************************************************/
+
 
 function abrirEnviarFoto() {
 
@@ -94,50 +89,44 @@ function abrirEnviarFoto() {
 
 
 /************************************************
- ABRIR CAMERA / GALERIA
+ DETECTAR FOTOS ESCOLHIDAS
 ************************************************/
 
-function tirarFoto() {
 
-    document
-        .getElementById("inputFoto")
-        .click();
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
 
-}
+        const inputFoto =
+            document.getElementById("inputFoto");
+
+
+        inputFoto.addEventListener(
+            "change",
+            function(event) {
+
+                fotosSelecionadas =
+                    Array.from(event.target.files);
+
+
+                mostrarPreview();
+
+            }
+        );
+
+    }
+);
 
 
 /************************************************
- QUANDO ESCOLHER FOTO
+ MOSTRAR PRÉ-VISUALIZAÇÃO
 ************************************************/
 
-document
-    .getElementById("inputFoto")
-    .addEventListener(
-        "change",
-        function(event) {
-
-            fotosSelecionadas =
-                Array.from(
-                    event.target.files
-                );
-
-
-            mostrarPreview();
-
-        }
-    );
-
-
-/************************************************
- MOSTRAR PREVIEW
-************************************************/
 
 function mostrarPreview() {
 
     const area =
-        document.getElementById(
-            "previewFotos"
-        );
+        document.getElementById("previewFotos");
 
 
     area.innerHTML = "";
@@ -165,24 +154,18 @@ function mostrarPreview() {
                         "preview-imagem";
 
 
-                    area.appendChild(
-                        imagem
-                    );
+                    area.appendChild(imagem);
 
                 };
 
 
-            leitor.readAsDataURL(
-                foto
-            );
+            leitor.readAsDataURL(foto);
 
         }
     );
 
 
-    if (
-        fotosSelecionadas.length > 0
-    ) {
+    if (fotosSelecionadas.length > 0) {
 
         document
             .getElementById("botaoEnviar")
@@ -197,11 +180,10 @@ function mostrarPreview() {
  ENVIAR PARA VALIDAÇÃO
 ************************************************/
 
+
 async function enviarParaValidacao() {
 
-    if (
-        fotosSelecionadas.length === 0
-    ) {
+    if (fotosSelecionadas.length === 0) {
 
         alert(
             "Escolha pelo menos uma foto."
@@ -212,46 +194,46 @@ async function enviarParaValidacao() {
     }
 
 
-    const banco =
-        await abrirBanco();
+    try {
+
+        const banco =
+            await abrirBanco();
 
 
-    const transacao =
-        banco.transaction(
-            "fotos",
-            "readwrite"
+        const transacao =
+            banco.transaction(
+                "fotos",
+                "readwrite"
+            );
+
+
+        const tabela =
+            transacao.objectStore(
+                "fotos"
+            );
+
+
+        fotosSelecionadas.forEach(
+            function(foto) {
+
+                tabela.add({
+
+                    arquivo: foto,
+
+                    nome: foto.name,
+
+                    data:
+                        new Date().toISOString(),
+
+                    status: "pendente"
+
+                });
+
+            }
         );
 
 
-    const tabela =
-        transacao.objectStore(
-            "fotos"
-        );
-
-
-    fotosSelecionadas.forEach(
-        function(foto) {
-
-            tabela.add({
-
-                arquivo: foto,
-
-                nome: foto.name,
-
-                data:
-                    new Date()
-                    .toISOString(),
-
-                status: "pendente"
-
-            });
-
-        }
-    );
-
-
-    transacao.oncomplete =
-        function() {
+        transacao.oncomplete = function() {
 
             alert(
                 "✅ Foto(s) enviada(s) para validação!"
@@ -280,12 +262,34 @@ async function enviarParaValidacao() {
 
         };
 
+
+        transacao.onerror = function() {
+
+            alert(
+                "❌ Erro ao salvar as fotos."
+            );
+
+        };
+
+    }
+
+    catch (erro) {
+
+        console.error(erro);
+
+        alert(
+            "❌ Não foi possível salvar a foto."
+        );
+
+    }
+
 }
 
 
 /************************************************
- ABRIR SENHA
+ ABRIR ÁREA DE SENHA
 ************************************************/
+
 
 function abrirSenha() {
 
@@ -297,12 +301,18 @@ function abrirSenha() {
         .classList
         .remove("escondido");
 
+
+    document
+        .getElementById("erroSenha")
+        .innerText = "";
+
 }
 
 
 /************************************************
  VALIDAR SENHA
 ************************************************/
+
 
 function validarSenha() {
 
@@ -312,9 +322,7 @@ function validarSenha() {
         .value;
 
 
-    if (
-        senha === SENHA_ADMIN
-    ) {
+    if (senha === SENHA_ADMIN) {
 
         esconderTodas();
 
@@ -342,34 +350,36 @@ function validarSenha() {
 
 
 /************************************************
- CARREGAR FOTOS
+ CARREGAR FOTOS PENDENTES
 ************************************************/
+
 
 async function carregarFotosPendentes() {
 
-    const banco =
-        await abrirBanco();
+    try {
+
+        const banco =
+            await abrirBanco();
 
 
-    const transacao =
-        banco.transaction(
-            "fotos",
-            "readonly"
-        );
+        const transacao =
+            banco.transaction(
+                "fotos",
+                "readonly"
+            );
 
 
-    const tabela =
-        transacao.objectStore(
-            "fotos"
-        );
+        const tabela =
+            transacao.objectStore(
+                "fotos"
+            );
 
 
-    const pedido =
-        tabela.getAll();
+        const pedido =
+            tabela.getAll();
 
 
-    pedido.onsuccess =
-        function() {
+        pedido.onsuccess = function() {
 
             const fotos =
                 pedido.result.filter(
@@ -385,27 +395,30 @@ async function carregarFotosPendentes() {
 
         };
 
+    }
+
+    catch (erro) {
+
+        console.error(erro);
+
+    }
+
 }
 
 
 /************************************************
- MOSTRAR FOTOS
+ MOSTRAR FOTOS PENDENTES
 ************************************************/
 
-function mostrarFotosPendentes(
-    fotos
-) {
+
+function mostrarFotosPendentes(fotos) {
 
     const lista =
-        document.getElementById(
-            "listaFotos"
-        );
+        document.getElementById("listaFotos");
 
 
     const contador =
-        document.getElementById(
-            "contadorFotos"
-        );
+        document.getElementById("contadorFotos");
 
 
     lista.innerHTML = "";
@@ -416,9 +429,7 @@ function mostrarFotosPendentes(
         " foto(s) aguardando";
 
 
-    if (
-        fotos.length === 0
-    ) {
+    if (fotos.length === 0) {
 
         lista.innerHTML = `
 
@@ -429,6 +440,10 @@ function mostrarFotosPendentes(
                 <h3>
                     Nenhuma foto pendente
                 </h3>
+
+                <p>
+                    As fotos enviadas aparecerão aqui.
+                </p>
 
             </div>
 
@@ -449,46 +464,103 @@ function mostrarFotosPendentes(
 
 
             const card =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             card.className =
                 "foto-card";
 
 
-            card.innerHTML = `
+            const imagem =
+                document.createElement("img");
 
-                <img
-                    src="${url}">
 
-                <p>
-                    ${foto.nome}
-                </p>
+            imagem.src = url;
 
-                <div
-                    class="acoes">
 
-                    <button
-                        class="permitir"
-                        onclick="permitirFoto(${foto.id})">
+            const nome =
+                document.createElement("p");
 
-                        ✓ Permitir
 
-                    </button>
+            nome.innerText =
+                foto.nome;
 
-                    <button
-                        class="bloquear"
-                        onclick="bloquearFoto(${foto.id})">
 
-                        ✕ Bloquear
+            const acoes =
+                document.createElement("div");
 
-                    </button>
 
-                </div>
+            acoes.className =
+                "acoes";
 
-            `;
+
+            const permitir =
+                document.createElement("button");
+
+
+            permitir.className =
+                "permitir";
+
+
+            permitir.innerText =
+                "✓ Permitir";
+
+
+            permitir.onclick =
+                function() {
+
+                    permitirFoto(
+                        foto.id
+                    );
+
+                };
+
+
+            const bloquear =
+                document.createElement("button");
+
+
+            bloquear.className =
+                "bloquear";
+
+
+            bloquear.innerText =
+                "✕ Bloquear";
+
+
+            bloquear.onclick =
+                function() {
+
+                    bloquearFoto(
+                        foto.id
+                    );
+
+                };
+
+
+            acoes.appendChild(
+                permitir
+            );
+
+
+            acoes.appendChild(
+                bloquear
+            );
+
+
+            card.appendChild(
+                imagem
+            );
+
+
+            card.appendChild(
+                nome
+            );
+
+
+            card.appendChild(
+                acoes
+            );
 
 
             lista.appendChild(
@@ -504,6 +576,7 @@ function mostrarFotosPendentes(
 /************************************************
  PERMITIR FOTO
 ************************************************/
+
 
 async function permitirFoto(id) {
 
@@ -527,23 +600,29 @@ async function permitirFoto(id) {
  BLOQUEAR FOTO
 ************************************************/
 
+
 async function bloquearFoto(id) {
 
-    if (
+    const confirmar =
         confirm(
             "Deseja bloquear esta foto?"
-        )
-    ) {
-
-        await alterarStatus(
-            id,
-            "bloqueada"
         );
 
 
-        carregarFotosPendentes();
+    if (!confirmar) {
+
+        return;
 
     }
+
+
+    await alterarStatus(
+        id,
+        "bloqueada"
+    );
+
+
+    carregarFotosPendentes();
 
 }
 
@@ -551,6 +630,7 @@ async function bloquearFoto(id) {
 /************************************************
  ALTERAR STATUS
 ************************************************/
+
 
 async function alterarStatus(
     id,
@@ -561,46 +641,82 @@ async function alterarStatus(
         await abrirBanco();
 
 
-    const transacao =
-        banco.transaction(
-            "fotos",
-            "readwrite"
-        );
+    return new Promise(
+        (resolve, reject) => {
+
+            const transacao =
+                banco.transaction(
+                    "fotos",
+                    "readwrite"
+                );
 
 
-    const tabela =
-        transacao.objectStore(
-            "fotos"
-        );
+            const tabela =
+                transacao.objectStore(
+                    "fotos"
+                );
 
 
-    const pedido =
-        tabela.get(id);
+            const pedido =
+                tabela.get(id);
 
 
-    pedido.onsuccess =
-        function() {
+            pedido.onsuccess =
+                function() {
 
-            const foto =
-                pedido.result;
-
-
-            foto.status =
-                novoStatus;
+                    const foto =
+                        pedido.result;
 
 
-            tabela.put(
-                foto
-            );
+                    if (!foto) {
 
-        };
+                        reject(
+                            "Foto não encontrada"
+                        );
+
+                        return;
+
+                    }
+
+
+                    foto.status =
+                        novoStatus;
+
+
+                    tabela.put(
+                        foto
+                    );
+
+                };
+
+
+            transacao.oncomplete =
+                function() {
+
+                    resolve();
+
+                };
+
+
+            transacao.onerror =
+                function(event) {
+
+                    reject(
+                        event.target.error
+                    );
+
+                };
+
+        }
+    );
 
 }
 
 
 /************************************************
- VISUALIZAR APROVADAS
+ VISUALIZAR FOTOS APROVADAS
 ************************************************/
+
 
 function visualizarFotos() {
 
@@ -616,6 +732,7 @@ function visualizarFotos() {
  VOLTAR AO INÍCIO
 ************************************************/
 
+
 function voltarInicio() {
 
     esconderTodas();
@@ -630,33 +747,35 @@ function voltarInicio() {
 
 
 /************************************************
- ESCONDER TODAS
+ ESCONDER TODAS AS TELAS
 ************************************************/
+
 
 function esconderTodas() {
 
-    document
-        .getElementById("inicio")
-        .classList
-        .add("escondido");
+    const telas = [
+
+        "inicio",
+
+        "enviarTela",
+
+        "senhaTela",
+
+        "validacaoTela"
+
+    ];
 
 
-    document
-        .getElementById("enviarTela")
-        .classList
-        .add("escondido");
+    telas.forEach(
+        function(id) {
 
+            document
+                .getElementById(id)
+                .classList
+                .add("escondido");
 
-    document
-        .getElementById("senhaTela")
-        .classList
-        .add("escondido");
-
-
-    document
-        .getElementById("validacaoTela")
-        .classList
-        .add("escondido");
+        }
+    );
 
 }
 
