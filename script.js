@@ -39,6 +39,50 @@ const SENHA_ADMIN =
 
 /************************************************
 
+ CONFIGURAÇÕES DE OTIMIZAÇÃO DAS FOTOS
+
+************************************************/
+
+
+const TAMANHO_MAXIMO_IMAGEM =
+    2400;
+
+
+/*
+    Objetivo aproximado:
+
+    2 MB
+*/
+
+
+const TAMANHO_ALVO =
+    2 * 1024 * 1024;
+
+
+/*
+    Qualidade inicial da imagem.
+*/
+
+
+const QUALIDADE_INICIAL =
+    0.88;
+
+
+/*
+    Qualidade mínima permitida.
+
+    Não vamos reduzir excessivamente
+    para preservar a qualidade.
+*/
+
+
+const QUALIDADE_MINIMA =
+    0.55;
+
+
+
+/************************************************
+
  VARIÁVEIS
 
 ************************************************/
@@ -104,7 +148,9 @@ document
 
             if (!arquivo) {
 
+
                 return;
+
 
             }
 
@@ -144,6 +190,386 @@ document
 
 /************************************************
 
+ OTIMIZAR FOTO
+
+ Reduz resolução e tamanho antes
+ de enviar para o Supabase.
+
+************************************************/
+
+
+async function otimizarFoto(
+    arquivo
+) {
+
+
+    return new Promise(
+        function(resolve, reject) {
+
+
+            const imagem =
+                new Image();
+
+
+            const urlImagem =
+                URL.createObjectURL(
+                    arquivo
+                );
+
+
+            imagem.onload =
+                async function() {
+
+
+                    try {
+
+
+                        let largura =
+                            imagem.width;
+
+
+                        let altura =
+                            imagem.height;
+
+
+                        /*
+                            Redimensiona apenas se
+                            ultrapassar o tamanho máximo.
+                        */
+
+
+                        if (
+                            largura >
+                            TAMANHO_MAXIMO_IMAGEM
+                        ) {
+
+
+                            altura =
+                                Math.round(
+
+                                    altura *
+
+                                    (
+                                        TAMANHO_MAXIMO_IMAGEM /
+                                        largura
+                                    )
+
+                                );
+
+
+                            largura =
+                                TAMANHO_MAXIMO_IMAGEM;
+
+
+                        }
+
+
+                        else if (
+                            altura >
+                            TAMANHO_MAXIMO_IMAGEM
+                        ) {
+
+
+                            largura =
+                                Math.round(
+
+                                    largura *
+
+                                    (
+                                        TAMANHO_MAXIMO_IMAGEM /
+                                        altura
+                                    )
+
+                                );
+
+
+                            altura =
+                                TAMANHO_MAXIMO_IMAGEM;
+
+
+                        }
+
+
+                        const canvas =
+                            document.createElement(
+                                "canvas"
+                            );
+
+
+                        const contexto =
+                            canvas.getContext(
+                                "2d"
+                            );
+
+
+                        canvas.width =
+                            largura;
+
+
+                        canvas.height =
+                            altura;
+
+
+                        contexto.drawImage(
+                            imagem,
+                            0,
+                            0,
+                            largura,
+                            altura
+                        );
+
+
+                        let qualidade =
+                            QUALIDADE_INICIAL;
+
+
+                        let blob =
+                            await gerarBlobImagem(
+                                canvas,
+                                qualidade
+                            );
+
+
+                        /*
+                            Reduz gradualmente
+                            a qualidade até tentar
+                            chegar próximo de 2 MB.
+                        */
+
+
+                        while (
+
+                            blob.size >
+                            TAMANHO_ALVO
+
+                            &&
+
+                            qualidade >
+                            QUALIDADE_MINIMA
+
+                        ) {
+
+
+                            qualidade =
+                                qualidade -
+                                0.05;
+
+
+                            blob =
+                                await gerarBlobImagem(
+                                    canvas,
+                                    qualidade
+                                );
+
+
+                        }
+
+
+                        /*
+                            Caso ainda esteja acima
+                            de 2 MB, reduz a resolução
+                            gradualmente.
+
+                            Mesmo assim, nunca bloqueia
+                            o envio da foto.
+                        */
+
+
+                        let tentativas =
+                            0;
+
+
+                        while (
+
+                            blob.size >
+                            TAMANHO_ALVO
+
+                            &&
+
+                            tentativas < 4
+
+                        ) {
+
+
+                            largura =
+                                Math.round(
+                                    largura * 0.85
+                                );
+
+
+                            altura =
+                                Math.round(
+                                    altura * 0.85
+                                );
+
+
+                            const novoCanvas =
+                                document.createElement(
+                                    "canvas"
+                                );
+
+
+                            const novoContexto =
+                                novoCanvas.getContext(
+                                    "2d"
+                                );
+
+
+                            novoCanvas.width =
+                                largura;
+
+
+                            novoCanvas.height =
+                                altura;
+
+
+                            novoContexto.drawImage(
+                                imagem,
+                                0,
+                                0,
+                                largura,
+                                altura
+                            );
+
+
+                            blob =
+                                await gerarBlobImagem(
+                                    novoCanvas,
+                                    QUALIDADE_MINIMA
+                                );
+
+
+                            tentativas++;
+
+
+                        }
+
+
+                        URL.revokeObjectURL(
+                            urlImagem
+                        );
+
+
+                        resolve(
+                            blob
+                        );
+
+
+                    }
+
+
+                    catch (erro) {
+
+
+                        URL.revokeObjectURL(
+                            urlImagem
+                        );
+
+
+                        reject(
+                            erro
+                        );
+
+
+                    }
+
+
+                };
+
+
+            imagem.onerror =
+                function() {
+
+
+                    URL.revokeObjectURL(
+                        urlImagem
+                    );
+
+
+                    reject(
+                        new Error(
+                            "Não foi possível processar esta imagem."
+                        )
+                    );
+
+
+                };
+
+
+            imagem.src =
+                urlImagem;
+
+
+        }
+    );
+
+
+}
+
+
+
+/************************************************
+
+ GERAR BLOB DA IMAGEM
+
+************************************************/
+
+
+function gerarBlobImagem(
+    canvas,
+    qualidade
+) {
+
+
+    return new Promise(
+        function(resolve, reject) {
+
+
+            canvas.toBlob(
+                function(blob) {
+
+
+                    if (!blob) {
+
+
+                        reject(
+                            new Error(
+                                "Não foi possível otimizar a imagem."
+                            )
+                        );
+
+
+                        return;
+
+
+                    }
+
+
+                    resolve(
+                        blob
+                    );
+
+
+                },
+
+
+                "image/jpeg",
+
+
+                qualidade
+            );
+
+
+        }
+    );
+
+
+}
+
+
+
+/************************************************
+
  ENVIAR FOTO
 
 ************************************************/
@@ -167,101 +593,162 @@ async function enviarFoto() {
 
         return;
 
+
     }
 
 
-    status.innerText =
-        "⏳ Enviando foto...";
+    try {
 
 
-    const extensao =
-        fotoSelecionada.name
-        .split(".")
-        .pop();
-
-
-    const nomeArquivo =
-
-        "aguardando/" +
-
-        Date.now() +
-
-        "_" +
-
-        Math.random()
-        .toString(36)
-        .substring(2,8) +
-
-        "." +
-
-        extensao;
-
-
-    const {
-
-        error
-
-    } =
-
-    await supabaseClient
-        .storage
-        .from(BUCKET)
-        .upload(
-
-            nomeArquivo,
-
-            fotoSelecionada,
-
-            {
-
-                cacheControl:
-                    "3600",
-
-                upsert:
-                    false
-
-            }
-
-        );
-
-
-    if (error) {
-
-
-        console.error(error);
+        /*
+            Primeiro otimiza a foto
+            diretamente no dispositivo
+            da pessoa.
+        */
 
 
         status.innerText =
-            "❌ Erro ao enviar a foto: " +
-            error.message;
+            "🖼️ Otimizando foto...";
 
 
-        return;
+        const fotoOtimizada =
+            await otimizarFoto(
+                fotoSelecionada
+            );
+
+
+        /*
+            Mostra aproximadamente
+            o tamanho final.
+        */
+
+
+        const tamanhoMB =
+            (
+                fotoOtimizada.size /
+                1024 /
+                1024
+            )
+            .toFixed(1);
+
+
+        status.innerText =
+            "☁️ Enviando foto otimizada (" +
+            tamanhoMB +
+            " MB)...";
+
+
+        /*
+            Agora todas as fotos
+            otimizadas são salvas
+            como JPG.
+        */
+
+
+        const nomeArquivo =
+
+            "aguardando/" +
+
+            Date.now() +
+
+            "_" +
+
+            Math.random()
+            .toString(36)
+            .substring(2,8) +
+
+            ".jpg";
+
+
+        const {
+
+            error
+
+        } =
+
+        await supabaseClient
+            .storage
+            .from(BUCKET)
+            .upload(
+
+                nomeArquivo,
+
+                fotoOtimizada,
+
+                {
+
+                    cacheControl:
+                        "3600",
+
+                    upsert:
+                        false,
+
+                    contentType:
+                        "image/jpeg"
+
+                }
+
+            );
+
+
+        if (error) {
+
+
+            console.error(
+                error
+            );
+
+
+            status.innerText =
+                "❌ Erro ao enviar a foto: " +
+                error.message;
+
+
+            return;
+
+
+        }
+
+
+        status.innerText =
+            "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
+
+
+        fotoSelecionada =
+            null;
+
+
+        document
+            .getElementById("fotoInput")
+            .value = "";
+
+
+        document
+            .getElementById(
+                "previewContainer"
+            )
+            .classList
+            .add(
+                "escondido"
+            );
+
 
     }
 
 
-    status.innerText =
-        "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
+    catch (erro) {
 
 
-    fotoSelecionada =
-        null;
-
-
-    document
-        .getElementById("fotoInput")
-        .value = "";
-
-
-    document
-        .getElementById(
-            "previewContainer"
-        )
-        .classList
-        .add(
-            "escondido"
+        console.error(
+            erro
         );
+
+
+        status.innerText =
+            "❌ Erro ao otimizar a foto. Tente novamente.";
+
+
+    }
 
 
 }
@@ -326,6 +813,7 @@ function abrirSenha() {
 
 
         return;
+
 
     }
 
@@ -423,6 +911,7 @@ function validarSenha() {
 
 
     }
+
 
     else {
 
@@ -565,6 +1054,7 @@ async function carregarFotosPendentes() {
 
         return;
 
+
     }
 
 
@@ -582,6 +1072,7 @@ async function carregarFotosPendentes() {
 
 
         return;
+
 
     }
 
@@ -737,7 +1228,9 @@ async function aprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
+
         return;
+
 
     }
 
@@ -769,12 +1262,15 @@ async function aprovarFoto(nomeFoto) {
 
 
         alert(
+
             "❌ Erro ao aprovar a foto:\n\n" +
             error.message
+
         );
 
 
         return;
+
 
     }
 
@@ -810,7 +1306,9 @@ async function reprovarFoto(nomeFoto) {
 
     if (!confirmar) {
 
+
         return;
+
 
     }
 
@@ -842,12 +1340,15 @@ async function reprovarFoto(nomeFoto) {
 
 
         alert(
+
             "❌ Erro ao bloquear a foto:\n\n" +
             error.message
+
         );
 
 
         return;
+
 
     }
 
@@ -973,6 +1474,7 @@ async function visualizarFotos() {
 
         return;
 
+
     }
 
 
@@ -990,6 +1492,7 @@ async function visualizarFotos() {
 
 
         return;
+
 
     }
 
@@ -1086,11 +1589,6 @@ async function abrirApresentacao() {
     await carregarFotosApresentacao();
 
 
-    /*
-        Troca o painel automaticamente
-        a cada 10 segundos
-    */
-
     intervaloApresentacao =
         setInterval(
 
@@ -1100,11 +1598,6 @@ async function abrirApresentacao() {
 
         );
 
-
-    /*
-        Verifica novas fotos aprovadas
-        a cada 30 segundos
-    */
 
     intervaloAtualizacaoApresentacao =
         setInterval(
@@ -1192,6 +1685,7 @@ async function carregarFotosApresentacao() {
 
         return;
 
+
     }
 
 
@@ -1212,6 +1706,7 @@ async function carregarFotosApresentacao() {
 
 
         return;
+
 
     }
 
@@ -1277,10 +1772,6 @@ async function carregarFotosApresentacao() {
 
  TROCAR FOTOS DA APRESENTAÇÃO
 
- NOVO LAYOUT:
- 4 FOTOS À ESQUERDA
- 1 FOTO GRANDE À DIREITA
-
 ************************************************/
 
 
@@ -1295,7 +1786,9 @@ function trocarFotosApresentacao() {
 
     ) {
 
+
         return;
+
 
     }
 
@@ -1308,25 +1801,16 @@ function trocarFotosApresentacao() {
         );
 
 
-    /*
-        Agora mostramos
-        no máximo 5 fotos
-    */
-
     const quantidade =
 
         Math.min(
 
             fotosApresentacao.length,
 
-            5
+            8
 
         );
 
-
-    /*
-        Embaralha as fotos
-    */
 
     const fotosMisturadas =
 
@@ -1345,10 +1829,6 @@ function trocarFotosApresentacao() {
 
         );
 
-
-    /*
-        Efeito de desaparecimento
-    */
 
     painel.classList.add(
         "painel-trocando"
@@ -1377,18 +1857,21 @@ function trocarFotosApresentacao() {
                         "foto-apresentacao";
 
 
-                    /*
-                        A quinta foto fica grande
-                        ocupando toda a direita
-                    */
-
-                    if (
-                        index === 4
-                    ) {
+                    if (index === 0) {
 
 
                         card.classList.add(
-                            "foto-principal-apresentacao"
+                            "foto-grande"
+                        );
+
+
+                    }
+
+                    else if (index === 3) {
+
+
+                        card.classList.add(
+                            "foto-media"
                         );
 
 
@@ -1519,9 +2002,7 @@ function sairApresentacao() {
 
 
     if (
-
         document.fullscreenElement
-
     ) {
 
 
