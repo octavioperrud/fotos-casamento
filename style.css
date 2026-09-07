@@ -1,1 +1,320 @@
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:Arial;background:#f3ebe2;color:#564536}.card{width:min(92vw,520px);padding:35px;background:#fff;border-radius:24px;text-align:center;box-shadow:0 15px 45px #0002}.rings{font-size:48px}h1{font-family:Georgia;font-size:34px}button,label{display:block;width:100%;padding:17px;margin-top:16px;border:0;border-radius:14px;background:#8a694b;color:white;font-size:17px;font-weight:bold;cursor:pointer}label input{display:none}#preview{max-width:100%;max-height:400px;margin-top:18px;border-radius:14px}.hidden{display:none!important}#reader{width:100%;margin:15px 0}#msg{color:#47714b;line-height:1.6}
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2b1055,
+            #7597de
+        );
+
+    color: white;
+
+}
+
+
+.container {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+}
+
+
+.tela {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+}
+
+
+.escondido {
+
+    display: none;
+
+}
+
+
+.card {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    background:
+        rgba(20,20,30,0.92);
+
+    border-radius: 25px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.4);
+
+}
+
+
+.principal {
+
+    max-width: 450px;
+
+}
+
+
+.icone {
+
+    font-size: 55px;
+
+    margin-bottom: 15px;
+
+}
+
+
+h1 {
+
+    font-size: 32px;
+
+    margin-bottom: 10px;
+
+}
+
+
+h2 {
+
+    margin-top: 0;
+
+}
+
+
+.subtitulo {
+
+    color: #ddd;
+
+    margin-bottom: 30px;
+
+}
+
+
+.botao {
+
+    width: 100%;
+
+    border: none;
+
+    padding: 18px;
+
+    margin-top: 15px;
+
+    border-radius: 15px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.botao:hover {
+
+    transform: scale(1.03);
+
+}
+
+
+.botao-foto {
+
+    background:
+        #ff5f7e;
+
+    color: white;
+
+}
+
+
+.botao-visualizar {
+
+    background:
+        #4da3ff;
+
+    color: white;
+
+}
+
+
+.botao-validacao {
+
+    background:
+        #f5c542;
+
+    color: #222;
+
+}
+
+
+.rodape {
+
+    margin-top: 30px;
+
+    color: #bbb;
+
+    font-size: 14px;
+
+}
+
+
+input {
+
+    width: 100%;
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    margin-top: 20px;
+
+    font-size: 17px;
+
+}
+
+
+.voltar {
+
+    background: none;
+
+    border: none;
+
+    color: #ccc;
+
+    margin-top: 20px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+
+.erro {
+
+    color: #ff7777;
+
+}
+
+
+.painel {
+
+    max-width: 900px;
+
+}
+
+
+.topo-painel {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+}
+
+
+.sair {
+
+    background: #e74c3c;
+
+    border: none;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+}
+
+
+.descricao {
+
+    color: #ccc;
+
+}
+
+
+.lista-fotos {
+
+    margin-top: 25px;
+
+}
+
+
+.sem-fotos {
+
+    padding: 50px 20px;
+
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+
+}
+
+
+.sem-fotos h3 {
+
+    margin-bottom: 10px;
+
+}
+
+
+@media
+(max-width: 600px) {
+
+    .card {
+
+        padding: 25px;
+
+    }
+
+
+    h1 {
+
+        font-size: 27px;
+
+    }
+
+}
