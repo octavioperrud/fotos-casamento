@@ -123,6 +123,7 @@
 }
 
 
+
 /* ====================================== */
 /* PAINEL DE FOTOS                        */
 /* ====================================== */
@@ -136,10 +137,9 @@
 
     grid-template-columns:
 
-        repeat(
-            3,
-            1fr
-        );
+        1fr
+        1fr
+        1fr;
 
     grid-template-rows:
 
@@ -163,9 +163,6 @@
 }
 
 
-/* EFEITO DE TRANSIÇÃO */
-
-
 .painel-trocando {
 
     opacity: 0;
@@ -173,8 +170,9 @@
 }
 
 
+
 /* ====================================== */
-/* FOTO                                   */
+/* FOTOS                                  */
 /* ====================================== */
 
 
@@ -184,7 +182,7 @@
 
     overflow: hidden;
 
-    border-radius: 40px;
+    border-radius: 35px;
 
     background: #111;
 
@@ -211,7 +209,7 @@
 
 
 /* ====================================== */
-/* AJUSTE DAS IMAGENS                     */
+/* AJUSTE AUTOMÁTICO DA IMAGEM            */
 /* ====================================== */
 
 
@@ -236,29 +234,29 @@
 }
 
 
-/* PEQUENO MOVIMENTO NAS FOTOS */
+.foto-apresentacao:hover img {
 
+    transform:
 
-.foto-apresentacao img {
-
-    animation:
-
-        movimentoFoto
-        12s
-        ease-in-out
-        infinite
-        alternate;
+        scale(
+            1.05
+        );
 
 }
 
 
+
 /* ====================================== */
-/* LINHA SUPERIOR                         */
-/* 3 FOTOS IGUAIS                         */
+/* POSIÇÕES DAS 5 FOTOS                   */
 /* ====================================== */
 
 
-.foto-topo-1 {
+/* -------------------------------------- */
+/* FOTO 1 - SUPERIOR ESQUERDA             */
+/* -------------------------------------- */
+
+
+.foto-apresentacao:nth-child(1) {
 
     grid-column: 1;
 
@@ -267,7 +265,12 @@
 }
 
 
-.foto-topo-2 {
+/* -------------------------------------- */
+/* FOTO 2 - SUPERIOR CENTRO               */
+/* -------------------------------------- */
+
+
+.foto-apresentacao:nth-child(2) {
 
     grid-column: 2;
 
@@ -276,7 +279,12 @@
 }
 
 
-.foto-topo-3 {
+/* -------------------------------------- */
+/* FOTO 3 - SUPERIOR DIREITA              */
+/* -------------------------------------- */
+
+
+.foto-apresentacao:nth-child(3) {
 
     grid-column: 3;
 
@@ -285,15 +293,12 @@
 }
 
 
-/* ====================================== */
-/* LINHA INFERIOR                         */
-/* ====================================== */
+/* -------------------------------------- */
+/* FOTO 4 - INFERIOR ESQUERDA             */
+/* -------------------------------------- */
 
 
-/* FOTO ESQUERDA - 1/3 */
-
-
-.foto-inferior-esquerda {
+.foto-apresentacao:nth-child(4) {
 
     grid-column: 1;
 
@@ -302,10 +307,12 @@
 }
 
 
-/* FOTO DIREITA - 2/3 */
+/* -------------------------------------- */
+/* FOTO 5 - INFERIOR GRANDE               */
+/* -------------------------------------- */
 
 
-.foto-inferior-direita {
+.foto-apresentacao:nth-child(5) {
 
     grid-column:
 
@@ -317,8 +324,9 @@
 }
 
 
+
 /* ====================================== */
-/* ANIMAÇÕES                              */
+/* ANIMAÇÃO                               */
 /* ====================================== */
 
 
@@ -352,34 +360,9 @@
 }
 
 
-@keyframes movimentoFoto {
-
-    from {
-
-        transform:
-
-            scale(
-                1
-            );
-
-    }
-
-
-    to {
-
-        transform:
-
-            scale(
-                1.06
-            );
-
-    }
-
-}
-
 
 /* ====================================== */
-/* RODAPÉ                                 */
+/* STATUS                                 */
 /* ====================================== */
 
 
@@ -405,6 +388,7 @@
 }
 
 
+
 /* ====================================== */
 /* CELULAR                                */
 /* ====================================== */
@@ -412,6 +396,27 @@
 
 @media
 (max-width: 600px) {
+
+
+    .container {
+
+        padding: 25px;
+
+    }
+
+
+    h1 {
+
+        font-size: 30px;
+
+    }
+
+
+    .galeria {
+
+        grid-template-columns: 1fr;
+
+    }
 
 
     .apresentacao-topo {
@@ -447,35 +452,66 @@
 
         grid-template-columns:
 
-            repeat(
-                3,
-                1fr
-            );
+            1fr
+            1fr;
 
         grid-template-rows:
 
             1fr
+            1fr
             2fr;
 
-        gap: 6px;
+        gap: 8px;
 
-        padding: 6px;
-
-    }
-
-
-    .foto-apresentacao {
-
-        border-radius: 18px;
+        padding: 8px;
 
     }
 
 
-    .status-apresentacao {
+    .foto-apresentacao:nth-child(1) {
 
-        font-size: 14px;
+        grid-column: 1;
 
-        padding: 10px;
+        grid-row: 1;
+
+    }
+
+
+    .foto-apresentacao:nth-child(2) {
+
+        grid-column: 2;
+
+        grid-row: 1;
+
+    }
+
+
+    .foto-apresentacao:nth-child(3) {
+
+        grid-column:
+
+            1
+            / 3;
+
+        grid-row: 2;
+
+    }
+
+
+    .foto-apresentacao:nth-child(4) {
+
+        grid-column: 1;
+
+        grid-row: 3;
+
+    }
+
+
+    .foto-apresentacao:nth-child(5) {
+
+        grid-column: 2;
+
+        grid-row: 3;
 
     }
 
