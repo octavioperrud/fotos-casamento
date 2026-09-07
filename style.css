@@ -501,14 +501,14 @@ input[type="file"] {
         );
 
     /*
-        Linha superior um pouco menor
+        Linha superior menor
         Linha inferior maior
     */
 
     grid-template-rows:
 
-        0.85fr
-        2.15fr;
+        1fr
+        2fr;
 
     gap: 12px;
 
