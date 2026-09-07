@@ -51,6 +51,15 @@ let modoGaleria =
     "pendentes";
 
 
+let fotosApresentacao = [];
+
+
+let intervaloApresentacao = null;
+
+
+let intervaloAtualizacaoApresentacao = null;
+
+
 
 /************************************************
 
@@ -189,8 +198,6 @@ async function enviarFoto() {
 
 
     const {
-
-        data,
 
         error
 
@@ -737,8 +744,6 @@ async function aprovarFoto(nomeFoto) {
 
     const {
 
-        data,
-
         error
 
     } =
@@ -811,8 +816,6 @@ async function reprovarFoto(nomeFoto) {
 
 
     const {
-
-        data,
 
         error
 
@@ -893,11 +896,6 @@ async function visualizarFotos() {
     ).innerText =
         "🖼️ Fotos Aprovadas";
 
-
-    /*
-        MOSTRA O BOTÃO SAIR
-        NO TOPO DAS FOTOS APROVADAS
-    */
 
     document
         .getElementById(
@@ -1064,6 +1062,485 @@ async function visualizarFotos() {
 
 /************************************************
 
+ ABRIR APRESENTAÇÃO
+
+************************************************/
+
+
+async function abrirApresentacao() {
+
+
+    esconderTodasTelas();
+
+
+    document
+        .getElementById(
+            "apresentacaoTela"
+        )
+        .classList
+        .remove(
+            "escondido"
+        );
+
+
+    await carregarFotosApresentacao();
+
+
+    /*
+        Troca o painel automaticamente
+        a cada 10 segundos
+    */
+
+    intervaloApresentacao =
+        setInterval(
+
+            trocarFotosApresentacao,
+
+            10000
+
+        );
+
+
+    /*
+        Verifica novas fotos aprovadas
+        a cada 30 segundos
+    */
+
+    intervaloAtualizacaoApresentacao =
+        setInterval(
+
+            carregarFotosApresentacao,
+
+            30000
+
+        );
+
+
+}
+
+
+
+/************************************************
+
+ CARREGAR FOTOS DA APRESENTAÇÃO
+
+************************************************/
+
+
+async function carregarFotosApresentacao() {
+
+
+    const painel =
+
+        document
+        .getElementById(
+            "painelApresentacao"
+        );
+
+
+    const status =
+
+        document
+        .getElementById(
+            "statusApresentacao"
+        );
+
+
+    const {
+
+        data,
+
+        error
+
+    } =
+
+    await supabaseClient
+        .storage
+        .from(BUCKET)
+        .list(
+
+            "aprovadas",
+
+            {
+
+                limit: 1000,
+
+                sortBy: {
+
+                    column:
+                        "created_at",
+
+                    order:
+                        "desc"
+
+                }
+
+            }
+
+        );
+
+
+    if (error) {
+
+
+        console.error(error);
+
+
+        status.innerText =
+            "❌ Erro ao carregar as fotos.";
+
+
+        return;
+
+    }
+
+
+    if (
+
+        !data ||
+
+        data.length === 0
+
+    ) {
+
+
+        painel.innerHTML = "";
+
+
+        status.innerText =
+            "❤️ Aguardando as primeiras fotos aprovadas...";
+
+
+        return;
+
+    }
+
+
+    fotosApresentacao =
+
+        data.map(
+            function(foto) {
+
+
+                const caminho =
+
+                    "aprovadas/" +
+                    foto.name;
+
+
+                const {
+
+                    data: urlData
+
+                } =
+
+                supabaseClient
+                    .storage
+                    .from(BUCKET)
+                    .getPublicUrl(
+                        caminho
+                    );
+
+
+                return {
+
+                    nome:
+                        foto.name,
+
+                    url:
+                        urlData.publicUrl
+
+                };
+
+
+            }
+        );
+
+
+    status.innerText =
+
+        "❤️ " +
+
+        fotosApresentacao.length +
+
+        " momentos compartilhados";
+
+
+    trocarFotosApresentacao();
+
+
+}
+
+
+
+/************************************************
+
+ TROCAR FOTOS DA APRESENTAÇÃO
+
+************************************************/
+
+
+function trocarFotosApresentacao() {
+
+
+    if (
+
+        !fotosApresentacao ||
+
+        fotosApresentacao.length === 0
+
+    ) {
+
+        return;
+
+    }
+
+
+    const painel =
+
+        document
+        .getElementById(
+            "painelApresentacao"
+        );
+
+
+    /*
+        Quantidade de fotos exibidas
+        simultaneamente
+    */
+
+    const quantidade =
+
+        Math.min(
+
+            fotosApresentacao.length,
+
+            8
+
+        );
+
+
+    /*
+        Embaralha as fotos
+    */
+
+    const fotosMisturadas =
+
+        [...fotosApresentacao]
+        .sort(
+
+            () =>
+                Math.random() - 0.5
+
+        )
+        .slice(
+
+            0,
+
+            quantidade
+
+        );
+
+
+    /*
+        Efeito de desaparecimento
+    */
+
+    painel.classList.add(
+        "painel-trocando"
+    );
+
+
+    setTimeout(
+        function() {
+
+
+            painel.innerHTML = "";
+
+
+            fotosMisturadas.forEach(
+                function(foto,index) {
+
+
+                    const card =
+
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "foto-apresentacao";
+
+
+                    /*
+                        Algumas fotos ficam maiores
+                    */
+
+                    if (index === 0) {
+
+
+                        card.classList.add(
+                            "foto-grande"
+                        );
+
+
+                    }
+
+                    else if (index === 3) {
+
+
+                        card.classList.add(
+                            "foto-media"
+                        );
+
+
+                    }
+
+
+                    const imagem =
+
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    imagem.src =
+                        foto.url;
+
+
+                    imagem.alt =
+                        "Foto do casamento";
+
+
+                    card.appendChild(
+                        imagem
+                    );
+
+
+                    painel.appendChild(
+                        card
+                    );
+
+
+                }
+            );
+
+
+            painel.classList.remove(
+                "painel-trocando"
+            );
+
+
+        },
+
+        500
+
+    );
+
+
+}
+
+
+
+/************************************************
+
+ TELA CHEIA
+
+************************************************/
+
+
+function alternarTelaCheia() {
+
+
+    if (
+
+        !document.fullscreenElement
+
+    ) {
+
+
+        document
+            .getElementById(
+                "apresentacaoTela"
+            )
+            .requestFullscreen()
+            .catch(
+                function(error) {
+
+
+                    console.error(
+                        error
+                    );
+
+
+                }
+            );
+
+
+    }
+
+    else {
+
+
+        document.exitFullscreen();
+
+
+    }
+
+
+}
+
+
+
+/************************************************
+
+ SAIR DA APRESENTAÇÃO
+
+************************************************/
+
+
+function sairApresentacao() {
+
+
+    clearInterval(
+        intervaloApresentacao
+    );
+
+
+    clearInterval(
+        intervaloAtualizacaoApresentacao
+    );
+
+
+    intervaloApresentacao =
+        null;
+
+
+    intervaloAtualizacaoApresentacao =
+        null;
+
+
+    if (
+        document.fullscreenElement
+    ) {
+
+
+        document.exitFullscreen();
+
+
+    }
+
+
+    voltarInicio();
+
+
+}
+
+
+
+/************************************************
+
  SAIR DA VALIDAÇÃO
 
 ************************************************/
@@ -1144,6 +1621,12 @@ function esconderTodasTelas() {
 
     document
         .getElementById("validacaoTela")
+        .classList
+        .add("escondido");
+
+
+    document
+        .getElementById("apresentacaoTela")
         .classList
         .add("escondido");
 
