@@ -1,7 +1,5 @@
 * {
-
     box-sizing: border-box;
-
 }
 
 
@@ -28,6 +26,11 @@ body {
 }
 
 
+/* ====================================== */
+/* TELAS                                  */
+/* ====================================== */
+
+
 .tela {
 
     min-height: 100vh;
@@ -48,6 +51,11 @@ body {
     display: none !important;
 
 }
+
+
+/* ====================================== */
+/* CONTAINERS                             */
+/* ====================================== */
 
 
 .container {
@@ -76,6 +84,11 @@ body {
     max-width: 1200px;
 
 }
+
+
+/* ====================================== */
+/* TEXTOS                                 */
+/* ====================================== */
 
 
 h1 {
@@ -107,6 +120,11 @@ h2 {
 }
 
 
+/* ====================================== */
+/* BOTÕES                                 */
+/* ====================================== */
+
+
 .botao {
 
     width: 100%;
@@ -127,14 +145,17 @@ h2 {
 
     color: #3d322c;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
 
 }
 
 
 .botao:hover {
 
-    transform: scale(1.02);
+    transform:
+        scale(1.02);
 
 }
 
@@ -184,6 +205,11 @@ h2 {
 }
 
 
+/* ====================================== */
+/* INPUTS                                 */
+/* ====================================== */
+
+
 input[type="password"] {
 
     width: 100%;
@@ -216,6 +242,11 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* PREVIEW                                */
+/* ====================================== */
+
+
 .preview-container {
 
     margin-top: 25px;
@@ -234,6 +265,11 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* STATUS                                 */
+/* ====================================== */
+
+
 .status {
 
     margin-top: 20px;
@@ -250,6 +286,11 @@ input[type="file"] {
     margin-top: 15px;
 
 }
+
+
+/* ====================================== */
+/* GALERIA ADMINISTRATIVA                  */
+/* ====================================== */
 
 
 .galeria {
@@ -357,7 +398,6 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
 /* APRESENTAÇÃO                           */
 /* ====================================== */
@@ -391,13 +431,18 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* TOPO                                   */
+/* ====================================== */
+
+
 .apresentacao-topo {
 
-    min-height: 80px;
+    min-height: 64px;
 
     padding:
-        15px
-        30px;
+        10px
+        25px;
 
     display: flex;
 
@@ -415,6 +460,8 @@ input[type="file"] {
         );
 
     z-index: 10;
+
+    flex-shrink: 0;
 
 }
 
@@ -481,21 +528,44 @@ input[type="file"] {
 }
 
 
+/* ====================================== */
+/* PAINEL PRINCIPAL                        */
+/* ====================================== */
 
-/* ====================================== */
-/* PAINEL DA APRESENTAÇÃO                  */
-/* ====================================== */
+
+/*
+    ESTRUTURA EXATA:
+
+    FOTO GRANDE | PEQUENA | PEQUENA
+    FOTO GRANDE | PEQUENA | PEQUENA
+
+*/
 
 
 .painel-apresentacao {
 
     flex: 1;
 
+    min-height: 0;
+
+    width: 100%;
+
     display: grid;
+
+    grid-template-columns:
+
+        minmax(0, 1.55fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    grid-template-rows:
+
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
     gap: 12px;
 
-    padding: 15px;
+    padding: 12px;
 
     overflow: hidden;
 
@@ -511,377 +581,19 @@ input[type="file"] {
 
 
 /* ====================================== */
-/* LAYOUT 1                                */
-/* FOTO GRANDE + 4 FOTOS                   */
+/* GRANDE À DIREITA                        */
 /* ====================================== */
 
 
-.painel-layout-1 {
+.painel-apresentacao.grande-direita {
 
     grid-template-columns:
 
-        1.6fr
-        1fr
-        1fr;
-
-    grid-template-rows:
-
-        1fr
-        1fr;
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1.55fr);
 
 }
-
-
-.painel-layout-1
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        1 / 3;
-
-}
-
-
-.painel-layout-1
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-1
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-1
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-1
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        2;
-
-}
-
-
-
-/* ====================================== */
-/* LAYOUT 2                                */
-/* 3 FOTOS EM CIMA + 2 EMBAIXO             */
-/* ====================================== */
-
-
-.painel-layout-2 {
-
-    grid-template-columns:
-
-        repeat(
-            6,
-            1fr
-        );
-
-    grid-template-rows:
-
-        1fr
-        1.5fr;
-
-}
-
-
-.painel-layout-2
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1 / 3;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-2
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        3 / 5;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-2
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        5 / 7;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-2
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        1 / 4;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-2
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        4 / 7;
-
-    grid-row:
-
-        2;
-
-}
-
-
-
-/* ====================================== */
-/* LAYOUT 3                                */
-/* FOTO GRANDE EM CIMA                     */
-/* ====================================== */
-
-
-.painel-layout-3 {
-
-    grid-template-columns:
-
-        repeat(
-            4,
-            1fr
-        );
-
-    grid-template-rows:
-
-        1.4fr
-        1fr;
-
-}
-
-
-.painel-layout-3
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1 / 5;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-3
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-3
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-3
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-3
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        4;
-
-    grid-row:
-
-        2;
-
-}
-
-
-
-/* ====================================== */
-/* LAYOUT 4                                */
-/* FOTO GRANDE À DIREITA                   */
-/* ====================================== */
-
-
-.painel-layout-4 {
-
-    grid-template-columns:
-
-        1fr
-        1fr
-        1.6fr;
-
-    grid-template-rows:
-
-        1fr
-        1fr;
-
-}
-
-
-.painel-layout-4
-.foto-apresentacao:nth-child(1) {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-4
-.foto-apresentacao:nth-child(2) {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        1;
-
-}
-
-
-.painel-layout-4
-.foto-apresentacao:nth-child(3) {
-
-    grid-column:
-
-        1;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-4
-.foto-apresentacao:nth-child(4) {
-
-    grid-column:
-
-        2;
-
-    grid-row:
-
-        2;
-
-}
-
-
-.painel-layout-4
-.foto-apresentacao:nth-child(5) {
-
-    grid-column:
-
-        3;
-
-    grid-row:
-
-        1 / 3;
-
-}
-
 
 
 /* ====================================== */
@@ -896,9 +608,8 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
-/* FOTOS DA APRESENTAÇÃO                   */
+/* FOTO                                   */
 /* ====================================== */
 
 
@@ -920,7 +631,7 @@ input[type="file"] {
 
         0
         10px
-        35px
+        30px
 
         rgba(
             0,
@@ -932,15 +643,14 @@ input[type="file"] {
     animation:
 
         aparecerFoto
-        0.8s
+        0.7s
         ease;
 
 }
 
 
-
 /* ====================================== */
-/* IMAGENS                                 */
+/* IMAGENS                                */
 /* ====================================== */
 
 
@@ -959,35 +669,161 @@ input[type="file"] {
 }
 
 
-/* Fotos verticais */
+/* ====================================== */
+/* LAYOUT NORMAL                           */
+/* FOTO GRANDE À ESQUERDA                  */
+/* ====================================== */
 
 
-.foto-vertical img {
+/*
+    ┌───────────────────────┬───────────┬───────────┐
+    │                       │ Pequena 1 │ Pequena 2 │
+    │     FOTO GRANDE       ├───────────┼───────────┤
+    │                       │ Pequena 3 │ Pequena 4 │
+    └───────────────────────┴───────────┴───────────┘
+*/
 
-    object-position:
 
-        center
-        center;
+.foto-posicao-1 {
+
+    grid-column: 1;
+
+    grid-row: 1 / 3;
+
+}
+
+
+.foto-posicao-2 {
+
+    grid-column: 2;
+
+    grid-row: 1;
 
 }
 
 
-/* Fotos horizontais */
+.foto-posicao-3 {
 
+    grid-column: 3;
 
-.foto-horizontal img {
-
-    object-position:
-
-        center
-        center;
+    grid-row: 1;
 
 }
 
+
+.foto-posicao-4 {
+
+    grid-column: 2;
+
+    grid-row: 2;
+
+}
+
+
+.foto-posicao-5 {
+
+    grid-column: 3;
+
+    grid-row: 2;
+
+}
 
 
 /* ====================================== */
-/* ANIMAÇÃO                                */
+/* LAYOUT GRANDE À DIREITA                 */
+/* ====================================== */
+
+
+/*
+    ┌───────────┬───────────┬───────────────────────┐
+    │ Pequena 1 │ Pequena 2 │                       │
+    ├───────────┼───────────┤     FOTO GRANDE       │
+    │ Pequena 3 │ Pequena 4 │                       │
+    └───────────┴───────────┴───────────────────────┘
+*/
+
+
+.painel-apresentacao.grande-direita
+.foto-posicao-1 {
+
+    grid-column: 3;
+
+    grid-row: 1 / 3;
+
+}
+
+
+.painel-apresentacao.grande-direita
+.foto-posicao-2 {
+
+    grid-column: 1;
+
+    grid-row: 1;
+
+}
+
+
+.painel-apresentacao.grande-direita
+.foto-posicao-3 {
+
+    grid-column: 2;
+
+    grid-row: 1;
+
+}
+
+
+.painel-apresentacao.grande-direita
+.foto-posicao-4 {
+
+    grid-column: 1;
+
+    grid-row: 2;
+
+}
+
+
+.painel-apresentacao.grande-direita
+.foto-posicao-5 {
+
+    grid-column: 2;
+
+    grid-row: 2;
+
+}
+
+
+/* ====================================== */
+/* FALLBACK PARA MENOS DE 5 FOTOS          */
+/* ====================================== */
+
+
+.painel-apresentacao.menos-de-cinco {
+
+    grid-template-columns:
+
+        repeat(
+            auto-fit,
+            minmax(220px, 1fr)
+        );
+
+    grid-template-rows: 1fr;
+
+}
+
+
+.painel-apresentacao.menos-de-cinco
+.foto-apresentacao {
+
+    grid-column: auto;
+
+    grid-row: auto;
+
+}
+
+
+/* ====================================== */
+/* ANIMAÇÃO                               */
 /* ====================================== */
 
 
@@ -1021,9 +857,8 @@ input[type="file"] {
 }
 
 
-
 /* ====================================== */
-/* STATUS                                  */
+/* STATUS APRESENTAÇÃO                     */
 /* ====================================== */
 
 
@@ -1032,9 +867,9 @@ input[type="file"] {
     text-align: center;
 
     padding:
-        15px;
+        10px;
 
-    font-size: 18px;
+    font-size: 16px;
 
     background:
 
@@ -1045,12 +880,13 @@ input[type="file"] {
             0.35
         );
 
+    flex-shrink: 0;
+
 }
 
 
-
 /* ====================================== */
-/* CELULAR                                 */
+/* CELULAR                                */
 /* ====================================== */
 
 
@@ -1074,18 +910,18 @@ input[type="file"] {
 
     .galeria {
 
-        grid-template-columns:
-
-            1fr;
+        grid-template-columns: 1fr;
 
     }
 
 
     .apresentacao-topo {
 
+        min-height: 55px;
+
         padding:
-            10px
-            15px;
+            8px
+            12px;
 
     }
 
@@ -1108,20 +944,30 @@ input[type="file"] {
     }
 
 
+    /*
+        No celular:
+
+        FOTO GRANDE
+        ───────────
+        Pequena | Pequena
+        Pequena | Pequena
+    */
+
+
     .painel-apresentacao {
 
         grid-template-columns:
 
             repeat(
                 2,
-                1fr
-            ) !important;
+                minmax(0, 1fr)
+            );
 
         grid-template-rows:
 
-            1fr
-            1fr
-            1.3fr !important;
+            minmax(0, 1.4fr)
+            minmax(0, 1fr)
+            minmax(0, 1fr);
 
         gap: 8px;
 
@@ -1130,72 +976,81 @@ input[type="file"] {
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(1) {
+    .painel-apresentacao.grande-direita {
 
-        grid-column:
+        grid-template-columns:
 
-            1 / 3 !important;
-
-        grid-row:
-
-            1 !important;
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(2) {
+    .foto-posicao-1,
 
-        grid-column:
+    .painel-apresentacao.grande-direita
+    .foto-posicao-1 {
 
-            1 !important;
+        grid-column: 1 / 3;
 
-        grid-row:
-
-            2 !important;
+        grid-row: 1;
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(3) {
+    .foto-posicao-2,
 
-        grid-column:
+    .painel-apresentacao.grande-direita
+    .foto-posicao-2 {
 
-            2 !important;
+        grid-column: 1;
 
-        grid-row:
-
-            2 !important;
+        grid-row: 2;
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(4) {
+    .foto-posicao-3,
 
-        grid-column:
+    .painel-apresentacao.grande-direita
+    .foto-posicao-3 {
 
-            1 !important;
+        grid-column: 2;
 
-        grid-row:
-
-            3 !important;
+        grid-row: 2;
 
     }
 
 
-    .painel-apresentacao
-    .foto-apresentacao:nth-child(5) {
+    .foto-posicao-4,
 
-        grid-column:
+    .painel-apresentacao.grande-direita
+    .foto-posicao-4 {
 
-            2 !important;
+        grid-column: 1;
 
-        grid-row:
+        grid-row: 3;
 
-            3 !important;
+    }
+
+
+    .foto-posicao-5,
+
+    .painel-apresentacao.grande-direita
+    .foto-posicao-5 {
+
+        grid-column: 2;
+
+        grid-row: 3;
+
+    }
+
+
+    .foto-apresentacao {
+
+        border-radius: 18px;
 
     }
 
