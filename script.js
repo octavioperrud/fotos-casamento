@@ -1086,6 +1086,11 @@ async function abrirApresentacao() {
     await carregarFotosApresentacao();
 
 
+    /*
+        Troca o painel automaticamente
+        a cada 10 segundos
+    */
+
     intervaloApresentacao =
         setInterval(
 
@@ -1095,6 +1100,11 @@ async function abrirApresentacao() {
 
         );
 
+
+    /*
+        Verifica novas fotos aprovadas
+        a cada 30 segundos
+    */
 
     intervaloAtualizacaoApresentacao =
         setInterval(
@@ -1267,6 +1277,10 @@ async function carregarFotosApresentacao() {
 
  TROCAR FOTOS DA APRESENTAÇÃO
 
+ NOVO LAYOUT:
+ 4 FOTOS À ESQUERDA
+ 1 FOTO GRANDE À DIREITA
+
 ************************************************/
 
 
@@ -1294,16 +1308,25 @@ function trocarFotosApresentacao() {
         );
 
 
+    /*
+        Agora mostramos
+        no máximo 5 fotos
+    */
+
     const quantidade =
 
         Math.min(
 
             fotosApresentacao.length,
 
-            8
+            5
 
         );
 
+
+    /*
+        Embaralha as fotos
+    */
 
     const fotosMisturadas =
 
@@ -1323,6 +1346,10 @@ function trocarFotosApresentacao() {
         );
 
 
+    /*
+        Efeito de desaparecimento
+    */
+
     painel.classList.add(
         "painel-trocando"
     );
@@ -1336,7 +1363,7 @@ function trocarFotosApresentacao() {
 
 
             fotosMisturadas.forEach(
-                function(foto, index) {
+                function(foto,index) {
 
 
                     const card =
@@ -1351,15 +1378,21 @@ function trocarFotosApresentacao() {
 
 
                     /*
-                        DISTRIBUIÇÃO DAS FOTOS
-                        CONFORME O MODELO
+                        A quinta foto fica grande
+                        ocupando toda a direita
                     */
 
+                    if (
+                        index === 4
+                    ) {
 
-                    card.classList.add(
-                        "foto-layout-" +
-                        (index + 1)
-                    );
+
+                        card.classList.add(
+                            "foto-principal-apresentacao"
+                        );
+
+
+                    }
 
 
                     const imagem =
@@ -1486,7 +1519,9 @@ function sairApresentacao() {
 
 
     if (
+
         document.fullscreenElement
+
     ) {
 
 
