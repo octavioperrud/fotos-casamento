@@ -110,11 +110,6 @@
         </p>
 
 
-        <!--
-            SEM "capture" PARA O CELULAR
-            PODER OFERECER CÂMERA OU GALERIA
-        -->
-
         <input
 
             type="file"
@@ -122,6 +117,8 @@
             id="fotoInput"
 
             accept="image/*"
+
+            capture="environment"
 
         >
 
@@ -239,7 +236,7 @@
 
 
 <!-- ====================================== -->
-<!-- VALIDAÇÃO -->
+<!-- VALIDAÇÃO / VISUALIZAÇÃO -->
 <!-- ====================================== -->
 
 <div
@@ -265,7 +262,7 @@
 
         <button
             class="botao atualizar"
-            onclick="carregarFotosPendentes()"
+            onclick="atualizarFotos()"
         >
 
             🔄 Atualizar Fotos
