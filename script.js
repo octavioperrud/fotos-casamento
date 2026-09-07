@@ -1843,23 +1843,66 @@ function trocarFotosApresentacao() {
             /*
                 =================================================
 
-                ADICIONA AS DUAS METADES.
+                ADICIONA AS DUAS METADES
 
-                A ORDEM VISUAL É CONTROLADA
-                PELO CSS.
+                IMPORTANTE:
+
+                A ordem física dos elementos
+                acompanha o lado da foto grande.
+
+                Isso garante que ela apareça
+                corretamente tanto à esquerda
+                quanto à direita.
 
                 =================================================
             */
 
 
-            painel.appendChild(
-                areaGrande
-            );
+            if (
+                grandeNaEsquerda
+            ) {
 
 
-            painel.appendChild(
-                areaPequenas
-            );
+                /*
+                    FOTO GRANDE À ESQUERDA
+
+                    [ GRANDE ][ PEQUENAS ]
+                */
+
+
+                painel.appendChild(
+                    areaGrande
+                );
+
+
+                painel.appendChild(
+                    areaPequenas
+                );
+
+
+            }
+
+            else {
+
+
+                /*
+                    FOTO GRANDE À DIREITA
+
+                    [ PEQUENAS ][ GRANDE ]
+                */
+
+
+                painel.appendChild(
+                    areaPequenas
+                );
+
+
+                painel.appendChild(
+                    areaGrande
+                );
+
+
+            }
 
 
             /*
