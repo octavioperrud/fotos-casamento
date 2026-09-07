@@ -1,21 +1,15 @@
 /************************************************
-
  CONFIGURAÇÕES SUPABASE
-
 ************************************************/
-
 
 const SUPABASE_URL =
     "https://gmizhmkichnkzsdaznjg.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable_4j1VkO20dQG7R6oMYRMwgA_V9HYVRri";
 
-
 const BUCKET =
     "fotos-casamento";
-
 
 const supabaseClient =
     supabase.createClient(
@@ -24,71 +18,37 @@ const supabaseClient =
     );
 
 
-
 /************************************************
-
  CONFIGURAÇÕES
-
 ************************************************/
-
 
 const SENHA_ADMIN =
     "CASAMENTO2026";
 
 
-
 /************************************************
-
  VARIÁVEIS
-
 ************************************************/
 
-
-let fotoSelecionada =
-    null;
-
+let fotoSelecionada = null;
 
 let modoGaleria =
     "pendentes";
 
+let fotosApresentacao = [];
 
-let fotosApresentacao =
-    [];
+let intervaloApresentacao = null;
 
-
-let intervaloApresentacao =
-    null;
-
-
-let intervaloAtualizacaoApresentacao =
-    null;
-
-
-/*
-    Controla a alternância da foto grande.
-
-    true  = esquerda
-    false = direita
-*/
-
-
-let grandeNaEsquerda =
-    true;
-
+let intervaloAtualizacaoApresentacao = null;
 
 
 /************************************************
-
  ABRIR ENVIO
-
 ************************************************/
-
 
 function abrirEnvio() {
 
-
     esconderTodasTelas();
-
 
     document
         .getElementById(
@@ -99,17 +59,12 @@ function abrirEnvio() {
             "escondido"
         );
 
-
 }
 
 
-
 /************************************************
-
  PREVIEW DA FOTO
-
 ************************************************/
-
 
 document
     .getElementById(
@@ -119,10 +74,8 @@ document
         "change",
         function(event) {
 
-
             const arquivo =
                 event.target.files[0];
-
 
             if (!arquivo) {
 
@@ -130,10 +83,8 @@ document
 
             }
 
-
             fotoSelecionada =
                 arquivo;
-
 
             const imagem =
                 document
@@ -141,12 +92,10 @@ document
                     "previewImagem"
                 );
 
-
             imagem.src =
                 URL.createObjectURL(
                     arquivo
                 );
-
 
             document
                 .getElementById(
@@ -157,18 +106,13 @@ document
                     "escondido"
                 );
 
-
         }
     );
 
 
-
 /************************************************
-
  COMPRIMIR FOTO
-
 ************************************************/
-
 
 function comprimirImagem(
     arquivo,
@@ -176,10 +120,8 @@ function comprimirImagem(
     larguraMaxima = 2400
 ) {
 
-
     return new Promise(
-        function(resolve, reject) {
-
+        function(resolve,reject) {
 
             if (
                 !arquivo.type.startsWith(
@@ -187,57 +129,45 @@ function comprimirImagem(
                 )
             ) {
 
-
                 reject(
                     new Error(
                         "O arquivo não é uma imagem."
                     )
                 );
 
-
                 return;
 
             }
 
-
             const leitor =
                 new FileReader();
-
 
             leitor.onload =
                 function(event) {
 
-
                     const imagem =
                         new Image();
-
 
                     imagem.onload =
                         function() {
 
-
                             let largura =
                                 imagem.width;
 
-
                             let altura =
                                 imagem.height;
-
 
                             if (
                                 largura >
                                 larguraMaxima
                             ) {
 
-
                                 const proporcao =
                                     larguraMaxima /
                                     largura;
 
-
                                 largura =
                                     larguraMaxima;
-
 
                                 altura =
                                     Math.round(
@@ -245,29 +175,23 @@ function comprimirImagem(
                                         proporcao
                                     );
 
-
                             }
-
 
                             const canvas =
                                 document.createElement(
                                     "canvas"
                                 );
 
-
                             canvas.width =
                                 largura;
 
-
                             canvas.height =
                                 altura;
-
 
                             const contexto =
                                 canvas.getContext(
                                     "2d"
                                 );
-
 
                             contexto.drawImage(
                                 imagem,
@@ -277,13 +201,10 @@ function comprimirImagem(
                                 altura
                             );
 
-
                             canvas.toBlob(
                                 function(blob) {
 
-
                                     if (!blob) {
-
 
                                         reject(
                                             new Error(
@@ -291,16 +212,13 @@ function comprimirImagem(
                                             )
                                         );
 
-
                                         return;
 
                                     }
 
-
                                     resolve(
                                         blob
                                     );
-
 
                                 },
 
@@ -309,13 +227,10 @@ function comprimirImagem(
                                 qualidade
                             );
 
-
                         };
-
 
                     imagem.onerror =
                         function() {
-
 
                             reject(
                                 new Error(
@@ -323,20 +238,15 @@ function comprimirImagem(
                                 )
                             );
 
-
                         };
-
 
                     imagem.src =
                         event.target.result;
 
-
                 };
-
 
             leitor.onerror =
                 function() {
-
 
                     reject(
                         new Error(
@@ -344,61 +254,45 @@ function comprimirImagem(
                         )
                     );
 
-
                 };
-
 
             leitor.readAsDataURL(
                 arquivo
             );
 
-
         }
     );
-
 
 }
 
 
-
 /************************************************
-
  ENVIAR FOTO
-
 ************************************************/
 
-
 async function enviarFoto() {
-
 
     const status =
         document.getElementById(
             "statusEnvio"
         );
 
-
     if (!fotoSelecionada) {
-
 
         status.innerText =
             "📸 Escolha ou tire uma foto primeiro.";
-
 
         return;
 
     }
 
-
     try {
-
 
         status.innerText =
             "⏳ Preparando sua foto...";
 
-
         let qualidade =
             0.88;
-
 
         let imagemComprimida =
             await comprimirImagem(
@@ -406,17 +300,14 @@ async function enviarFoto() {
                 qualidade
             );
 
-
         while (
             imagemComprimida.size >
             2 * 1024 * 1024 &&
             qualidade > 0.50
         ) {
 
-
             qualidade =
                 qualidade - 0.05;
-
 
             imagemComprimida =
                 await comprimirImagem(
@@ -424,13 +315,10 @@ async function enviarFoto() {
                     qualidade
                 );
 
-
         }
-
 
         status.innerText =
             "⏳ Enviando foto...";
-
 
         const nomeArquivo =
 
@@ -442,10 +330,9 @@ async function enviarFoto() {
 
             Math.random()
             .toString(36)
-            .substring(2, 8) +
+            .substring(2,8) +
 
             ".jpg";
-
 
         const {
 
@@ -477,37 +364,31 @@ async function enviarFoto() {
 
             );
 
-
         if (error) {
 
-
-            console.error(error);
-
+            console.error(
+                error
+            );
 
             status.innerText =
                 "❌ Erro ao enviar a foto: " +
                 error.message;
 
-
             return;
 
         }
 
-
         status.innerText =
             "✅ Foto enviada com sucesso! Obrigado por compartilhar esse momento ❤️";
 
-
         fotoSelecionada =
             null;
-
 
         document
             .getElementById(
                 "fotoInput"
             )
             .value = "";
-
 
         document
             .getElementById(
@@ -518,54 +399,42 @@ async function enviarFoto() {
                 "escondido"
             );
 
-
     }
 
     catch (error) {
 
-
-        console.error(error);
-
+        console.error(
+            error
+        );
 
         status.innerText =
             "❌ Erro ao preparar a foto: " +
             error.message;
 
-
     }
-
 
 }
 
 
-
 /************************************************
-
  ABRIR SENHA
-
 ************************************************/
 
-
 function abrirSenha() {
-
 
     const autorizado =
         localStorage.getItem(
             "adminAutorizado"
         );
 
-
     if (
         autorizado === "sim"
     ) {
 
-
         modoGaleria =
             "pendentes";
 
-
         esconderTodasTelas();
-
 
         document
             .getElementById(
@@ -576,12 +445,10 @@ function abrirSenha() {
                 "escondido"
             );
 
-
         document.querySelector(
             "#validacaoTela h2"
         ).innerText =
             "📋 Fotos Aguardando Liberação";
-
 
         document
             .getElementById(
@@ -592,17 +459,13 @@ function abrirSenha() {
                 "escondido"
             );
 
-
         carregarFotosPendentes();
-
 
         return;
 
     }
 
-
     esconderTodasTelas();
-
 
     document
         .getElementById(
@@ -613,20 +476,14 @@ function abrirSenha() {
             "escondido"
         );
 
-
 }
 
 
-
 /************************************************
-
  VALIDAR SENHA
-
 ************************************************/
 
-
 function validarSenha() {
-
 
     const senha =
 
@@ -636,7 +493,6 @@ function validarSenha() {
         )
         .value;
 
-
     const erro =
 
         document
@@ -644,24 +500,19 @@ function validarSenha() {
             "erroSenha"
         );
 
-
     if (
         senha === SENHA_ADMIN
     ) {
-
 
         localStorage.setItem(
             "adminAutorizado",
             "sim"
         );
 
-
         modoGaleria =
             "pendentes";
 
-
         esconderTodasTelas();
-
 
         document
             .getElementById(
@@ -672,12 +523,10 @@ function validarSenha() {
                 "escondido"
             );
 
-
         document.querySelector(
             "#validacaoTela h2"
         ).innerText =
             "📋 Fotos Aguardando Liberação";
-
 
         document
             .getElementById(
@@ -688,77 +537,54 @@ function validarSenha() {
                 "escondido"
             );
 
-
-        erro.innerText =
-            "";
-
+        erro.innerText = "";
 
         carregarFotosPendentes();
-
 
     }
 
     else {
 
-
         erro.innerText =
             "❌ Senha incorreta!";
 
-
     }
-
 
 }
 
 
-
 /************************************************
-
  ATUALIZAR FOTOS
-
 ************************************************/
 
-
 function atualizarFotos() {
-
 
     if (
         modoGaleria ===
         "aprovadas"
     ) {
 
-
         visualizarFotos();
-
 
     }
 
     else {
 
-
         carregarFotosPendentes();
 
-
     }
-
 
 }
 
 
-
 /************************************************
-
  CARREGAR FOTOS PENDENTES
-
 ************************************************/
-
 
 async function carregarFotosPendentes() {
 
-
     modoGaleria =
         "pendentes";
-
 
     document
         .getElementById(
@@ -769,14 +595,12 @@ async function carregarFotosPendentes() {
             "escondido"
         );
 
-
     const galeria =
 
         document
         .getElementById(
             "galeriaPendentes"
         );
-
 
     const mensagem =
 
@@ -785,14 +609,10 @@ async function carregarFotosPendentes() {
             "nenhumaFoto"
         );
 
-
-    galeria.innerHTML =
-        "";
-
+    galeria.innerHTML = "";
 
     mensagem.innerText =
         "⏳ Carregando fotos...";
-
 
     const {
 
@@ -811,8 +631,7 @@ async function carregarFotosPendentes() {
 
             {
 
-                limit:
-                    1000,
+                limit: 1000,
 
                 sortBy: {
 
@@ -828,36 +647,30 @@ async function carregarFotosPendentes() {
 
         );
 
-
     if (error) {
 
-
-        console.error(error);
-
+        console.error(
+            error
+        );
 
         mensagem.innerText =
             "❌ Erro ao carregar as fotos.";
 
-
         return;
 
     }
-
 
     if (
         !data ||
         data.length === 0
     ) {
 
-
         mensagem.innerText =
             "📭 Nenhuma foto aguardando aprovação.";
-
 
         return;
 
     }
-
 
     mensagem.innerText =
 
@@ -867,39 +680,29 @@ async function carregarFotosPendentes() {
 
         " foto(s) aguardando aprovação";
 
-
     data.forEach(
         function(foto) {
-
 
             criarCardFoto(
                 foto
             );
 
-
         }
     );
-
 
 }
 
 
-
 /************************************************
-
  CRIAR CARD DA FOTO
-
 ************************************************/
 
-
 function criarCardFoto(foto) {
-
 
     const caminho =
 
         "aguardando/" +
         foto.name;
-
 
     const {
 
@@ -914,10 +717,8 @@ function criarCardFoto(foto) {
             caminho
         );
 
-
     const urlFoto =
         data.publicUrl;
-
 
     const galeria =
 
@@ -926,16 +727,13 @@ function criarCardFoto(foto) {
             "galeriaPendentes"
         );
 
-
     const card =
         document.createElement(
             "div"
         );
 
-
     card.className =
         "foto-card";
-
 
     card.innerHTML =
 
@@ -946,16 +744,13 @@ function criarCardFoto(foto) {
             alt="Foto enviada"
         >
 
-
         <div class="nome-foto">
 
             ${foto.name}
 
         </div>
 
-
         <div class="botoes-foto">
-
 
             <button
                 class="botao-aprovar"
@@ -966,7 +761,6 @@ function criarCardFoto(foto) {
 
             </button>
 
-
             <button
                 class="botao-reprovar"
                 onclick="reprovarFoto('${foto.name}')"
@@ -976,30 +770,22 @@ function criarCardFoto(foto) {
 
             </button>
 
-
         </div>
 
         `;
-
 
     galeria.appendChild(
         card
     );
 
-
 }
 
 
-
 /************************************************
-
  APROVAR FOTO
-
 ************************************************/
 
-
 async function aprovarFoto(nomeFoto) {
-
 
     const confirmar =
 
@@ -1007,13 +793,11 @@ async function aprovarFoto(nomeFoto) {
             "Deseja permitir esta foto?"
         );
 
-
     if (!confirmar) {
 
         return;
 
     }
-
 
     const {
 
@@ -1034,45 +818,35 @@ async function aprovarFoto(nomeFoto) {
 
         );
 
-
     if (error) {
 
-
-        console.error(error);
-
+        console.error(
+            error
+        );
 
         alert(
             "❌ Erro ao aprovar a foto:\n\n" +
             error.message
         );
 
-
         return;
 
     }
-
 
     alert(
         "✅ Foto aprovada!"
     );
 
-
     carregarFotosPendentes();
-
 
 }
 
 
-
 /************************************************
-
  REPROVAR FOTO
-
 ************************************************/
 
-
 async function reprovarFoto(nomeFoto) {
-
 
     const confirmar =
 
@@ -1080,13 +854,11 @@ async function reprovarFoto(nomeFoto) {
             "Deseja bloquear esta foto?"
         );
 
-
     if (!confirmar) {
 
         return;
 
     }
-
 
     const {
 
@@ -1107,52 +879,40 @@ async function reprovarFoto(nomeFoto) {
 
         );
 
-
     if (error) {
 
-
-        console.error(error);
-
+        console.error(
+            error
+        );
 
         alert(
             "❌ Erro ao bloquear a foto:\n\n" +
             error.message
         );
 
-
         return;
 
     }
-
 
     alert(
         "🚫 Foto bloqueada!"
     );
 
-
     carregarFotosPendentes();
-
 
 }
 
 
-
 /************************************************
-
  VISUALIZAR FOTOS APROVADAS
-
 ************************************************/
 
-
 async function visualizarFotos() {
-
 
     modoGaleria =
         "aprovadas";
 
-
     esconderTodasTelas();
-
 
     document
         .getElementById(
@@ -1163,12 +923,10 @@ async function visualizarFotos() {
             "escondido"
         );
 
-
     document.querySelector(
         "#validacaoTela h2"
     ).innerText =
         "🖼️ Fotos Aprovadas";
-
 
     document
         .getElementById(
@@ -1179,14 +937,12 @@ async function visualizarFotos() {
             "escondido"
         );
 
-
     const galeria =
 
         document
         .getElementById(
             "galeriaPendentes"
         );
-
 
     const mensagem =
 
@@ -1195,14 +951,10 @@ async function visualizarFotos() {
             "nenhumaFoto"
         );
 
-
-    galeria.innerHTML =
-        "";
-
+    galeria.innerHTML = "";
 
     mensagem.innerText =
         "⏳ Carregando fotos aprovadas...";
-
 
     const {
 
@@ -1221,8 +973,7 @@ async function visualizarFotos() {
 
             {
 
-                limit:
-                    1000,
+                limit: 1000,
 
                 sortBy: {
 
@@ -1238,33 +989,26 @@ async function visualizarFotos() {
 
         );
 
-
     if (error) {
-
 
         mensagem.innerText =
             "❌ Erro ao carregar fotos.";
 
-
         return;
 
     }
-
 
     if (
         !data ||
         data.length === 0
     ) {
 
-
         mensagem.innerText =
             "📭 Ainda não existem fotos aprovadas.";
-
 
         return;
 
     }
-
 
     mensagem.innerText =
 
@@ -1272,16 +1016,13 @@ async function visualizarFotos() {
 
         " foto(s) disponíveis ❤️";
 
-
     data.forEach(
         function(foto) {
-
 
             const caminho =
 
                 "aprovadas/" +
                 foto.name;
-
 
             const {
 
@@ -1296,16 +1037,13 @@ async function visualizarFotos() {
                     caminho
                 );
 
-
             const card =
                 document.createElement(
                     "div"
                 );
 
-
             card.className =
                 "foto-card";
-
 
             card.innerHTML =
 
@@ -1318,32 +1056,23 @@ async function visualizarFotos() {
 
                 `;
 
-
             galeria.appendChild(
                 card
             );
 
-
         }
     );
-
 
 }
 
 
-
 /************************************************
-
  ABRIR APRESENTAÇÃO
-
 ************************************************/
-
 
 async function abrirApresentacao() {
 
-
     esconderTodasTelas();
-
 
     document
         .getElementById(
@@ -1354,34 +1083,17 @@ async function abrirApresentacao() {
             "escondido"
         );
 
-
     clearInterval(
         intervaloApresentacao
     );
-
 
     clearInterval(
         intervaloAtualizacaoApresentacao
     );
 
-
-    /*
-        Reinicia a alternância.
-
-        A primeira tela começa com
-        a foto grande à esquerda.
-    */
-
-
-    grandeNaEsquerda =
-        true;
-
-
     await carregarFotosApresentacao();
 
-
     intervaloApresentacao =
-
         setInterval(
 
             trocarFotosApresentacao,
@@ -1390,9 +1102,7 @@ async function abrirApresentacao() {
 
         );
 
-
     intervaloAtualizacaoApresentacao =
-
         setInterval(
 
             carregarFotosApresentacao,
@@ -1401,20 +1111,14 @@ async function abrirApresentacao() {
 
         );
 
-
 }
 
 
-
 /************************************************
-
  CARREGAR FOTOS DA APRESENTAÇÃO
-
 ************************************************/
 
-
 async function carregarFotosApresentacao() {
-
 
     const painel =
 
@@ -1423,14 +1127,12 @@ async function carregarFotosApresentacao() {
             "painelApresentacao"
         );
 
-
     const status =
 
         document
         .getElementById(
             "statusApresentacao"
         );
-
 
     const {
 
@@ -1449,8 +1151,7 @@ async function carregarFotosApresentacao() {
 
             {
 
-                limit:
-                    1000,
+                limit: 1000,
 
                 sortBy: {
 
@@ -1466,52 +1167,42 @@ async function carregarFotosApresentacao() {
 
         );
 
-
     if (error) {
 
-
-        console.error(error);
-
+        console.error(
+            error
+        );
 
         status.innerText =
             "❌ Erro ao carregar as fotos.";
 
-
         return;
 
     }
-
 
     if (
         !data ||
         data.length === 0
     ) {
 
-
-        painel.innerHTML =
-            "";
-
+        painel.innerHTML = "";
 
         status.innerText =
             "❤️ Aguardando as primeiras fotos aprovadas...";
 
-
         return;
 
     }
-
 
     fotosApresentacao =
 
         data.map(
             function(foto) {
 
-
                 const caminho =
 
                     "aprovadas/" +
                     foto.name;
-
 
                 const {
 
@@ -1526,7 +1217,6 @@ async function carregarFotosApresentacao() {
                         caminho
                     );
 
-
                 return {
 
                     nome:
@@ -1537,10 +1227,8 @@ async function carregarFotosApresentacao() {
 
                 };
 
-
             }
         );
-
 
     status.innerText =
 
@@ -1550,81 +1238,111 @@ async function carregarFotosApresentacao() {
 
         " momentos compartilhados";
 
-
     trocarFotosApresentacao();
 
+}
+
+
+/************************************************
+ ESCOLHER LAYOUT DA APRESENTAÇÃO
+
+ IMPORTANTE:
+
+ LAYOUT 1:
+ FOTO GRANDE À ESQUERDA
+ + 4 FOTOS PEQUENAS À DIREITA
+
+ LAYOUT 4:
+ 4 FOTOS PEQUENAS À ESQUERDA
+ + FOTO GRANDE À DIREITA
+************************************************/
+
+function escolherLayout() {
+
+    const layouts = [
+
+        "painel-layout-1",
+
+        "painel-layout-4"
+
+    ];
+
+    const indice =
+
+        Math.floor(
+
+            Math.random() *
+            layouts.length
+
+        );
+
+    return layouts[indice];
 
 }
 
 
-
 /************************************************
-
- CRIAR CARD DA FOTO DA APRESENTAÇÃO
-
+ IDENTIFICAR PROPORÇÃO DA FOTO
 ************************************************/
 
-
-function criarFotoApresentacao(
-    foto
+function carregarProporcaoImagem(
+    url
 ) {
 
+    return new Promise(
+        function(resolve) {
 
-    const card =
-        document.createElement(
-            "div"
-        );
+            const imagem =
+                new Image();
 
+            imagem.onload =
+                function() {
 
-    card.className =
-        "foto-apresentacao";
+                    resolve({
 
+                        largura:
+                            imagem.naturalWidth,
 
-    const imagem =
-        document.createElement(
-            "img"
-        );
+                        altura:
+                            imagem.naturalHeight,
 
+                        proporcao:
+                            imagem.naturalWidth /
+                            imagem.naturalHeight
 
-    imagem.src =
-        foto.url;
+                    });
 
+                };
 
-    imagem.alt =
-        "Momento compartilhado";
+            imagem.onerror =
+                function() {
 
+                    resolve({
 
-    imagem.loading =
-        "eager";
+                        largura: 1,
 
+                        altura: 1,
 
-    card.appendChild(
-        imagem
+                        proporcao: 1
+
+                    });
+
+                };
+
+            imagem.src =
+                url;
+
+        }
     );
-
-
-    return card;
-
 
 }
 
 
-
 /************************************************
-
  TROCAR FOTOS DA APRESENTAÇÃO
-
- LAYOUT FIXO:
-
- 50% = FOTO GRANDE
-
- 50% = 4 FOTOS PEQUENAS
-
 ************************************************/
 
-
-function trocarFotosApresentacao() {
-
+async function trocarFotosApresentacao() {
 
     if (
         !fotosApresentacao ||
@@ -1635,7 +1353,6 @@ function trocarFotosApresentacao() {
 
     }
 
-
     const painel =
 
         document
@@ -1643,42 +1360,34 @@ function trocarFotosApresentacao() {
             "painelApresentacao"
         );
 
+    const quantidade =
 
-    /*
-        Mistura as fotos.
-    */
+        Math.min(
 
+            fotosApresentacao.length,
+
+            5
+
+        );
 
     const fotosMisturadas =
 
         [...fotosApresentacao]
 
         .sort(
+
             () =>
                 Math.random() - 0.5
-        );
 
+        )
 
-    /*
-        Seleciona no máximo 5 fotos.
-    */
+        .slice(
 
-
-    const fotosSelecionadas =
-
-        fotosMisturadas.slice(
             0,
-            Math.min(
-                fotosMisturadas.length,
-                5
-            )
+
+            quantidade
+
         );
-
-
-    /*
-        Inicia a transição.
-    */
-
 
     painel.classList.add(
         "painel-trocando"
@@ -1686,237 +1395,333 @@ function trocarFotosApresentacao() {
 
 
     setTimeout(
-        function() {
+        async function() {
+
+            /*
+                Limpa completamente o painel
+            */
+
+            painel.innerHTML = "";
 
 
             /*
-                Limpa completamente
-                o painel anterior.
+                Remove todas as classes anteriores
+                e mantém somente a classe principal
             */
 
-
-            painel.innerHTML =
-                "";
+            painel.className =
+                "painel-apresentacao";
 
 
             /*
-                Remove as classes de posição.
+                Escolhe SOMENTE entre:
+
+                painel-layout-1
+                FOTO GRANDE À ESQUERDA
+
+                painel-layout-4
+                FOTO GRANDE À DIREITA
             */
 
+            const layout =
+                escolherLayout();
 
-            painel.classList.remove(
-                "grande-esquerda"
+
+            painel.classList.add(
+                layout
             );
 
 
-            painel.classList.remove(
-                "grande-direita"
-            );
-
-
             /*
-                Define o lado da
-                foto grande.
+                Carrega as proporções das fotos
             */
 
+            const fotosComProporcao =
 
-            if (
-                grandeNaEsquerda
-            ) {
+                await Promise.all(
 
+                    fotosMisturadas.map(
+                        async function(foto) {
 
-                painel.classList.add(
-                    "grande-esquerda"
+                            const dimensoes =
+
+                                await carregarProporcaoImagem(
+                                    foto.url
+                                );
+
+                            return {
+
+                                ...foto,
+
+                                ...dimensoes
+
+                            };
+
+                        }
+                    )
+
                 );
 
 
-            }
-
-            else {
-
-
-                painel.classList.add(
-                    "grande-direita"
-                );
-
-
-            }
-
-
             /*
-                Cria a área que ocupará
-                exatamente 50% da tela.
-
-                FOTO GRANDE.
+                Mantém a ordenação por proporção,
+                ajudando no enquadramento das fotos
             */
 
+            fotosComProporcao.sort(
+                function(a,b) {
 
-            const areaGrande =
-                document.createElement(
-                    "div"
-                );
-
-
-            areaGrande.className =
-                "area-foto-grande";
-
-
-            /*
-                Cria a área que ocupará
-                exatamente 50% da tela.
-
-                4 FOTOS PEQUENAS.
-            */
-
-
-            const areaPequenas =
-                document.createElement(
-                    "div"
-                );
-
-
-            areaPequenas.className =
-                "area-fotos-pequenas";
-
-
-            /*
-                =================================================
-
-                FOTO GRANDE
-
-                =================================================
-            */
-
-
-            if (
-                fotosSelecionadas.length >= 1
-            ) {
-
-
-                const fotoGrande =
-                    criarFotoApresentacao(
-                        fotosSelecionadas[0]
+                    return (
+                        a.proporcao -
+                        b.proporcao
                     );
-
-
-                areaGrande.appendChild(
-                    fotoGrande
-                );
-
-
-            }
-
-
-            /*
-                =================================================
-
-                FOTOS PEQUENAS
-
-                Sempre são adicionadas
-                na grade 2 x 2.
-
-                =================================================
-            */
-
-
-            for (
-                let i = 1;
-                i < fotosSelecionadas.length;
-                i++
-            ) {
-
-
-                const fotoPequena =
-                    criarFotoApresentacao(
-                        fotosSelecionadas[i]
-                    );
-
-
-                areaPequenas.appendChild(
-                    fotoPequena
-                );
-
-
-            }
-
-
-            /*
-                =================================================
-
-                ADICIONA AS DUAS METADES.
-
-                A ORDEM VISUAL É CONTROLADA
-                PELO CSS.
-
-                =================================================
-            */
-
-
-            painel.appendChild(
-                areaGrande
-            );
-
-
-            painel.appendChild(
-                areaPequenas
-            );
-
-
-            /*
-                Finaliza a transição.
-            */
-
-
-            requestAnimationFrame(
-                function() {
-
-
-                    painel.classList.remove(
-                        "painel-trocando"
-                    );
-
 
                 }
             );
 
 
             /*
-                Alterna para a próxima tela.
+                ==================================================
 
-                ESQUERDA → DIREITA
+                LAYOUT 1
+                FOTO GRANDE À ESQUERDA
 
-                DIREITA → ESQUERDA
+                A PRIMEIRA FOTO PRECISA SER
+                EXPLICITAMENTE O PRIMEIRO ELEMENTO.
+
+                Isso garante que o CSS:
+
+                nth-child(1)
+
+                ocupe corretamente a área grande
+                da esquerda.
+
+                ==================================================
             */
 
+            if (
+                layout ===
+                "painel-layout-1"
+            ) {
 
-            grandeNaEsquerda =
-                !grandeNaEsquerda;
+                fotosComProporcao.forEach(
+                    function(foto,index) {
 
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+                        card.className =
+                            "foto-apresentacao";
+
+
+                        /*
+                            Classes auxiliares
+                            apenas para identificação
+                        */
+
+                        if (
+                            index === 0
+                        ) {
+
+                            card.classList.add(
+                                "foto-grande-esquerda"
+                            );
+
+                        }
+
+                        else {
+
+                            card.classList.add(
+                                "foto-pequena"
+                            );
+
+                        }
+
+
+                        if (
+                            foto.proporcao < 0.85
+                        ) {
+
+                            card.classList.add(
+                                "foto-vertical"
+                            );
+
+                        }
+
+                        else if (
+                            foto.proporcao > 1.15
+                        ) {
+
+                            card.classList.add(
+                                "foto-horizontal"
+                            );
+
+                        }
+
+                        else {
+
+                            card.classList.add(
+                                "foto-quadrada"
+                            );
+
+                        }
+
+
+                        const imagem =
+                            document.createElement(
+                                "img"
+                            );
+
+                        imagem.src =
+                            foto.url;
+
+                        imagem.alt =
+                            "Foto do casamento";
+
+
+                        card.appendChild(
+                            imagem
+                        );
+
+
+                        painel.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /*
+                ==================================================
+
+                LAYOUT 4
+                FOTO GRANDE À DIREITA
+
+                O CSS utiliza:
+
+                nth-child(5)
+
+                como a foto grande.
+
+                ==================================================
+            */
+
+            else {
+
+                fotosComProporcao.forEach(
+                    function(foto,index) {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+                        card.className =
+                            "foto-apresentacao";
+
+
+                        if (
+                            index === 4
+                        ) {
+
+                            card.classList.add(
+                                "foto-grande-direita"
+                            );
+
+                        }
+
+                        else {
+
+                            card.classList.add(
+                                "foto-pequena"
+                            );
+
+                        }
+
+
+                        if (
+                            foto.proporcao < 0.85
+                        ) {
+
+                            card.classList.add(
+                                "foto-vertical"
+                            );
+
+                        }
+
+                        else if (
+                            foto.proporcao > 1.15
+                        ) {
+
+                            card.classList.add(
+                                "foto-horizontal"
+                            );
+
+                        }
+
+                        else {
+
+                            card.classList.add(
+                                "foto-quadrada"
+                            );
+
+                        }
+
+
+                        const imagem =
+                            document.createElement(
+                                "img"
+                            );
+
+                        imagem.src =
+                            foto.url;
+
+                        imagem.alt =
+                            "Foto do casamento";
+
+
+                        card.appendChild(
+                            imagem
+                        );
+
+
+                        painel.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            }
+
+
+            painel.classList.remove(
+                "painel-trocando"
+            );
 
         },
 
         500
-    );
 
+    );
 
 }
 
 
-
 /************************************************
-
  TELA CHEIA
-
 ************************************************/
 
-
 function alternarTelaCheia() {
-
 
     if (
         !document.fullscreenElement
     ) {
-
 
         document
             .getElementById(
@@ -1926,106 +1731,75 @@ function alternarTelaCheia() {
             .catch(
                 function(error) {
 
-
                     console.error(
                         error
                     );
 
-
                 }
             );
-
 
     }
 
     else {
 
-
         document.exitFullscreen();
 
-
     }
-
 
 }
 
 
-
 /************************************************
-
  SAIR DA APRESENTAÇÃO
-
 ************************************************/
 
-
 function sairApresentacao() {
-
 
     clearInterval(
         intervaloApresentacao
     );
 
-
     clearInterval(
         intervaloAtualizacaoApresentacao
     );
 
-
     intervaloApresentacao =
         null;
 
-
     intervaloAtualizacaoApresentacao =
         null;
-
 
     if (
         document.fullscreenElement
     ) {
 
-
         document.exitFullscreen();
-
 
     }
 
-
     voltarInicio();
-
 
 }
 
 
-
 /************************************************
-
  SAIR DA VALIDAÇÃO
-
 ************************************************/
-
 
 function sairValidacao() {
 
-
     voltarInicio();
-
 
 }
 
 
-
 /************************************************
-
  VOLTAR AO INÍCIO
-
 ************************************************/
-
 
 function voltarInicio() {
 
-
     esconderTodasTelas();
-
 
     document
         .getElementById(
@@ -2036,35 +1810,26 @@ function voltarInicio() {
             "escondido"
         );
 
-
     document
         .getElementById(
             "senha"
         )
         .value = "";
 
-
     document
         .getElementById(
             "erroSenha"
         )
-        .innerText =
-            "";
-
+        .innerText = "";
 
 }
 
 
-
 /************************************************
-
  ESCONDER TODAS AS TELAS
-
 ************************************************/
 
-
 function esconderTodasTelas() {
-
 
     document
         .getElementById(
@@ -2075,7 +1840,6 @@ function esconderTodasTelas() {
             "escondido"
         );
 
-
     document
         .getElementById(
             "envioTela"
@@ -2084,7 +1848,6 @@ function esconderTodasTelas() {
         .add(
             "escondido"
         );
-
 
     document
         .getElementById(
@@ -2095,7 +1858,6 @@ function esconderTodasTelas() {
             "escondido"
         );
 
-
     document
         .getElementById(
             "validacaoTela"
@@ -2105,7 +1867,6 @@ function esconderTodasTelas() {
             "escondido"
         );
 
-
     document
         .getElementById(
             "apresentacaoTela"
@@ -2114,6 +1875,5 @@ function esconderTodasTelas() {
         .add(
             "escondido"
         );
-
 
 }
